@@ -1,0 +1,57 @@
+name: eazy_order
+repository: 
+
+packages:
+  - eazy_order_web
+  - eazy_order_go
+  - eazy_order_pro
+  - eazy_order_admin
+  - packages/**
+
+command:
+  bootstrap:
+    usePubspecOverrides: true
+    runPubGetInParallel: true
+
+scripts:
+  analyze:
+    description: Run flutter analyze in all packages
+    run: melos exec -- "flutter analyze ."
+    
+  test:
+    description: Run flutter test in all packages with coverage
+    run: melos exec --dir-exists="test" -- "flutter test --coverage"
+    
+  build:all:
+    description: Build all apps
+    run: |
+      melos run build: eazy_order_web
+      melos run build: eazy_order_go
+      melos run build: eazy_order_pro
+      melos run build: eazy_order_admin
+      
+  build:eazy_order_web:
+    description: Build Eazy Order Web app
+    run: cd eazy_order_web && flutter build web
+    
+  build:eazy_order_go:
+    description: Build Eazy Order Go app
+    run: cd eazy_order_go && flutter build apk
+
+  build:eazy_order_pro:
+    description: Build Eazy Order Pro app
+    run: cd eazy_order_pro && flutter build apk
+
+  build:eazy_order_admin:
+    description: Build Eazy Order Admin app
+    run: cd eazy_order_admin && flutter build web
+    
+  pub:get:
+    description: Run pub get in all packages
+    run: melos exec -- "flutter pub get"
+    
+  codegen:
+    description: Run build_runner in packages with @riverpod annotations
+    run: >
+      melos exec --depends-on="riverpod_generator" --depends-on="build_runner" -- 
+      "dart run build_runner build --delete-conflicting-outputs"

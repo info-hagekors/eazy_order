@@ -1,0 +1,13 @@
+name: eazy_order
+description: Smart Ordering System workspace with Flutter and Riverpod
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.7.2 <4.0.0"
+  flutter: ">=3.10.0 <4.0.0"
+
+dev_dependencies:
+  melos: ^6.3.2
+  very_good_analysis: ^5.0.0  # Recommended for consistent code style across packages
+  flutter_lints: ^3.0.0
