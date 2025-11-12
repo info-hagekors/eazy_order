@@ -32,13 +32,13 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Column(
             children: [
-              SizedBox(height: 18.h,),
+              SizedBox(height: MediaQuery.of(context).padding.top + 15),
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Today's Report",
                   style: GoogleFonts.nunito(
-                      fontSize: 24.sp,
+                      fontSize: 22.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.black
                   ),

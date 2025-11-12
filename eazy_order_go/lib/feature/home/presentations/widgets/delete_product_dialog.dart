@@ -1,4 +1,3 @@
-
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,56 +9,96 @@ class DeleteProductDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.zero,
-      content: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 24.h),
-              Text(
-                  'Delete Product',
-                  style: GoogleFonts.roboto(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.black
-                  )
+      insetPadding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 24.h),
+      backgroundColor: AppColors.imageBgColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+      contentPadding: EdgeInsets.all(20.w),
+
+
+      content: SizedBox(
+        width: 380.w,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ⚠️ Warning icon
+            Container(
+              width: 60.w,
+              height: 60.w,
+              decoration: BoxDecoration(
+                color: AppColors.error.withOpacity(0.2),
+                shape: BoxShape.circle,
               ),
-              SizedBox(height: 12.h,),
-              Text(
-                  'Are you sure you want to delete this product?',
-                  style: GoogleFonts.roboto(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.black.withAlpha(128)
-                  )
+              child: const Icon(
+                Icons.warning_amber_rounded,
+                color: AppColors.error,
+                size: 36,
               ),
-              SizedBox(height: 24.h,),
-              Container(
-                alignment: Alignment.centerRight,
-                child: AppButton(
-                  text: 'Ok',
-                  onPressed: () async {
-                    Navigator.of(context).pop(true);
-                  },
-                  color: AppColors.imageBgColor,
-                  width: 80.w,
-                  height: 35.h,
-                  borderRadius: 12.r,
-                  textStyle: GoogleFonts.inter(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.black
+            ),
+            SizedBox(height: 14.h),
+
+            // 🧩 Title
+            Text(
+              'Delete Product',
+              style: GoogleFonts.nunito(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primaryColor,
+              ),
+            ),
+            SizedBox(height: 10.h),
+
+            // 🧾 Message
+            Text(
+              'Are you sure you want to delete this product?',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.nunito(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: AppColors.black.withAlpha(180),
+              ),
+            ),
+            SizedBox(height: 20.h),
+
+            // 🔘 Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(
+                    'Cancel',
+                    style: GoogleFonts.nunito(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryColor,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 24.h),
-            ],
-          ),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.error,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.w,
+                      vertical: 10.h,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(
+                    'Delete',
+                    style: GoogleFonts.nunito(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 }
-

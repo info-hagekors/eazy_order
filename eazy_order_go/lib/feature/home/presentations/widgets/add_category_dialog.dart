@@ -26,17 +26,24 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
   Widget build(BuildContext context) {
     final controller = ref.read(categoryControllerProvider.notifier);
     return AlertDialog(
+      backgroundColor: AppColors.imageBgColor, // 🔹 dialog background color
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15), // 🔹 rounded dialog shape
+      ),
+      insetPadding: EdgeInsets.symmetric(horizontal: 35.w, vertical: 24.h),
+      contentPadding: EdgeInsets.all(20.w),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: 4.h),
             Text(
               '${widget.categoryId.isNotEmpty ? 'Update' : 'Create'} Category',
               style: GoogleFonts.nunito(
-                fontSize: 22.sp,
+                fontSize: 25.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black
+                color: AppColors.primaryColor
               )
             ),
             SizedBox(height: 6.h,),
@@ -51,30 +58,42 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
             SizedBox(height: 24.h,),
             CommonTextField(
               controller: _controller,
-              onChanged: (val) {},
+              onChanged: (val) {
+                if(val.isNotEmpty){
+                  final capitalized = val[0].toUpperCase()+ val.substring(1);
+                  if(capitalized != val){
+                    _controller.value = TextEditingValue(
+                      text: capitalized,
+                      selection: TextSelection.collapsed(offset: capitalized.length),
+                    );
+                  }
+                }
+              },
               hintText: 'Category Name',
             ),
             SizedBox(height: 24.h),
             Container(
               alignment: Alignment.centerRight,
-              child: AppButton(
-                text: 'Save',
-                onPressed: () async {
-                  if (widget.categoryId.isNotEmpty) {
-                    await controller.updateCategoryName(_controller.text, widget.categoryId);
-                  } else {
-                    await controller.saveCategory(_controller.text, widget.businessId);
-                  }
-                  ref.read(goRouterProvider).pop(true);
-                },
-                color: AppColors.primaryButtonColor,
-                width: 130.w,
-                height: 45.h,
-                borderRadius: 12.r,
-                textStyle: GoogleFonts.nunito(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.white
+              child: Center(
+                child: AppButton(
+                  text: 'Save',
+                  onPressed: () async {
+                    if (widget.categoryId.isNotEmpty) {
+                      await controller.updateCategoryName(_controller.text, widget.categoryId);
+                    } else {
+                      await controller.saveCategory(_controller.text, widget.businessId);
+                    }
+                    ref.read(goRouterProvider).pop(true);
+                  },
+                  color: AppColors.primaryColor,
+                  width: 130.w,
+                  height: 45.h,
+                  borderRadius: 12.r,
+                  textStyle: GoogleFonts.nunito(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.white
+                  ),
                 ),
               ),
             ),

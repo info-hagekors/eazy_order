@@ -84,7 +84,11 @@ class ProductController extends _$ProductController {
     }
   }
 
-  void activeInactiveProduct(CategoryModel category, String productId, bool value) async {
+  Future<void> activeInactiveProduct(
+      CategoryModel category,
+      String productId,
+      bool value
+      ) async {
     final categoryRepo = ref.read(categoryRepositoryProvider);
     final updatedProducts = category.products.map((e) {
       if (e.productId == productId) {

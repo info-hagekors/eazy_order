@@ -96,10 +96,10 @@ class _QrCodeScreenState extends ConsumerState<QrCodeScreen> {
                 onPressed: () {
                   ref.read(qrCodeControllerProvider.notifier).shareQrCode(_qrKey);
                 },
-                width: 100.w,
+                width: 120.w,
                 height: 45.h,
                 borderRadius: 32.r,
-                textColor: AppColors.black,
+                textColor: AppColors.primaryColor,
                 borderColor: AppColors.primaryColor,
                 color: AppColors.imageBgColor,
               ),

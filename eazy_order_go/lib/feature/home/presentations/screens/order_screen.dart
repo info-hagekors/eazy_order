@@ -26,7 +26,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
       backgroundColor: AppColors.screenBgColor,
       floatingActionButton: FloatingActionButton(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100)
+          borderRadius: BorderRadius.circular(20)
         ),
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.primaryColor,
@@ -40,6 +40,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           padding: EdgeInsets.symmetric(horizontal: 18.w),
           child: Column(
             children: [
+              SizedBox(height: MediaQuery.of(context).padding.top + 15),
               if (state.isLoading) ... [
                 Container(
                   height: MediaQuery.of(context).size.height - kToolbarHeight,
@@ -56,8 +57,8 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                       child: Text(
                         "Today's Order",
                         style: GoogleFonts.nunito(
-                            fontSize: 21.sp,
-                            fontWeight: FontWeight.w500,
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w600,
                             color: AppColors.black
                         ),
                       ),
@@ -67,10 +68,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                       style: GoogleFonts.nunito(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.heading,
+                          color: AppColors.secondary,
                       ),
                     ),
-                    Icon(Icons.keyboard_arrow_right_rounded, size: 20.h, color: AppColors.heading,)
+                    Icon(Icons.keyboard_arrow_right_rounded, size: 20.h, color: AppColors.secondary,)
                   ],
                 ),
                 SizedBox(height: 16.h,),
@@ -124,7 +125,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                   )
                 ] else ... [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.55,
                     alignment: Alignment.center,
                     child: Image.asset(
                       AppImages.icNoOrders,

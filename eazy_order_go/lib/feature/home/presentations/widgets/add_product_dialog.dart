@@ -1,6 +1,4 @@
-
 import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core/core.dart';
 import 'package:eazy_order_go/core/routing/app_router.dart';
@@ -13,7 +11,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class AddProductDialog extends ConsumerStatefulWidget {
-  const AddProductDialog({super.key, required this.businessId, required this.categoryId});
+  const AddProductDialog({
+    super.key,
+    required this.businessId,
+    required this.categoryId,
+  });
 
   final String businessId;
   final String categoryId;
@@ -30,28 +32,81 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
   Widget build(BuildContext context) {
     final state = ref.watch(productControllerProvider);
     final controller = ref.read(productControllerProvider.notifier);
-    return AlertDialog(
-      contentPadding: EdgeInsets.zero,
-      insetPadding: EdgeInsets.zero,
-      content: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+
+    return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              AppColors.bgColor2.withOpacity(0.9),
+              AppColors.imageBgColor.withOpacity(0.9),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 12,
+              offset: Offset(0, 6),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 24.h),
+              // 🧩 Header Row with Title (left) + Cancel (right)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Add Product',
+                    style: GoogleFonts.nunito(
+                      fontSize: 25.sp,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close_rounded,
+                        color: AppColors.primaryColor, size: 26.sp),
+                    onPressed: () => ref.read(goRouterProvider).pop(),
+                  ),
+                ],
+              ),
+              SizedBox(height: 16.h),
+
+              // 🖼 Image Section
               _imageWidget(state.images),
-              SizedBox(height: 12.h,),
+
+              SizedBox(height: 20.h),
+
+              // 🧾 Input Fields
               CommonTextField(
-                onChanged: (val) => controller.onNameChanges(val),
+                onChanged: (val) {
+                  if (val.isNotEmpty) {
+                    // Capitalize the first letter and keep rest as typed
+                    final capitalized =
+                        val[0].toUpperCase() + val.substring(1);
+                    controller.onNameChanges(capitalized);
+                  } else {
+                    controller.onNameChanges('');
+                  }
+                },
                 hintText: 'Product Name',
               ),
-              SizedBox(height: 12.h,),
+
+              SizedBox(height: 14.h),
               CommonTextField(
                 onChanged: (val) => controller.onPriceChanges(val),
                 hintText: 'Price',
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 12.h,),
+              SizedBox(height: 14.h),
               SizedBox(
                 height: 150.h,
                 child: CommonTextField(
@@ -60,45 +115,34 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
                   maxLines: 10,
                 ),
               ),
-              SizedBox(height: 12.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: AppButton(
-                      text: 'Cancel',
-                      onPressed: () => ref.read(goRouterProvider).pop(),
-                      color: AppColors.white.withAlpha(205),
-                      height: 45.h,
-                      borderRadius: 12.r,
-                      textStyle: GoogleFonts.inter(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black
-                      ),
-                    ),
+
+              SizedBox(height: 28.h),
+
+              // 🔘 Centered Save Button
+              Center(
+                child: AppButton(
+                  text: 'Save',
+                  height: 45.h,
+                  width: 180.w,
+                  isLoading: state.isLoading,
+                  onPressed: state.isValid
+                      ? () async {
+                    await controller.saveProduct(
+                      widget.businessId,
+                      widget.categoryId,
+                    );
+                    ref.read(goRouterProvider).pop(true);
+                  }
+                      : null,
+                  color: AppColors.primaryColor,
+                  borderRadius: 14.r,
+                  textStyle: GoogleFonts.inter(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.white,
                   ),
-                  SizedBox(width: 16.w,),
-                  Expanded(
-                    child: AppButton(
-                      text: 'Save',
-                      height: 45.h,
-                      isLoading: state.isLoading,
-                      onPressed: state.isValid ? () async {
-                        await controller.saveProduct(widget.businessId, widget.categoryId);
-                        ref.read(goRouterProvider).pop(true);
-                      } : null,
-                      color: AppColors.primaryColor,
-                      borderRadius: 12.r,
-                      textStyle: GoogleFonts.inter(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.white
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-              SizedBox(height: 24.h),
             ],
           ),
         ),
@@ -106,87 +150,104 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
     );
   }
 
+  // 🖼 Image Picker + Carousel Widget
   Widget _imageWidget(List<XFile> images) {
-    const size = 200;
+    const size = 190;
+
     return Column(
       children: [
         Container(
           height: size.h,
           width: size.w,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.r),
-              color: AppColors.screenBgColor
-          ),
-          child: images.isNotEmpty ? CarouselSlider.builder(
-            carouselController: _carouselController,
-            options: CarouselOptions(
-              autoPlay: images.length > 1 ? true : false,
-              autoPlayInterval: Duration(seconds: 5),
-              height: size.h,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              aspectRatio: 0.8,
-              viewportFraction: 1,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+            shape: BoxShape.circle,
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFFEEF2FF),
+                Color(0xFFF3F4F6),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight
             ),
-            itemCount: images.length,
-            itemBuilder: (context, itemIndex, pageviewIndex) {
-              return ClipRRect(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                borderRadius: BorderRadius.circular(12.r),
-                child: Image.file(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 8,
+                offset: Offset(0, 3),
+              )
+            ],
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: images.isNotEmpty
+              ? ClipOval(
+                child: CarouselSlider.builder(
+                  carouselController: _carouselController,
+                  options: CarouselOptions(
+                autoPlay: images.length > 1,
+                autoPlayInterval: Duration(seconds: 4),
+                height: size.h,
+                viewportFraction: 1,
+                onPageChanged: (index, _) {
+                  setState(() => _currentIndex = index);
+                },
+                            ),
+                  itemCount: images.length,
+                  itemBuilder: (context, itemIndex, _) {
+                return Image.file(
                   File(images[itemIndex].path),
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: double.infinity,
+                  );
+                 },
                 ),
-              );
-            },
-          ) : IconButton(
-            onPressed: () {
-              ref.read(productControllerProvider.notifier).pickImages();
-            },
-            icon: Icon(Icons.add, size: 48.h,),
+              )
+              : Center(
+            child: IconButton(
+              onPressed: () {
+                ref.read(productControllerProvider.notifier).pickImages();
+              },
+              icon: Icon(Icons.add_a_photo_rounded,
+                  size: 42.h,
+                  color: AppColors.primaryColor
+              ),
+            ),
           ),
         ),
-        if (images.length > 1) ... [
-          SizedBox(height: 12.h),
+
+        // 🔘 Indicator
+        if (images.length > 1) ...[
+          SizedBox(height: 10.h),
           AnimatedSmoothIndicator(
             activeIndex: _currentIndex,
             count: images.length,
             effect: WormEffect(
-                dotHeight: 8,
-                dotWidth: 8,
-                activeDotColor: AppColors.primaryButtonColor,
-                spacing: 2.r,
-                dotColor: AppColors.heading
+              dotHeight: 8.h,
+              dotWidth: 8.w,
+              activeDotColor: AppColors.primaryColor,
+              dotColor: AppColors.borderColor,
             ),
-            onDotClicked: (index) {
-              _carouselController.animateToPage(index);
-            },
-          )
+          ),
         ],
-        SizedBox(height: 12.h),
-        if (images.isNotEmpty) ... [
+
+        // ➕ Add more images
+        if (images.isNotEmpty) ...[
+          SizedBox(height: 12.h),
           AppButton(
             text: '+ Add More',
             onPressed: () {
               ref.read(productControllerProvider.notifier).pickImages();
             },
-            color: AppColors.primaryColor.withAlpha(128),
-            width: 120.w,
-            height: 30.h,
-            borderRadius: 12.r,
+            color: AppColors.primaryColor.withOpacity(0.85),
+            width: 140.w,
+            height: 44.h,
+            borderRadius: 14.r,
             textStyle: GoogleFonts.inter(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
-                color: AppColors.white
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
             ),
           ),
-          SizedBox(height: 12.h,),
         ],
       ],
     );

@@ -37,9 +37,34 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
         resizeToAvoidBottomInset: true,
         appBar: CommonAppBar(
           title: '',
-          leading: SizedBox.shrink(),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 18, top: 4, bottom: 4),
+            child: InkWell(
+              onTap: () => Navigator.pop(context),
+              borderRadius: BorderRadius.circular(25),
+              child: Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.grey.shade400, // Border color
+                    width: 1.2,
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: AppColors.primaryColor,
+                    size: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
           backgroundColor: AppColors.screenBgColor,
         ),
+
         body: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Column(
@@ -134,21 +159,8 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
                     color: AppColors.primaryButtonColor,
                   ),
                 ),
-              ] else ... [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: AppButton(
-                    text: 'Logout',
-                    onPressed: () => ref.read(homeControllerProvider.notifier).logout(),
-                    textStyle: GoogleFonts.roboto(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.white
-                    ),
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ],
+              ] ,
+
               SizedBox(height: AppConsts.bottomPadding,)
             ],
           ),
@@ -173,8 +185,8 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
               Expanded(
                 child: Text(
                   'Order Preference',
-                  style: GoogleFonts.nunito(
-                      fontSize: 15.sp,
+                  style: GoogleFonts.poppins(
+                      fontSize: 17.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.supporting
                   ),
@@ -192,6 +204,7 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
             itemBuilder: (context, index) {
               final item = AppConsts.orderPreference[index];
               return CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.trailing,
                 onChanged: (val) {
                   //ref.read(businessSetupControllerProvider.notifier).onOrderPreferenceChanged(item);
                 },
@@ -199,7 +212,7 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
                 activeColor: AppColors.primaryColor,
                 title: Text(
                   item,
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.black
@@ -230,8 +243,8 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
               Expanded(
                 child: Text(
                   'Payment Options',
-                  style: GoogleFonts.nunito(
-                      fontSize: 15.sp,
+                  style: GoogleFonts.poppins(
+                      fontSize: 17.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.supporting
                   ),
@@ -256,7 +269,7 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
                 activeColor: AppColors.primaryColor,
                 title: Text(
                   item,
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.black

@@ -489,15 +489,15 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
               child: Container(
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AppColors.black,
-                  borderRadius: BorderRadius.circular(6),
+                  color: AppColors.primaryColor,
+                  borderRadius: BorderRadius.circular(7),
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   'Menu',
                   style: GoogleFonts.nunito(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.white
                   ),
                 ),
