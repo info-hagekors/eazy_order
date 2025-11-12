@@ -8,11 +8,12 @@ class AppImages {
 
   static const icNoOrders = 'assets/images/no_orders.png';
   static const icNoCategory = 'assets/images/no_category.png';
-
+  
   static const animOrderSuccess = 'assets/animation/order_success.json';
   static const animOrderFail = 'assets/animation/order_fail.json';
 
   static const welcome = 'assets/images/welcome.png';
 
   static const invalidQr = 'assets/images/invalid_qr.png';
+  static const storeimage = 'assets/images/storeimage.png';
 }
