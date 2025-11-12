@@ -22,6 +22,7 @@ class _AddUserDetailsDialogState extends ConsumerState<AddUserDetailsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: AppColors.imageBgColor,
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,7 +33,7 @@ class _AddUserDetailsDialogState extends ConsumerState<AddUserDetailsDialog> {
               style: GoogleFonts.roboto(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
-                color: AppColors.black
+                color: AppColors.primaryColor
               )
             ),
             SizedBox(height: 24.h,),
@@ -63,7 +64,7 @@ class _AddUserDetailsDialogState extends ConsumerState<AddUserDetailsDialog> {
                   }
                   ref.read(goRouterProvider).pop({'mobile':_mobileController.text.trim(), 'name':_nameController.text.trim()});
                 },
-                color: AppColors.primaryButtonColor,
+                color: AppColors.primaryColor,
                 width: 110.w,
                 height: 40.h,
                 borderRadius: 24.r,

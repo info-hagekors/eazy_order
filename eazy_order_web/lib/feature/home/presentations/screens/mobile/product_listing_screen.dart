@@ -386,7 +386,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
         margin: EdgeInsets.symmetric(horizontal: 16.w),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.r),
-            color: AppColors.primaryButtonColor,
+            color: AppColors.primaryColor,
             border: Border.all(color: AppColors.screenBgColor, width: 2.w)
         ),
         child: Row(

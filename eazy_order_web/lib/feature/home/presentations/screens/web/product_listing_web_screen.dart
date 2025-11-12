@@ -255,7 +255,7 @@ class _ProductListingWebScreenState extends ConsumerState<ProductListingWebScree
                         margin: EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.r),
-                            color: AppColors.primaryButtonColor,
+                            color: AppColors.primaryColor,
                             border: Border.all(color: AppColors.screenBgColor, width: 2)
                         ),
                         child: Row(
@@ -309,7 +309,7 @@ class _ProductListingWebScreenState extends ConsumerState<ProductListingWebScree
         margin: EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.r),
-            color: AppColors.primaryButtonColor,
+            color: AppColors.primaryColor,
             border: Border.all(color: AppColors.screenBgColor, width: 2)
         ),
         child: Row(
