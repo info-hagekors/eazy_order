@@ -205,6 +205,7 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
               final item = AppConsts.orderPreference[index];
               return CheckboxListTile(
                 controlAffinity: ListTileControlAffinity.trailing,
+                contentPadding: EdgeInsets.only(left: 8.w, right: 4.w),
                 onChanged: (val) {
                   //ref.read(businessSetupControllerProvider.notifier).onOrderPreferenceChanged(item);
                 },
@@ -262,6 +263,8 @@ class _StoreProfileScreenState extends ConsumerState<StoreProfileScreen> {
             itemBuilder: (context, index) {
               final item = AppConsts.paymentOptions[index];
               return CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.trailing,
+                contentPadding: EdgeInsets.only(left: 8.w, right: 4.w),
                 onChanged: (val) {
 
                 },
