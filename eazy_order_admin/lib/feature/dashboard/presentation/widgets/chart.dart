@@ -30,7 +30,7 @@ class Chart extends StatelessWidget {
                 Text(
                   "29.1",
                   style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.w600,
                         height: 0.5,
                       ),
@@ -71,7 +71,7 @@ List<PieChartSectionData> paiChartSelectionData = [
     radius: 16,
   ),
   PieChartSectionData(
-    color: AppColors.primaryColor.withOpacity(0.1),
+    color: AppColors.background2,
     value: 25,
     showTitle: false,
     radius: 13,

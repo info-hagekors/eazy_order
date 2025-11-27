@@ -1,5 +1,4 @@
 import 'package:core/core.dart';
-import 'package:eazy_order_go/feature/home/applications/category_controller.dart';
 import 'package:eazy_order_go/feature/home/applications/home_controller.dart';
 import 'package:eazy_order_go/feature/home/applications/product_controller.dart';
 import 'package:eazy_order_go/feature/home/presentations/widgets/add_category_dialog.dart';
@@ -11,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../applications/category_controller.dart';
 
 class CatalogScreen extends ConsumerStatefulWidget {
   const CatalogScreen({super.key});
@@ -28,7 +29,8 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
     return Scaffold(
       backgroundColor: AppColors.screenBgColor,
       floatingActionButton: FloatingActionButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20)),
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.primaryColor,
         onPressed: () {

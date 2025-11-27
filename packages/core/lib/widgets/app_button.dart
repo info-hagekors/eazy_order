@@ -62,10 +62,10 @@ class AppButton extends StatelessWidget {
         )
             : child ?? Text(
           text,
-          style: textStyle ?? GoogleFonts.nunito(
+          style: textStyle ?? GoogleFonts.poppins(
             color: textColor ?? AppColors.white,
             fontSize: AppConsts.isWeb ? 16 : 16.sp,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ),

@@ -8,6 +8,7 @@ import 'package:eazy_order_admin/feature/main_screen/presentations/screens/main_
 import 'package:eazy_order_admin/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,62 +27,122 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(signUpControllerProvider);
     return Scaffold(
-        body: Responsive.isDesktop(context)
-            ? Center(child: contentDesktopWidget(state))
-            : contentMobileWidget(state)
+      backgroundColor: AppColors.transparent,
+        body: Stack(
+          children:[
+            if(Responsive.isDesktop(context))
+              Positioned.fill(
+                  child: Image.asset(
+                      "assets/images/background.png",
+                  fit: BoxFit.cover
+                  ),
+              ),
+            Responsive.isDesktop(context)
+                ? Center(child: contentDesktopWidget(state))
+                : Container(
+                color: AppColors.white,
+            child: contentMobileWidget(state)),
+          ],
+        )
     );
   }
 
   Widget contentDesktopWidget(SignupEntity state) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Row(
       children: [
-        CommonCard(
-          padding: const EdgeInsets.symmetric(horizontal: 50),
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+        // 🔵 LEFT SECTION — gradient image already from parent (Stack background)
+        Expanded(
+          flex: 3,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-            Expanded(
-              flex: 3,
-                child: Column(
-                  children: [
-                    Text(
-                      'Eazy Order',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Text('Smart Ordering System'),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    SizedBox(
-                      width: 350,
-                      child: SvgPicture.asset('assets/icons/main.svg', semanticsLabel: ''),
-                    )
-                  ],
-                )),
-            const VerticalDivider(
-              width: 1,
-              color: AppColors.white,
+                Text(
+                  'Eazy Order',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Smart Ordering System',
+                  style: TextStyle(
+                    fontSize: 14.5,
+                    color: AppColors.white,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: 350,
+                  child: SvgPicture.asset(
+                    'assets/icons/main.svg',
+                    semanticsLabel: '',
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              flex: 2,
-              child: _stepWiseFormWidget(state),
-            )
-          ]),
-        )
+          ),
+        ),
+
+        // ⚪ RIGHT SECTION — FULL HEIGHT WHITE CONTAINER
+        Expanded(
+          flex: 2,
+          child: Container(
+            height: double.infinity,
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                // FORM AREA
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 40),
+                      child: _stepWiseFormWidget(state),
+                    ),
+                  ),
+                ),
+
+                // FOOTER AREA
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Text(
+                    "© 2025 Eazy Order ❤️ by Hagekors Technolabs",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 14, color: AppColors.black),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
       ],
     );
   }
 
+
   Widget _stepWiseFormWidget(SignupEntity state) {
-    return state.currentStep == 1
-        ? _signUpFormWidget(state)
-        : state.currentStep == 2 ? _verifyEmailWidget(state) : _createPasswordWidget(state);
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // MAIN CONTENT
+          state.currentStep == 1
+              ? _signUpFormWidget(state)
+              : state.currentStep == 2
+              ? _verifyEmailWidget(state)
+              : _createPasswordWidget(state),
+
+          const SizedBox(height: 20),
+
+        ],
+      ),
+    );
   }
+
 
   Widget _signUpFormWidget(SignupEntity state) {
     final controller = ref.read(signUpControllerProvider.notifier);
@@ -90,16 +151,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Sign Up',
-              style: const TextStyle(fontSize: 20),
+            Center(
+              child: Text(
+                'Sign Up',
+                style: TextStyle(
+                    fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black
+                ),
+              ),
             ),
             const SizedBox(
-              height: 20,
+              height: 55,
             ),
             Text(
-              'Full Name',
-              style: const TextStyle(fontSize: 12),
+              'Full Name :',
+              style:  TextStyle(
+                  fontSize: 14,
+                color: AppColors.black
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -122,6 +192,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 alignment: Alignment.center,
                 child: SvgPicture.asset(
                   'assets/icons/profile.svg',
+                  color: AppColors.link,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -131,8 +202,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               height: 20,
             ),
             Text(
-              'Email',
-              style: const TextStyle(fontSize: 12),
+              'Email :',
+              style:  TextStyle(
+                  fontSize: 14,
+                color: AppColors.black
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -155,6 +229,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 alignment: Alignment.center,
                 child: SvgPicture.asset(
                   'assets/icons/email.svg',
+                  color: AppColors.link,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -164,8 +239,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               height: 20,
             ),
             Text(
-              'Mobile',
-              style: const TextStyle(fontSize: 12),
+              'Mobile :',
+              style: TextStyle(
+                  fontSize: 14,
+                color: AppColors.black
+              ),
             ),
             const SizedBox(
               height: 10,
@@ -188,6 +266,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 child: SvgPicture.asset(
                   'assets/icons/lock.svg',
                   fit: BoxFit.contain,
+                  color: AppColors.link,
                 ),
               ),
               onChanged: (String val) => controller.onMobileChange(val),
@@ -199,7 +278,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   height: 20,
                   child: Checkbox(
                     value: state.isAgree,
-                    checkColor: AppColors.white,
+                    checkColor: AppColors.background2,
                     activeColor: AppColors.primaryColor,
                     //onChanged: (val) => setState(() => agreed = val ?? false),
                     onChanged: (val) => controller.onAgreeChange(val ?? false),
@@ -209,28 +288,29 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   child: Wrap(
                     children: [
                       Text(
-                        'By clicking next button, you are agreeing to ',
+                        'By clicking next button you are agree to',
                         style: GoogleFonts.poppins(
-                            fontSize: 10,
+                            fontSize: 12.5,
                             fontWeight: FontWeight.w400,
+                          color: AppColors.black
                         ),
                       ),
                       GestureDetector(
                         onTap: () => launchUrl(Uri.parse(AppConsts.termsCondition)),
                         child: Text(
                             "Terms & Conditions",
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.poppins(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.primaryColor,
                                 decoration: TextDecoration.underline,
-                              decorationColor: AppColors.white
+                              decorationColor: AppColors.black
                             )
                         ),
                       ),
                       Text(
                         ' and ',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 10,
                             fontWeight: FontWeight.w400,
                         ),
@@ -239,12 +319,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         onTap: () => launchUrl(Uri.parse(AppConsts.privacyPolicy)),
                         child: Text(
                             "Privacy Policy",
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.poppins(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.primaryColor,
                                 decoration: TextDecoration.underline,
-                                decorationColor: AppColors.white
+                                decorationColor: AppColors.black
                             )
                         ),
                       ),
@@ -273,10 +353,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 20,),
             AppButton(
-              text: 'Next',
-              color: AppColors.primaryColor,
+              text: 'Register Now',
+              color: AppColors.white,
+              textStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15.5
+              ),
               isLoading: state.isLoading1,
               onPressed: state.isStep1Validated ? () {
                 ref.read(signUpControllerProvider.notifier).onStep1NextClick();
@@ -291,20 +375,29 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Already have an account? "),
+                Text("Already have an account?  ->  ",
+                  style: GoogleFonts.poppins(
+                      color: AppColors.black
+                  ),
+                ),
                 InkWell(
                   child: Text(
                     'SignIn',
-                    style: const TextStyle(color: AppColors.primaryColor),
+                    style: GoogleFonts.poppins(
+                        color: AppColors.link,
+                      decoration: TextDecoration.underline,
+                     decorationColor: AppColors.link,
+                    ),
                   ),
                   onTap: () {
                     ref.read(goRouterProvider).push(SignInScreen.routeName);
                   },
                 )
               ],
-            )
+            ),
           ],
-        ));
+        )
+    );
   }
 
   Widget _verifyEmailWidget(SignupEntity state) {
@@ -354,7 +447,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 alignment: Alignment.center,
                 child: SvgPicture.asset(
                   'assets/icons/lock.svg',
-                  fit: BoxFit.contain,
+                  color: AppColors.link,
                 ),
               ),
               onChanged: (String val) => controller.onOtpEmailChange(val),
@@ -386,6 +479,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 alignment: Alignment.center,
                 child: SvgPicture.asset(
                   'assets/icons/lock.svg',
+                  color: AppColors.link,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -413,18 +507,26 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Already have an account? "),
+                Text("Already have an account?  ->  ",
+                  style: GoogleFonts.poppins(
+                      color: AppColors.black,
+                  ),
+                ),
                 InkWell(
                   child: Text(
                     'SignIn',
-                    style: const TextStyle(color: Colors.blue),
+                    style:  GoogleFonts.poppins(
+                        color: AppColors.link,
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.link
+                    ),
                   ),
                   onTap: () {
                     ref.read(goRouterProvider).push(SignInScreen.routeName);
                   },
                 )
               ],
-            )
+            ),
           ],
         ));
   }
@@ -445,7 +547,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             ),
             Text(
               'Enter your password',
-              style: const TextStyle(fontSize: 12),
+              style: TextStyle(fontSize: 22),
             ),
             const SizedBox(
               height: 10,
@@ -470,6 +572,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 child: SvgPicture.asset(
                   'assets/icons/lock.svg',
                   fit: BoxFit.contain,
+                  color: AppColors.link,
                 ),
               ),
               onChanged: (String val) => controller.onPasswordChange(val),
@@ -502,6 +605,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 child: SvgPicture.asset(
                   'assets/icons/lock.svg',
                   fit: BoxFit.contain,
+                  color: AppColors.link,
                 ),
               ),
               onChanged: (String val) => controller.onConfirmPasswordChange(val),
@@ -527,26 +631,52 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Already have an account? "),
+                Text("Already have an account?  ->  ",
+                  style: GoogleFonts.poppins(
+                      color: AppColors.black
+                  ),),
                 InkWell(
                   child: Text(
                     'SignIn',
-                    style: const TextStyle(color: AppColors.primaryColor),
+                    style: GoogleFonts.poppins(
+                        color: AppColors.link,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppColors.link,
+                    ),
                   ),
                   onTap: () {
                     ref.read(goRouterProvider).push(SignInScreen.routeName);
                   },
                 )
               ],
-            )
+            ),
           ],
-        ));
+        )
+    );
   }
 
   Widget contentMobileWidget(SignupEntity state) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 60),
-        child: _stepWiseFormWidget(state)
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 60),
+            child: _stepWiseFormWidget(state),
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Text(
+            "© 2025 Eazy Order ❤️ by Hagekors Technolabs",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 14, color: AppColors.black),
+          ),
+        ),
+
+      ],
     );
   }
 }

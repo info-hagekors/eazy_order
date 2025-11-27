@@ -65,97 +65,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
 
-        // 🔹 Main Home Screen
-        child: Scaffold(
-          extendBodyBehindAppBar: true,
-          backgroundColor: AppColors.imageBgColor,
-          appBar: CommonAppBar(
-            title: 'Home',
-            titleStyle: GoogleFonts.nunito(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.primaryColor,
-            ),
-            backgroundColor: AppColors.imageBgColor,
-            showLeading: true,
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Material(
-                  color: Colors.transparent,
-                  shape: const CircleBorder(),
-                  child: InkWell(
-                    customBorder: const CircleBorder(),
-                    splashColor: AppColors.primaryColor.withOpacity(0.2),
-                    highlightColor: Colors.transparent,
-                    onTap: _handleMenuButtonPressed,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ValueListenableBuilder<AdvancedDrawerValue>(
-                        valueListenable: _advancedDrawerController,
-                        builder: (_, value, __) {
-                          return AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            child: Icon(
-                              value.visible ? Icons.clear : Icons.menu,
-                              key: ValueKey<bool>(value.visible),
-                              color: Colors.black,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-            actions: [
-              IconButton(
-                onPressed: () {
-                  ref.read(goRouterProvider).push(QrCodeScreen.routeName);
-                },
-                icon: Icon(Icons.qr_code_2, size: 24.h),
-              ),
-            ],
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: state.selectedIndex,
-            onTap: ref.read(homeControllerProvider.notifier).updatePageIndex,
-            selectedItemColor: AppColors.primaryColor,
-            unselectedItemColor: AppColors.bgColor2,
-            selectedLabelStyle: GoogleFonts.nunito(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-            ),
-            unselectedLabelStyle: GoogleFonts.nunito(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-            ),
-            iconSize: 24,
-            elevation: 12,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.analytics_outlined),
-                label: 'Analysis',
-              ),
-              BottomNavigationBarItem(icon: Icon(Icons.layers), label: 'Order'),
-              BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Catalog'),
-            ],
-          ),
-          body: PageTransitionSwitcher(
-            duration: const Duration(milliseconds: 400),
-            reverse: state.selectedIndex == 0,
-            transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
-              return SharedAxisTransition(
-                animation: primaryAnimation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.horizontal,
-                child: child,
-              );
-            },
-            child: _screens[state.selectedIndex],
-          ),
-        ),
-
         // 🔹 Drawer with full gradient (covering top & bottom)
         drawer: Container(
           clipBehavior: Clip.hardEdge,
@@ -267,6 +176,96 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+        // 🔹 Main Home Screen
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          backgroundColor: AppColors.imageBgColor,
+          appBar: CommonAppBar(
+            title: 'Home',
+            titleStyle: GoogleFonts.nunito(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryColor,
+            ),
+            backgroundColor: AppColors.imageBgColor,
+            showLeading: true,
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Material(
+                  color: Colors.transparent,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    splashColor: AppColors.primaryColor.withOpacity(0.2),
+                    highlightColor: Colors.transparent,
+                    onTap: _handleMenuButtonPressed,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ValueListenableBuilder<AdvancedDrawerValue>(
+                        valueListenable: _advancedDrawerController,
+                        builder: (_, value, __) {
+                          return AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 250),
+                            child: Icon(
+                              value.visible ? Icons.clear : Icons.menu,
+                              key: ValueKey<bool>(value.visible),
+                              color: Colors.black,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+            actions: [
+              IconButton(
+                onPressed: () {
+                  ref.read(goRouterProvider).push(QrCodeScreen.routeName);
+                },
+                icon: Icon(Icons.qr_code_2, size: 24.h),
+              ),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: state.selectedIndex,
+            onTap: ref.read(homeControllerProvider.notifier).updatePageIndex,
+            selectedItemColor: AppColors.primaryColor,
+            unselectedItemColor: AppColors.bgColor2,
+            selectedLabelStyle: GoogleFonts.nunito(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+            ),
+            unselectedLabelStyle: GoogleFonts.nunito(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+            ),
+            iconSize: 24,
+            elevation: 12,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.analytics_outlined),
+                label: 'Analysis',
+              ),
+              BottomNavigationBarItem(icon: Icon(Icons.layers), label: 'Order'),
+              BottomNavigationBarItem(icon: Icon(Icons.category), label: 'Catalog'),
+            ],
+          ),
+          body: PageTransitionSwitcher(
+            duration: const Duration(milliseconds: 400),
+            reverse: state.selectedIndex == 0,
+            transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
+              return SharedAxisTransition(
+                animation: primaryAnimation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.horizontal,
+                child: child,
+              );
+            },
+            child: _screens[state.selectedIndex],
           ),
         ),
       ),

@@ -1,4 +1,5 @@
 
+import 'package:core/core.dart';
 import 'package:eazy_order_admin/feature/dashboard/entity/my_files.dart';
 import 'package:eazy_order_admin/responsive.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,8 @@ class MyFiles extends StatelessWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             ElevatedButton.icon(
-              style: TextButton.styleFrom(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.white,
                 padding: EdgeInsets.symmetric(
                   horizontal: defaultPadding * 1.5,
                   vertical:
@@ -32,8 +34,8 @@ class MyFiles extends StatelessWidget {
                 ),
               ),
               onPressed: () {},
-              icon: Icon(Icons.add),
-              label: Text("Add New"),
+              icon: Icon(Icons.add,color: AppColors.primaryColor),
+              label: Text("Add New",style: TextStyle(color: AppColors.primaryColor),),
             ),
           ],
         ),

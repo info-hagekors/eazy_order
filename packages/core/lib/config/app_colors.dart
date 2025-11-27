@@ -36,9 +36,14 @@ class AppColors
   static const Color confirm = Color(0xfffb8500);
   static const Color complete = Color(0xff80ed99);
   static const Color cancel = Color(0xffd00000);
+  static const Color lightblue = Colors.lightBlueAccent;
+  static const Color lightorange = Colors.orangeAccent;
+
+
 
   static const Color link = Color(0xff0077b6);
   static const Color red = Colors.red;
+  static const Color grey = Colors.grey;
 
   static const Color verifyGreen = Color(0xff269A47);
 }

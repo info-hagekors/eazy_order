@@ -1,5 +1,8 @@
 
+import 'package:core/core.dart';
 import 'package:core/utils/toast_utils.dart';
+import 'package:eazy_order_admin/feature/catalog/presentation/screens/category_screen.dart';
+import 'package:eazy_order_admin/feature/catalog/presentation/screens/product_screen.dart';
 import 'package:eazy_order_admin/feature/dashboard/application/menu_app_controller.dart';
 import 'package:eazy_order_admin/feature/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:eazy_order_admin/feature/dashboard/presentation/widgets/side_menu.dart';
@@ -34,22 +37,25 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDesktop = Responsive.isDesktop(context);
+
     return Scaffold(
       key: MenuAppController.scaffoldKey,
-      drawer: SideMenu(onItemClick: (index) => onMenuClick(index),),
+      backgroundColor: AppColors.background3,
+
+      // Drawer appears ONLY on small screens
+      drawer: isDesktop ? null : SideMenu(onItemClick: onMenuClick),
+
       body: SafeArea(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // We want this side menu only for large screen
-            if (Responsive.isDesktop(context))
+            // Permanent menu on desktop
+            if (isDesktop)
               Expanded(
-                // default flex = 1
-                // and it takes 1/6 part of the screen
-                child: SideMenu(onItemClick: (index) => onMenuClick(index),),
+                child: SideMenu(onItemClick: onMenuClick),
               ),
+
             Expanded(
-              // It takes 5/6 part of the screen
               flex: 5,
               child: selectedScreen,
             ),
@@ -66,13 +72,21 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         selectedScreen = DashboardScreen();
         break;
       case 2:
-        selectedScreen = UserScreen();
+        selectedScreen = UserScreen();     //for user screen
         break;
       case 3:
-        selectedScreen = DashboardScreen();
-      case 4:
-        selectedScreen = DashboardScreen();
+        selectedScreen = CategoryScreen(businessId: '708100e7-1eef-41f9-8f66-f8173dfb41d7');    // for catalog screen
         break;
+      case 4:
+        selectedScreen = ProductScreen();   //for product screen
+        break;
+      case 5:
+        selectedScreen = DashboardScreen();   //for order screen
+        break;
+      case 6:
+        selectedScreen = DashboardScreen();   //for customer screen
+        break;
+
       default:
         selectedScreen = Container();
         break;

@@ -40,7 +40,7 @@ class _CreateUserDialogState extends State<AddUserDialog> {
     }
   }
 
-  final labelStyle = GoogleFonts.nunito(
+  final labelStyle = GoogleFonts.poppins(
       fontSize: 14,
       fontWeight: FontWeight.bold
   );
@@ -54,7 +54,7 @@ class _CreateUserDialogState extends State<AddUserDialog> {
       ),
       title: Text(
           'Create New User',
-        style: GoogleFonts.nunito(
+        style: GoogleFonts.poppins(
           fontSize: 22,
           fontWeight: FontWeight.bold
         ),
@@ -142,7 +142,7 @@ class _CreateUserDialogState extends State<AddUserDialog> {
       actions: [
         TextButton(
           onPressed: isLoading ? null : () => Navigator.of(context).pop(),
-          child: Text('Cancel', style: GoogleFonts.nunito(
+          child: Text('Cancel', style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: AppColors.black
@@ -159,7 +159,7 @@ class _CreateUserDialogState extends State<AddUserDialog> {
             child: CircularProgressIndicator(strokeWidth: 2),
           ) : Text(
               'Create',
-            style: GoogleFonts.nunito(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: AppColors.white

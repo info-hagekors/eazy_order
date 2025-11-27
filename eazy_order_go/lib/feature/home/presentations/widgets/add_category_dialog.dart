@@ -78,6 +78,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                 child: AppButton(
                   text: 'Save',
                   onPressed: () async {
+
                     if (widget.categoryId.isNotEmpty) {
                       await controller.updateCategoryName(_controller.text, widget.categoryId);
                     } else {

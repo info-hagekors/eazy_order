@@ -16,8 +16,8 @@ class RecentFiles extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(defaultPadding),
       decoration: BoxDecoration(
-        color: AppColors.primaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        color: AppColors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,6 +30,7 @@ class RecentFiles extends StatelessWidget {
             width: double.infinity,
             child: DataTable(
               columnSpacing: defaultPadding,
+              dividerThickness: 0.1,
               // minWidth: 600,
               columns: [
                 DataColumn(

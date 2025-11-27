@@ -42,7 +42,7 @@ class CommonTextField extends StatelessWidget {
           border: Border.all(
               color: AppColors.background2
           ),
-          color: backgroundColor ?? AppColors.background3
+          color: backgroundColor ?? AppColors.white
       ),
       alignment: Alignment.center,
       child: TextField(
@@ -58,7 +58,7 @@ class CommonTextField extends StatelessWidget {
             borderSide: BorderSide(color: borderColor ?? AppColors.background3),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor ?? AppColors.borderColor),
+            borderSide: BorderSide(color: borderColor ?? AppColors.black),
           ),
           contentPadding: EdgeInsets.symmetric(horizontal: AppConsts.isWeb ? 15 : 15.w,
               vertical: AppConsts.isWeb ? 15 : 15.h),

@@ -58,7 +58,7 @@ class _AppState extends ConsumerState<App> {
                   ],
                   locale: Locale('en', ''), // Default Language
                   theme: ThemeData.dark().copyWith(
-                    scaffoldBackgroundColor: AppColors.imageBgColor,
+                    scaffoldBackgroundColor: AppColors.black12,
                     textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(bodyColor: Colors.black),
                     canvasColor: AppColors.accentColor,
                     primaryColor: AppColors.primaryColor

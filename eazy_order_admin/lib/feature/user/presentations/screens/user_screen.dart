@@ -1,4 +1,3 @@
-
 import 'package:data_table_2/data_table_2.dart';
 import 'package:eazy_order_admin/constants.dart';
 import 'package:eazy_order_admin/feature/user/applications/user_controller.dart';
@@ -40,12 +39,12 @@ class _UserScreenState extends ConsumerState<UserScreen> {
             SizedBox(height: 20,),
             Text(
               "Users",
-              style: GoogleFonts.nunito(
+              style: GoogleFonts.poppins(
                 fontSize: 28,
                 fontWeight: FontWeight.bold
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             Row(
               children: [
                 Expanded(child: SizedBox()),
@@ -55,16 +54,16 @@ class _UserScreenState extends ConsumerState<UserScreen> {
                   child: AppButton(
                     text: '',
                     onPressed: () => openCreateUserDialog(context),
-                    color: AppColors.primaryColor,
+                    color: AppColors.white,
                     child: Row(
                       children: [
-                        Icon(Icons.add, size: 16, color: AppColors.white,),
-                        SizedBox(width: 10,),
+                        Icon(Icons.add, size: 16, color: AppColors.primaryColor,),
+                        SizedBox(width: 10),
                         Text(
                             'Add User',
                           style: TextStyle(
                             fontSize: 14,
-                            color: AppColors.white
+                            color: AppColors.primaryColor
                           ),
                         )
                       ],
@@ -170,11 +169,11 @@ class CommonDataTable<T> extends StatelessWidget {
             empty: Center(child: Text('No Data Found.!'),),
             clipBehavior: Clip.antiAliasWithSaveLayer,
             headingRowColor: WidgetStatePropertyAll(AppColors.primaryColor),
-            headingTextStyle: GoogleFonts.nunito(
+            headingTextStyle: GoogleFonts.poppins(
               color: AppColors.white,
               fontSize: 16
             ),
-            dataTextStyle: GoogleFonts.nunito(
+            dataTextStyle: GoogleFonts.poppins(
                 fontSize: 14
             ),
             decoration: BoxDecoration(
