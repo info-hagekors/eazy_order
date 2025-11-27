@@ -65,7 +65,6 @@ dependencies:
   #Payments
   razorpay_flutter: ^1.4.0
 
-
   # Utilities
   flutter_dotenv: ^5.2.1
   intl: ^0.20.2
