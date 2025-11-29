@@ -31,3 +31,7 @@ export 'utils/toast_utils.dart';
 export 'services/auth_service.dart';
 export 'services/business_service.dart';
 export 'services/firebase_storage_service.dart';
+
+//Repositories
+export 'repositories/category_repository.dart';
+export 'repositories/product_repository.dart';

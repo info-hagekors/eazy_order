@@ -10,6 +10,8 @@ class CategoryModel {
   bool isActive;
   List<ProductModel> products;
   bool isOpened;
+  String createdAt;
+  String updatedAt;
 
   CategoryModel({
     required this.globalKey,
@@ -19,6 +21,8 @@ class CategoryModel {
     this.isActive = true,
     this.products = const [],
     this.isOpened = true,
+    this.createdAt = '',
+    this.updatedAt = '',
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,8 @@ class CategoryModel {
       businessId: json['business_id'] ?? '',
       isActive: json['ia_active'] ?? false,
       products: List<ProductModel>.from(json['products']?.map((x) => ProductModel.fromJson(x)) ?? []),
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
     );
   }
 
@@ -39,6 +45,8 @@ class CategoryModel {
       'business_id': businessId,
       'ia_active': isActive,
       'products': products.map((x) => x.toMap()).toList(),
+      'created_at': createdAt,
+      'updated_at': updatedAt,
     };
   }
 }
@@ -54,6 +62,8 @@ class ProductModel {
   bool isActive;
   List<String> imageUrls;
   int quantity;
+  String createdAt;
+  String updatedAt;
 
   ProductModel({
     required this.productId,
@@ -66,6 +76,8 @@ class ProductModel {
     this.isActive = false,
     this.imageUrls = const [],
     this.quantity = 0,
+    this.createdAt = '',
+    this.updatedAt = '',
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -79,6 +91,8 @@ class ProductModel {
       isActive: json['ia_active'] ?? false,
       imageUrls: List<String>.from(json['image_urls'] ?? []),
       quantity: json['quantity'] ?? 0,
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
     );
   }
 
@@ -87,13 +101,13 @@ class ProductModel {
       'product_id': productId,
       'product_name': productName,
       'category_id': categoryId,
-      'category_name': categoryName,
       'business_id': businessId,
       'description': description,
       'price': price,
       'ia_active': isActive,
       'image_urls': imageUrls,
-      'quantity': quantity,
+      'created_at': createdAt,
+      'updated_at': updatedAt,
     };
   }
 

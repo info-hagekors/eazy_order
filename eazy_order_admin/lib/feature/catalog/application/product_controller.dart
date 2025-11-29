@@ -1,12 +1,12 @@
 
 import 'package:core/models/category_model.dart';
+import 'package:core/repositories/product_repository.dart';
 import 'package:core/services/firebase_storage_service.dart';
 import 'package:eazy_order_admin/feature/catalog/entity/product_entity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
-import '../repository/product_repository.dart';
-import 'category_controller.dart';
+
 part "product_controller.g.dart";
 
 @riverpod

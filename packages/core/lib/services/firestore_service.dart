@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,8 @@ class FirestoreService {
 
   static const String collectionBusiness = 'businesses';
   static const String collectionCatalog = 'catalog';
+  static const String collectionCategory = 'category';
+  static const String collectionProduct = 'product';
   static const String collectionOrder = 'orders';
 
   /// Add data to a collection
@@ -29,7 +32,7 @@ class FirestoreService {
     });
   }
 
-  Future<void> updateDocument(String collectionPath, String docId, String field, String data) async {
+  Future<void> updateDocument(String collectionPath, String docId, String field, dynamic data) async {
     final docRef = _db.collection(collectionPath).doc(docId);
     await docRef.update({
       field: data,
@@ -74,16 +77,15 @@ class FirestoreService {
 
       return dataList;
     } catch(e) {
-      print(e.toString());
+      debugPrint(e.toString());
       return [];
     }
   }
 
   Future<void> setDocument(String collection, String id, Map<String, dynamic> data) async {
-
     final docRef = _db.collection(collection).doc(id);
     try {
-      await docRef.set(data);
+      await docRef.set(data, SetOptions(merge: true));
       debugPrint('Saved successfully!');
     } catch (e) {
       debugPrint('Error saving business: $e');
