@@ -1,11 +1,12 @@
+
 import 'package:core/models/category_model.dart';
+import 'package:core/repositories/category_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 import '../entity/category_entity.dart';
-import '../repository/category_repository.dart';
 
 part 'category_controller.g.dart';
 
@@ -20,8 +21,8 @@ class CategoryController extends _$CategoryController {
   }
 
   Future<void> getAllCategoiescontroller(String businessId) async {
-    final categoryRepo = ref.read(CategoryRepositoryProvider);
-    List<CategoryModel> result = await categoryRepo.getAllCategoriesrepo(businessId);
+    final categoryRepo = ref.read(categoryRepositoryProvider);
+    List<CategoryModel> result = await categoryRepo.getAllCategories(businessId);
     if(result.isNotEmpty){
       CategoryModel firstCat = result.first;
       firstCat.isOpened = true;
@@ -39,14 +40,14 @@ class CategoryController extends _$CategoryController {
     }
     if(businessId.isNotEmpty){
       Fluttertoast.showToast(msg: "save succesfully");
-      final categoryRepo = ref.read(CategoryRepositoryProvider);
+      final categoryRepo = ref.read(categoryRepositoryProvider);
       CategoryModel category = CategoryModel(
           globalKey: GlobalKey(), 
           categoryId: _generateRequestId(), 
           categoryName: name, 
           businessId: businessId
       );
-      await categoryRepo.addCategoryrepo(category);
+      await categoryRepo.addCategory(category);
     }else{
       Fluttertoast.showToast(msg: 'Business Id not found');
     }
@@ -57,14 +58,14 @@ class CategoryController extends _$CategoryController {
       Fluttertoast.showToast(msg: 'Please enter category name');
       return;
     }
-   final categoryRepo = ref.read(CategoryRepositoryProvider);
-    await categoryRepo.updateCategorynamefromrepo(categoryId, name);
+   final categoryRepo = ref.read(categoryRepositoryProvider);
+    await categoryRepo.updateCategoryName(categoryId, name);
   }
 
   Future deleteCategoryfromcontroller(String categoryId) async {
     Fluttertoast.showToast(msg: 'category is deleted');
-    final categoryRepo = ref.read(CategoryRepositoryProvider);
-    await categoryRepo.deleteCategoryfromrepo(categoryId);
+    final categoryRepo = ref.read(categoryRepositoryProvider);
+    await categoryRepo.deleteCategory(categoryId);
   }
 
   String _generateRequestId() {

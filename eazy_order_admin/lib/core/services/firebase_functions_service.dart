@@ -4,7 +4,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:core/core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class FirebaseFunctionsService {
   final FirebaseFunctions _functions = FirebaseFunctions.instanceFor(region: 'us-central1');
@@ -105,8 +104,4 @@ class FirebaseFunctionsService {
       print('Error sending message: ${response.body}');
     }
   }
-
 }
-
-// Firestore Service provider
-final firebaseFunctionsServiceProvider = Provider((ref) => FirebaseFunctionsService());
