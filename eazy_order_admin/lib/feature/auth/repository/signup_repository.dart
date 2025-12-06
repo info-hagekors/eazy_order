@@ -31,14 +31,12 @@ class SignupRepository {
     return Right(user);
   }
 
-  void sendPhoneOtp(String mobile, Function(String)? onCodeSent) {
-    _authService.sendPhoneOtp(mobile, onCodeSent: (verificationId) {
-      onCodeSent?.call(verificationId);
-    });
+  Future sendPhoneOtp(String mobile) async {
+    await _authService.sendPhoneOtpWeb(mobile);
   }
 
   Future<Either<String, UserModel>> loginWithPhone(String verificationId, String otp) async {
-    final result = await _authService.loginWithPhone(verificationId, otp);
+    final result = await _authService.loginWithPhoneWeb(verificationId, otp);
     return result;
   }
 

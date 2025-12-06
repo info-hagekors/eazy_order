@@ -36,4 +36,11 @@ class UserController extends _$UserController {
       isLoading: false,
     );
   }
+
+  Future createUser(UserModel user) async {
+    final userRepo = ref.read(userRepositoryProvider);
+    final businessId = ref.read(mainScreenControllerProvider.notifier).businessId;
+    final result = await userRepo.createUser(user, businessId);
+    return result;
+  }
 }

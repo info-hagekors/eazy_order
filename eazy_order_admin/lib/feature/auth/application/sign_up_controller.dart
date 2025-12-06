@@ -101,13 +101,11 @@ class SignUpController extends _$SignUpController {
       return;
     }
     final signupRepo = ref.read(signupRepositoryProvider);
-    signupRepo.sendPhoneOtp('+91${state.mobile}', (verificationId) {
-      state = state.copyWith(
-          currentStep: 2,
-          isLoading1: false,
-          verificationId: verificationId
-      );
-    });
+    await signupRepo.sendPhoneOtp('+91${state.mobile}');
+    state = state.copyWith(
+      currentStep: 2,
+      isLoading1: false,
+    );
   }
 
   void onStep2NextClick() async {

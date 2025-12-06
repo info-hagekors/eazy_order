@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:core/models/create_user_response_model.dart';
 import 'package:core/models/user_model.dart';
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class AuthService {
@@ -24,6 +27,10 @@ class AuthService {
 
   User? _currentUser;
   User? get currentUser => _currentUser;
+
+  ConfirmationResult? _confirmation;
+
+  static const String baseUrl = "https://us-central1-eazy-order-fcb5b.cloudfunctions.net/api";
 
   final StreamController<User?> _userController = StreamController<User?>.broadcast();
   Stream<User?> get userStream => _userController.stream;
@@ -73,6 +80,11 @@ class AuthService {
     );
   }
 
+  Future sendPhoneOtpWeb(String phoneNumber) async {
+    final confirmationResult = await FirebaseAuth.instance.signInWithPhoneNumber(phoneNumber);
+    _confirmation = confirmationResult;
+  }
+
   Future<Either<String, UserModel>> loginWithPhone(String verificationId, String otp) async {
     try {
       final credential = PhoneAuthProvider.credential(
@@ -81,6 +93,22 @@ class AuthService {
       );
 
       final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      UserModel userModel = UserModel(
+        uid: userCredential.user?.uid ?? '',
+      );
+      _currentUser = FirebaseAuth.instance.currentUser;
+      return Right(userModel);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, UserModel>> loginWithPhoneWeb(String verificationId, String otp) async {
+    try {
+      final userCredential = await _confirmation?.confirm(otp);
+      if (userCredential == null) {
+        return Left('Invalid Otp...');
+      }
       UserModel userModel = UserModel(
         uid: userCredential.user?.uid ?? '',
       );
@@ -193,11 +221,32 @@ class AuthService {
       final userList = UserModel.parseList(result);
       return userList;
     } catch (e) {
-      print('Error fetching users: $e');
+      debugPrint('Error fetching users: $e');
       return [];
     }
   }
 
+  Future<CreateUserResponseModel> createUser({required UserModel model}) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/createUser"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        "name": model.name,
+        "email": model.email,
+        "phone": model.mobile,
+        "role": model.role,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      final err = jsonDecode(response.body);
+      throw Exception(err["error"] ?? "User creation failed");
+    }
+
+    return CreateUserResponseModel.fromJson(jsonDecode(response.body));
+  }
 
   void _onAuthStateChanged(User? user) {
     _currentUser = user;

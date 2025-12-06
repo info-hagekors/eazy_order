@@ -1,3 +1,4 @@
+/*
 import 'package:eazy_order_go/core/services/firestore_service.dart';
 import 'package:core/core.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,3 +61,4 @@ class CategoryRepository {
 
 // Auth Repository provider
 final categoryRepositoryProvider = Provider((ref) => CategoryRepository(ref.read(firestoreServiceProvider)));
+*/

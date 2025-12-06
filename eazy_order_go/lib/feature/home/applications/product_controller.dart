@@ -58,7 +58,8 @@ class ProductController extends _$ProductController {
             state.images, businessId);
       }
       
-      final categoryRepo = ref.read(categoryRepositoryProvider);
+      //final categoryRepo = ref.read(categoryRepositoryProvider);
+      final productRepo = ref.read(productRepositoryProvider);
       ProductModel product = ProductModel(
         businessId: businessId,
         categoryId: categoryId,
@@ -69,7 +70,7 @@ class ProductController extends _$ProductController {
         isActive: true,
         imageUrls: imageUrls
       );
-      await categoryRepo.addProduct(product);
+      await productRepo.addProduct(product);
       state = state.copyWith(
         images: [],
         productName: '',
@@ -89,7 +90,7 @@ class ProductController extends _$ProductController {
       String productId,
       bool value
       ) async {
-    final categoryRepo = ref.read(categoryRepositoryProvider);
+    final productRepo = ref.read(productRepositoryProvider);
     final updatedProducts = category.products.map((e) {
       if (e.productId == productId) {
         e.isActive = value;
@@ -97,14 +98,14 @@ class ProductController extends _$ProductController {
       return e;
     }).toList();
     ref.read(categoryControllerProvider.notifier).updateCategory(productId, value);
-    await categoryRepo.updateProducts(category.categoryId, updatedProducts.map((e) => e.toMap()).toList());
+    await productRepo.updateProducts(category.categoryId, updatedProducts.map((e) => e.toMap()).toList());
   }
 
   Future deleteProduct(CategoryModel category, String productId) async {
-    final categoryRepo = ref.read(categoryRepositoryProvider);
+    final productRepo = ref.read(productRepositoryProvider);
     final updatedProducts = category.products.where((e) => e.productId != productId).toList();
     ref.read(categoryControllerProvider.notifier).deleteProductFromCategory(updatedProducts, productId);
-    await categoryRepo.updateProducts(category.categoryId, updatedProducts.map((e) => e.toMap()).toList());
+    await productRepo.updateProducts(category.categoryId, updatedProducts.map((e) => e.toMap()).toList());
   }
 
   String _generateRequestId() {

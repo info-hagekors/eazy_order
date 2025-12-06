@@ -20,7 +20,7 @@ class _UserScreenState extends ConsumerState<UserScreen> {
 
   @override
   void initState() {
-    //ref.read(userControllerProvider.notifier).getUserData();
+    ref.read(userControllerProvider.notifier).getUserData();
     super.initState();
   }
 
@@ -78,9 +78,11 @@ class _UserScreenState extends ConsumerState<UserScreen> {
                 items: state.usersList,
                 columns: [
                   DataColumn(label: Text('Name'), columnWidth: FlexColumnWidth(3),),
-                  DataColumn(label: Text('Email'), columnWidth: FlexColumnWidth(2)),
+                  DataColumn(label: Text('Email'), columnWidth: FlexColumnWidth(3)),
                   DataColumn(label: Text('Mobile'), columnWidth: FlexColumnWidth(1)),
                   DataColumn(label: Text('Role'), columnWidth: FlexColumnWidth(1)),
+                  DataColumn(label: Text('Email Verified'), columnWidth: FlexColumnWidth(1)),
+                  DataColumn(label: Text('Phone Verified'), columnWidth: FlexColumnWidth(1)),
                   DataColumn(label: Align(alignment: Alignment.center, child: Text('Action')), columnWidth: FlexColumnWidth(1)),
                 ],
                 buildRows: (items) => items.map((user) {
@@ -90,6 +92,8 @@ class _UserScreenState extends ConsumerState<UserScreen> {
                     DataCell(Text(user.email ?? '')),
                     DataCell(Text(user.mobile ?? '')),
                     DataCell(Text(user.role.capitalize() ?? '')),
+                    DataCell(Text(user.isEmailVerified ? 'Yes' : 'No')),
+                    DataCell(Text(user.isMobileVerified ? 'Yes' : 'No')),
                     DataCell(
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -119,11 +123,12 @@ class _UserScreenState extends ConsumerState<UserScreen> {
       context: context,
       builder: (_) => AddUserDialog(
         onCreate: (userData) async {
-          // Save to Firestore or backend
-          //await FirebaseFirestore.instance.collection('users').add(userData);
+          await ref.read(userControllerProvider.notifier).createUser(userData);
         },
       ),
-    );
+    ).then((val) {
+      ref.read(userControllerProvider.notifier).getUserData();
+    });
   }
 
 
@@ -207,64 +212,5 @@ class CommonDataTable<T> extends StatelessWidget {
     );
   }
 }
-
-final List<Map<String, dynamic>> dummyUsers = [
-  {
-    'id': 'u1',
-    'name': 'Alice Johnson',
-    'email': 'alice@example.com',
-    'role': 'Admin',
-    'status': 'Active',
-    'createdAt': DateTime(2024, 5, 1),
-  },
-  {
-    'id': 'u2',
-    'name': 'Bob Smith',
-    'email': 'bob@example.com',
-    'role': 'Manager',
-    'status': 'Inactive',
-    'createdAt': DateTime(2024, 6, 12),
-  },
-  {
-    'id': 'u3',
-    'name': 'Charlie Kumar',
-    'email': 'charlie@example.com',
-    'role': 'Staff',
-    'status': 'Active',
-    'createdAt': DateTime(2024, 7, 5),
-  },
-  {
-    'id': 'u4',
-    'name': 'Diana Patel',
-    'email': 'diana@example.com',
-    'role': 'Support',
-    'status': 'Pending',
-    'createdAt': DateTime(2024, 3, 20),
-  },
-  {
-    'id': 'u5',
-    'name': 'Edward Nair',
-    'email': 'edward@example.com',
-    'role': 'Staff',
-    'status': 'Active',
-    'createdAt': DateTime(2024, 7, 10),
-  },
-  {
-    'id': 'u6',
-    'name': 'Fatima Rahman',
-    'email': 'fatima@example.com',
-    'role': 'Admin',
-    'status': 'Inactive',
-    'createdAt': DateTime(2024, 1, 3),
-  },
-  {
-    'id': 'u7',
-    'name': 'George Fernandes',
-    'email': 'george@example.com',
-    'role': 'Manager',
-    'status': 'Active',
-    'createdAt': DateTime(2024, 6, 20),
-  },
-];
 
 

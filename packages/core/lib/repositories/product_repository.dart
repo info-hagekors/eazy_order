@@ -39,6 +39,10 @@ class ProductRepository{
     final data = result.map((e)=> ProductModel.fromJson(e)).toList();
     return data;
   }
+
+  Future updateProducts(String categoryId, List<Map<String, dynamic>> products) async {
+    await _firestoreService.updateListDocument(FirestoreService.collectionCatalog, categoryId, 'products', products);
+  }
 }
 
 final productRepositoryProvider = Provider((ref)=> ProductRepository(ref.read(firestoreServiceProvider)));

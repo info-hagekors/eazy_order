@@ -1,9 +1,10 @@
 import 'package:core/core.dart';
+import 'package:eazy_order_admin/core/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddUserDialog extends StatefulWidget {
-  final Function(Map<String, dynamic>) onCreate;
+  final Function(UserModel) onCreate;
 
   const AddUserDialog({super.key, required this.onCreate});
 
@@ -27,16 +28,13 @@ class _CreateUserDialogState extends State<AddUserDialog> {
       _formKey.currentState?.save();
       setState(() => isLoading = true);
 
-      final newUser = {
-        'name': name,
-        'email': email,
-        'role': role,
-        'createdAt': DateTime.now(),
-      };
+      final user = UserModel(
+        name: name, email: email, mobile: mobile, role: role, createdAt: DateTime.now().toIso8601String()
+      );
 
-      await widget.onCreate(newUser);
+      await widget.onCreate(user);
 
-      if (context.mounted) Navigator.of(context).pop();
+      if (context.mounted) Navigator.of(navigatorKey.currentContext!).pop();
     }
   }
 
