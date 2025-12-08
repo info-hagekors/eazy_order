@@ -92,7 +92,7 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
                     // Capitalize the first letter and keep rest as typed
                     final capitalized =
                         val[0].toUpperCase() + val.substring(1);
-                    controller.onNameChanges(capitalized);
+                      controller.onNameChanges(capitalized);
                   } else {
                     controller.onNameChanges('');
                   }

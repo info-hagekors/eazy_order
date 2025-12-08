@@ -78,7 +78,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         selectedScreen = CategoryScreen(businessId: '708100e7-1eef-41f9-8f66-f8173dfb41d7');    // for catalog screen
         break;
       case 4:
-        selectedScreen = ProductScreen();   //for product screen
+        selectedScreen = ProductScreen(businessId: '708100e7-1eef-41f9-8f66-f8173dfb41d7', categoryId: '');   //for product screen
         break;
       case 5:
         selectedScreen = DashboardScreen();   //for order screen

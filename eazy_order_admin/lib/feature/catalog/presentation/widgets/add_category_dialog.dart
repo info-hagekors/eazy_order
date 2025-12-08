@@ -1,5 +1,6 @@
 import 'package:core/config/app_colors.dart';
 import 'package:core/widgets/app_button.dart';
+import 'package:eazy_order_admin/core/routing/app_router.dart';
 import 'package:eazy_order_admin/feature/catalog/application/category_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -154,19 +155,11 @@ class _CategoryDialogState extends ConsumerState<AddCategoryDialog> {
               final text = categoryCtrl.text.trim();
 
               if (isEdit) {
-                await controller.updateCategoryfromcontroller(
-                  text,
-                  widget.categoryId,
-                );
+                await controller.updateCategoryfromcontroller(text, widget.categoryId,);
               } else {
-                await controller.savaCategorycontroller(
-                  text,
-                  widget.businessId,
-                );
+                await controller.savaCategorycontroller(text, widget.businessId,);
               }
-              await controller.getAllCategoiescontroller(widget.businessId);
-
-              Navigator.pop(context);
+              ref.read(goRouterProvider).pop();
             },
           ),
         ),

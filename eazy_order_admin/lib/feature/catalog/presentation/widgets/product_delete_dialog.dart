@@ -1,20 +1,31 @@
 import 'package:core/config/app_colors.dart';
+import 'package:eazy_order_admin/feature/catalog/application/product_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProductDeleteDialog extends StatelessWidget {
+class ProductDeleteDialog extends ConsumerWidget {
   final String productName;
+  final String productId;
+  final String businessId;
 
-  const ProductDeleteDialog({super.key, required this.productName});
+  const ProductDeleteDialog({
+    super.key,
+    required this.productName,
+    required this.productId,
+    required this.businessId,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = ref.watch(productControllerProvider.notifier);
     return AlertDialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 35, vertical: 24),
       backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
       contentPadding: const EdgeInsets.all(23),
       content: SizedBox(
+
         width: 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -81,7 +92,17 @@ class ProductDeleteDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(18),
                     ),
                   ),
-                  onPressed: () => Navigator.pop(context, true),
+                  onPressed: () async {
+                    // 1. Delete product
+                    await ref.read(productControllerProvider.notifier)
+                        .deleteProductfromcontroller(productId);
+
+                    // 2. Refresh list
+                    await controller.getAllProductfromController(businessId);
+
+                    // 3. Close dialog and return true
+                    Navigator.pop(context, true);
+                  },
                   child: Text(
                     'Delete',
                     style: GoogleFonts.poppins(
@@ -90,7 +111,7 @@ class ProductDeleteDialog extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ],

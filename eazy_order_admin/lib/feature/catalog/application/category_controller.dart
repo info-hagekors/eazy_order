@@ -41,11 +41,13 @@ class CategoryController extends _$CategoryController {
     if(businessId.isNotEmpty){
       Fluttertoast.showToast(msg: "save succesfully");
       final categoryRepo = ref.read(categoryRepositoryProvider);
+
       CategoryModel category = CategoryModel(
-          globalKey: GlobalKey(), 
-          categoryId: _generateRequestId(), 
-          categoryName: name, 
-          businessId: businessId
+        globalKey: GlobalKey(),
+        categoryId: _generateRequestId(),
+        categoryName: name,
+        businessId: businessId,
+        isActive: true
       );
       await categoryRepo.addCategory(category);
     }else{
@@ -63,9 +65,9 @@ class CategoryController extends _$CategoryController {
   }
 
   Future deleteCategoryfromcontroller(String categoryId) async {
-    Fluttertoast.showToast(msg: 'category is deleted');
     final categoryRepo = ref.read(categoryRepositoryProvider);
     await categoryRepo.deleteCategory(categoryId);
+    Fluttertoast.showToast(msg: 'category is deleted');
   }
 
   String _generateRequestId() {

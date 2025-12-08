@@ -275,13 +275,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                             categoryId: cat.categoryId,
                                           ),
                                         );
-
-                                        if (result != null &&
-                                            result.isNotEmpty) {
-                                          controller.updateCategoryfromcontroller(cat.categoryId,result);
-                                        }
-
-                                         controller.getAllCategoiescontroller(widget.businessId);
+                                        controller.getAllCategoiescontroller(widget.businessId);
                                       },
                                     ),
                                     IconButton(

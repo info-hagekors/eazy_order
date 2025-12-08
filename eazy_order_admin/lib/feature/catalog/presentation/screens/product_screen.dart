@@ -1,29 +1,72 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core/config/app_colors.dart';
 import 'package:core/widgets/app_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../application/product_controller.dart';
 import '../widgets/add_product_dialog.dart';
 import '../widgets/edit_product_dialog.dart';
 import '../widgets/product_delete_dialog.dart';
 
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key});
+class ProductScreen extends ConsumerStatefulWidget {
+
+  final String businessId;
+  final String categoryId;
+
+  const ProductScreen({
+    super.key,
+    required this.businessId,
+    required this.categoryId
+  });
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  ConsumerState<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
-  List products = [];
+class _ProductScreenState extends ConsumerState<ProductScreen> {
+
+  List product = [];
   List filteredProducts = [];
 
   final searchController = TextEditingController();
 
+/*
+  void _loadFromController() {
+    final state = ref.read(productControllerProvider);
+
+    // Filter by current category here
+    final controllerProducts = state.products
+        .where((p) => p.categoryId == widget.categoryId)
+        .toList();
+
+    setState(() {
+      product = controllerProducts.map((p) {
+        return {
+          "id": p.productId,
+          "name": p.productName,
+          "category": p.categoryName, // or categoryName if you have it
+          "price": p.price,
+          "imageUrls": p.imageUrls,
+        };
+      }).toList();
+
+      filteredProducts = product;
+    });
+  }
+*/
+
+
   @override
   void initState() {
     super.initState();
-    filteredProducts = products;
-    searchController.addListener(_filterProducts);
+    Future.microtask(() async {
+      await ref.read(productControllerProvider.notifier)
+          .getAllProductfromController(widget.businessId);
+      _filterProducts();
+      searchController.addListener(_filterProducts);
+    });
   }
+
 
   @override
   void dispose() {
@@ -33,48 +76,42 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   void _filterProducts() {
+    final state = ref.read(productControllerProvider);
+
+    final allProductsForCategory = state.products;
+
+
+// apply search filter
     final query = searchController.text.toLowerCase();
+
     setState(() {
       filteredProducts = query.isEmpty
-          ? products
-          : products
-          .where((p) =>
-      p["name"].toLowerCase().contains(query) ||
-          p["category"].toLowerCase().contains(query) ||
-          p["price"].toString().contains(query))
-          .toList();
+          ? allProductsForCategory
+          : allProductsForCategory.where((p) {
+        final name = p.productName.toLowerCase();
+        final category = p.categoryName.toLowerCase(); // or categoryName if you have one
+        final price = p.price.toString();
+
+        return name.contains(query) ||
+            category.contains(query) ||
+            price.contains(query);
+        }).toList();
     });
   }
 
-  // OPEN ADD PRODUCT DIALOG
-  void openAddProductDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AddProductDialog(
-        onSave: (product) {
-          setState(() => products.add(product));
-          _filterProducts();
-        },
-      ),
-    );
-  }
 
-  // OPEN EDIT PRODUCT DIALOG
-  void openEditProductDialog(int index) {
-    showDialog(
-      context: context,
-      builder: (context) => EditProductDialog(
-        product: products[index],
-        onUpdate: (updatedProduct) {
-          setState(() => products[index] = updatedProduct);
-          _filterProducts();
-        },
-      ),
-    );
+  Future loadProducts() async {
+    await ref
+        .read(productControllerProvider.notifier)
+        .getAllProductfromController(widget.businessId);
+
+    _filterProducts();
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller= ref.read(productControllerProvider.notifier);
+    final state = ref.watch(productControllerProvider);
     return Scaffold(
       backgroundColor: const Color(0xfff8f8fb),
       body: SingleChildScrollView(
@@ -173,7 +210,17 @@ class _ProductScreenState extends State<ProductScreen> {
                           height: 40,
                           child: AppButton(
                             text: "+  Add Product",
-                            onPressed: openAddProductDialog,
+                            onPressed: () async{
+                              final result = await showDialog(
+                                  context: context,
+                                  builder: (context)=> AddProductDialog(
+                                      businessId: widget.businessId
+                                  )
+                              );
+                              if(result == true){
+                                await loadProducts();
+                              }
+                            },
                             color: AppColors.link,
                             width: 170,
                             height: 40,
@@ -239,25 +286,60 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                       ],
                       rows: filteredProducts.map((product) {
-                        int index = products.indexOf(product);
-
                         return DataRow(
                           cells: [
                             DataCell(
                               SizedBox(
-                                width: 50,
-                                child: Image.asset(
-                                  product["image"],
+                                width: 60,
+                                height: 50,
+                                child: (product.imageUrls != null && product.imageUrls.isNotEmpty)
+                                    ? CarouselSlider(
+                                  options: CarouselOptions(
+                                    height: 50,
+                                    autoPlay: true,
+                                    viewportFraction: 1,
+                                    enableInfiniteScroll: true,
+                                    autoPlayInterval: const Duration(seconds: 2),
+                                    autoPlayAnimationDuration: const Duration(seconds: 2),
+                                    scrollPhysics: const NeverScrollableScrollPhysics(),
+                                  ),
+                                  items: product.imageUrls.map<Widget>((imageUrls) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: Image.network(
+                                        imageUrls,
+                                        width: 60,
+                                        height: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                                    : Container(
                                   width: 60,
-                                  height: 60,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: AppColors.background2,
+                                  ),
+                                  child: const Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: 20,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                             ),
-                            DataCell(Text(product["name"])),
-                            DataCell(Text(product["category"])),
+                            DataCell(Text(product.productName)),
+                            DataCell(Text(
+                                product.categoryName.isNotEmpty
+                            ? product.categoryName
+                            : product.categoryId
+                            ),
+                            ),
                             DataCell(
                               Text(
-                                "₹ ${product["price"]}",
+                                "₹ ${product.price}",
                                 style: const TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold,
@@ -272,19 +354,36 @@ class _ProductScreenState extends State<ProductScreen> {
                                     IconButton(
                                       icon: const Icon(Icons.edit,
                                           color: Colors.blue),
-                                      onPressed: () =>
-                                          openEditProductDialog(index),
+                                      onPressed: ()async {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context)=> EditProductDialog(
+                                                businessId: widget.businessId,
+                                                product: product
+                                            )
+                                        );
+                                      },
                                     ),
                                     IconButton(
                                       icon: const Icon(Icons.delete,
                                           color: Colors.red),
+
                                       onPressed: () async{
-                                        final confirm= await showDialog(
-                                            context: context,
-                                            builder: (context)=>ProductDeleteDialog(productName: '',),);
-                                        if(confirm == true){
+                                        final result= await showDialog(
+                                          context: context,
+                                          builder: (context)=>ProductDeleteDialog(
+                                            productId: product.productId,
+                                            businessId: widget.businessId,
+                                            productName: product.productName,
+                                          ),
+                                        );
+                                        if(result == true){
+
+
+                                         await controller.deleteProductfromcontroller(product.productId);
+
+                                          await controller.getAllProductfromController(widget.businessId);
                                           setState(() {
-                                            products.remove(product);
                                             _filterProducts();
                                           });
                                         }

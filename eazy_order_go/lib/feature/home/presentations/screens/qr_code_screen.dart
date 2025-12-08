@@ -108,7 +108,7 @@ class _QrCodeScreenState extends ConsumerState<QrCodeScreen> {
             Spacer(),
             SizedBox(height: 32.h,),
             Text(
-              'Powered by Hagekors Technolabs',
+              '© 2025 Eazy Order ❤️ by Hagekors Technolabs',
               style: GoogleFonts.robotoMono(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w700,

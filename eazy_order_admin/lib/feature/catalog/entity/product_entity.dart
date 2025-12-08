@@ -1,36 +1,17 @@
-import 'package:image_picker/image_picker.dart';
+import 'package:core/core.dart';
 
 class ProductEntity {
-  final List<XFile> images;
-  final String productName;
-  final double price;
-  final String desc;
-  final bool isValid;
-  final bool isLoading;
+  final List<ProductModel> products;
 
   ProductEntity({
-    this.images= const[],
-    this.productName= '',
-    this.price=0.0,
-    this.desc='',
-    this.isValid=false,
-    this.isLoading=false,
-});
+    this.products = const [],
+  });
+
   ProductEntity copyWith({
-  List<XFile>? images,
-    String? productName,
-    double? price,
-    String? desc,
-    bool? isvalid,
-    bool? isLoading})
-  {
-  return  ProductEntity(
-    images: images ?? this.images,
-    productName: productName?? this.productName,
-    price: price ?? this.price,
-    desc: desc ?? this.desc,
-    isValid: isvalid ?? this.isValid,
-    isLoading: isLoading ?? this.isLoading
+    List<ProductModel>? products,
+  }) {
+    return ProductEntity(
+      products: products ?? this.products,
     );
   }
 }
