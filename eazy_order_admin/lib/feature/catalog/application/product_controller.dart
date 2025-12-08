@@ -1,99 +1,97 @@
-
-import 'package:core/models/category_model.dart';
+// application/product_controller.dart
+import 'dart:typed_data';
+import 'package:core/core.dart';
+import 'package:core/models/category_model.dart'; // contains ProductModel
 import 'package:core/repositories/product_repository.dart';
-import 'package:core/services/firebase_storage_service.dart';
 import 'package:eazy_order_admin/feature/catalog/entity/product_entity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 part "product_controller.g.dart";
 
 @riverpod
-class ProductController extends _$ProductController{
+class ProductController extends _$ProductController {
+  final _uuid = const Uuid();
+
   @override
-  ProductEntity build(){
+  ProductEntity build() {
+    // keep provider alive across UI changes
     ref.keepAlive();
     return ProductEntity();
   }
 
-/*  void pickImages() async {
-    final images = await ref.read(firebaseStorageServiceProvider).pickImageFromGallery();
-    List<XFile> prevImages = [...state.images, ...images];
-    state = state.copyWith(images: prevImages.sublist(prevImages.length > 5 ? prevImages.length -5 : 0));
-    validate();
-  }*/
 
-  void onNameChanges(String name){
-    state = state.copyWith(productName: name);
-    validate();
-  }
-
-  void onPriceChanges(String price){
-    state = state.copyWith(price: double.tryParse(price) ?? 0.0);
-    validate();
-  }
-
-  void onDescChanges(String desc) {
-    state = state.copyWith(desc: desc);
-  }
-
-  void validate() {
-    state =state.copyWith(isvalid: state.images.isNotEmpty && state.productName.isNotEmpty && state.price > 0);
-  }
-
-  Future saveProduct(String businessId, String categoryId) async {
-    if (businessId.isNotEmpty) {
-      state = state.copyWith(isLoading: true);
-      List<String> imageUrls = [];
-      if (state.images.isNotEmpty) {
-        imageUrls = await ref.read(firebaseStorageServiceProvider).uploadMultipleProductImages(
-            state.images, businessId);
-      }
-
+  Future<void> getAllProductfromController(String businessId) async {
+    try {
       final productRepo = ref.read(productRepositoryProvider);
-      ProductModel product = ProductModel(
-          businessId: businessId,
-          categoryId: categoryId,
-          productId: _generateRequestId(),
-          productName: state.productName,
-          price: state.price,
-          description: state.desc,
-          isActive: true,
-          imageUrls: imageUrls
-      );
-      await productRepo.addProduct(product);
-      state = state.copyWith(
-        images: [],
-        productName: '',
-        price: 0.0,
-        desc: '',
-        isLoading: false,
-      );
-    } else {
-      Fluttertoast.showToast(msg: 'Business Id not found');
+      final products = await productRepo.getAllProducts(businessId);
+
+      state = state.copyWith(products: products);
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Failed to load products");
     }
   }
 
-
-
-
-/*
-  Future deleteProduct(ProductModel product, String productId) async {
+  /// Save product. Optional images can be passed; controller uploads them and sets imageUrls.
+  Future saveProductfromcontroller(
+    String productName,
+    String businessId,
+    String categoryId,
+    String categoryName,
+    String price,
+    String description,
+    List<Uint8List> images,
+  ) async {
+    if (productName.trim().isEmpty) {
+      Fluttertoast.showToast(msg: "Please enter product name");
+      return;
+    }
+    if (businessId.trim().isEmpty) {
+      Fluttertoast.showToast(msg: "businessId not found");
+      return;
+    }
     final productRepo = ref.read(productRepositoryProvider);
-    final updatedProducts = product.productId.where((e) => e.productId != productId).toList();
-    ref.read(categoryControllerProvider.notifier).deleteCategoryfromcontroller(updatedProducts);
-    await productRepo.updateProduct(product.categoryId, updatedProducts.map((e) => e.toMap()).toList());
+    final storage = ref.read(firebaseStorageServiceProvider);
+    final productId = _uuid.v4();
+
+    List<String> uploadedUrls = [];
+    if (images.isNotEmpty) {
+      final imageFiles = images.map((bytes)=> XFile.fromData(
+        bytes,
+      name: '${productId}_${_uuid.v4()}.jpg')).toList();
+      uploadedUrls = await storage.uploadMultipleProductImages(imageFiles, businessId,);
+    }
+    final product = ProductModel(
+      productId: productId,
+      productName: productName,
+      businessId: businessId,
+      categoryName: categoryName,
+      categoryId: categoryId,
+      description: description,
+      price: double.tryParse(price) ?? 0.0,
+      isActive: true,
+      imageUrls: uploadedUrls,
+      quantity: 0,
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
+    );
+    await productRepo.addProduct(product);
+
+    state = state.copyWith(products: [product, ...state.products],);
+    Fluttertoast.showToast(msg: "product Added");
+
   }
-*/
 
-
-  String _generateRequestId() {
-    return const Uuid().v4();
+  Future<void> deleteProductfromcontroller(String productId) async {
+    try {
+      final productRepo = ref.read(productRepositoryProvider);
+      await productRepo.deleteProduct(productId);
+      state = state.copyWith(products: state.products.where((p) => p.productId != productId).toList());
+      Fluttertoast.showToast(msg: "Product deleted");
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Failed to delete product");
+    }
   }
-
-
-
-
-
 }
