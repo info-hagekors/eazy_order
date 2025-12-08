@@ -1,12 +1,9 @@
 
-import 'package:core/models/category_model.dart';
-import 'package:core/repositories/category_repository.dart';
+import 'package:core/core.dart';
+import 'package:eazy_order_admin/feature/catalog/entity/category_entity.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
-import '../entity/category_entity.dart';
 
 part 'category_controller.g.dart';
 
@@ -20,28 +17,21 @@ class CategoryController extends _$CategoryController {
     return CategoryEntity();
   }
 
-  Future<void> getAllCategoiescontroller(String businessId) async {
+  Future<void> getAllCategories(String businessId) async {
     final categoryRepo = ref.read(categoryRepositoryProvider);
     List<CategoryModel> result = await categoryRepo.getAllCategories(businessId);
-    if(result.isNotEmpty){
-      CategoryModel firstCat = result.first;
-      firstCat.isOpened = true;
-      result[0]= firstCat;
-    }
     state = state.copyWith(
       categoriesList: result
     );
   }
 
-  Future savaCategorycontroller(String name, String businessId) async {
+  Future savaCategory(String name, String businessId) async {
     if(name.isEmpty){
-      Fluttertoast.showToast(msg: "please enter category name");
+      ToastUtils.error('Please enter category name...');
       return;
     }
     if(businessId.isNotEmpty){
-      Fluttertoast.showToast(msg: "save succesfully");
       final categoryRepo = ref.read(categoryRepositoryProvider);
-
       CategoryModel category = CategoryModel(
         globalKey: GlobalKey(),
         categoryId: _generateRequestId(),
@@ -51,27 +41,39 @@ class CategoryController extends _$CategoryController {
       );
       await categoryRepo.addCategory(category);
     }else{
-      Fluttertoast.showToast(msg: 'Business Id not found');
+      ToastUtils.error('Something went wrong...');
     }
   }
 
-  Future updateCategoryfromcontroller(String name, String categoryId) async {
+  Future updateCategory(String name, String categoryId) async {
     if(name.isEmpty) {
-      Fluttertoast.showToast(msg: 'Please enter category name');
+      ToastUtils.error('Please enter category name...');
       return;
     }
-   final categoryRepo = ref.read(categoryRepositoryProvider);
+    final categoryRepo = ref.read(categoryRepositoryProvider);
     await categoryRepo.updateCategoryName(categoryId, name);
   }
 
-  Future deleteCategoryfromcontroller(String categoryId) async {
+  Future deleteCategory(String categoryId) async {
     final categoryRepo = ref.read(categoryRepositoryProvider);
     await categoryRepo.deleteCategory(categoryId);
-    Fluttertoast.showToast(msg: 'category is deleted');
+    ToastUtils.success('Category deleted successfully...');
   }
 
   String _generateRequestId() {
     return const Uuid().v4();
+  }
+
+  Future onActiveInActive(String categoryId, bool val) async {
+    List<CategoryModel> list = state.categoriesList.toList();
+    list = list.map((e) {
+      if(e.categoryId == categoryId) {
+        e.isActive = val;
+      }
+      return e;
+    }).toList();
+    state = state.copyWith(categoriesList: list);
+    await ref.read(categoryRepositoryProvider).setActiveInActive(categoryId, val);
   }
 }
 

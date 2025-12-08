@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/material.dart';
 
 class CategoryModel {
@@ -31,7 +30,7 @@ class CategoryModel {
       categoryId: json['category_id'] ?? '',
       categoryName: json['category_name'] ?? '',
       businessId: json['business_id'] ?? '',
-      isActive: json['ia_active'] ?? false,
+      isActive: json['is_active'] ?? false,
       products: List<ProductModel>.from(json['products']?.map((x) => ProductModel.fromJson(x)) ?? []),
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
@@ -43,11 +42,16 @@ class CategoryModel {
       'category_id': categoryId,
       'category_name': categoryName,
       'business_id': businessId,
-      'ia_active': isActive,
+      'is_active': isActive,
       'products': products.map((x) => x.toMap()).toList(),
       'created_at': createdAt,
       'updated_at': updatedAt,
     };
+  }
+
+  @override
+  String toString() {
+    return 'CategoryModel(globalKey: $globalKey, categoryId: $categoryId, categoryName: $categoryName, businessId: $businessId, isActive: $isActive, products: $products, isOpened: $isOpened, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }
 
@@ -88,7 +92,7 @@ class ProductModel {
       businessId: json['business_id'] ?? '',
       description: json['description'] ?? '',
       price: json['price']?.toDouble() ?? 0.0,
-      isActive: json['ia_active'] ?? false,
+      isActive: json['is_active'] ?? false,
       imageUrls: List<String>.from(json['image_urls'] ?? []),
       quantity: json['quantity'] ?? 0,
       createdAt: json['created_at'] ?? '',
@@ -104,7 +108,7 @@ class ProductModel {
       'business_id': businessId,
       'description': description,
       'price': price,
-      'ia_active': isActive,
+      'is_active': isActive,
       'image_urls': imageUrls,
       'created_at': createdAt,
       'updated_at': updatedAt,

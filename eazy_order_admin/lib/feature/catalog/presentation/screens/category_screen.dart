@@ -1,5 +1,5 @@
-import 'package:core/config/app_colors.dart';
-import 'package:core/widgets/app_button.dart';
+
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/category_controller.dart';
@@ -16,22 +16,21 @@ class CategoryScreen extends ConsumerStatefulWidget {
 
 class _CategoryScreenState extends ConsumerState<CategoryScreen> {
   final TextEditingController searchCtrl = TextEditingController();
-  List filteredList = [];
-
+  List<CategoryModel> filteredList = [];
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
-      ref.read(categoryControllerProvider.notifier).getAllCategoiescontroller(widget.businessId);
+      ref.read(categoryControllerProvider.notifier).getAllCategories(widget.businessId);
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     final categoryState = ref.watch(categoryControllerProvider);
     final controller = ref.read(categoryControllerProvider.notifier);
     final categories = categoryState.categoriesList;
-
 
     filteredList = searchCtrl.text.isEmpty ? categories : categories
         .where((c) => c.categoryName.toLowerCase().contains(searchCtrl.text.toLowerCase()))
@@ -129,7 +128,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                               ),
                             );
                             if (result != null) {
-                              controller.getAllCategoiescontroller(widget.businessId);
+                              controller.getAllCategories(widget.businessId);
                             }
                           },
                           color: AppColors.link,
@@ -148,14 +147,6 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                       : Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text(
-                        "Search :  ",
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-
                       SizedBox(
                         height: 40,
                         width: 220,
@@ -186,7 +177,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                               ),
                             );
                             if (result != null) {
-                              controller.getAllCategoiescontroller(widget.businessId);
+                              controller.getAllCategories(widget.businessId);
                             }
                           },
                           color: AppColors.link,
@@ -238,8 +229,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                         color: Colors.grey.shade300,
                       ),
                       headingRowColor:
-                      MaterialStateProperty.all(
-                          Colors.grey.shade100),
+                      WidgetStateProperty.all(Colors.grey.shade100),
 
                       columns: const [
                         DataColumn(
@@ -262,12 +252,26 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                             DataCell(
                                 Row(
                                   children: [
+                                    Checkbox(
+                                      value: cat.isActive,
+                                      onChanged: (val) {
+                                        filteredList = filteredList.map((e) {
+                                          if(e.categoryId == cat.categoryId) {
+                                            e.isActive = val ?? false;
+                                          }
+                                          return e;
+                                        }).toList();
+                                        //ToDo::: Needs to remove
+                                        setState(() { });
+                                        ref.read(categoryControllerProvider.notifier).onActiveInActive(cat.categoryId, val ?? false);
+                                      },
+                                    ),
                                     IconButton(
                                       icon: const Icon(
                                           Icons.edit,
                                           color: Colors.blue),
                                       onPressed: () async {
-                                        final result = await showDialog<String>(
+                                        final result = await showDialog(
                                           context: context,
                                           builder: (_) => AddCategoryDialog(
                                             businessId: widget.businessId,
@@ -275,7 +279,9 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                             categoryId: cat.categoryId,
                                           ),
                                         );
-                                        controller.getAllCategoiescontroller(widget.businessId);
+                                        if (result != null) {
+                                          controller.getAllCategories(widget.businessId);
+                                        }
                                       },
                                     ),
                                     IconButton(
@@ -290,14 +296,10 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                               categoryName: cat.categoryName,
                                             ),
                                         );
-
-
-                                      if(result == true){
-                                       await ref.read(categoryControllerProvider.notifier).
-                                       deleteCategoryfromcontroller(cat.categoryId);
-
-                                       controller.getAllCategoiescontroller(widget.businessId);
-                                      }
+                                        if(result == true){
+                                          await ref.read(categoryControllerProvider.notifier).deleteCategory(cat.categoryId);
+                                          await controller.getAllCategories(widget.businessId);
+                                        }
                                      },
                                     ),
                                   ],

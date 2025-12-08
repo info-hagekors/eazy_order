@@ -155,11 +155,11 @@ class _CategoryDialogState extends ConsumerState<AddCategoryDialog> {
               final text = categoryCtrl.text.trim();
 
               if (isEdit) {
-                await controller.updateCategoryfromcontroller(text, widget.categoryId,);
+                await controller.updateCategory(text, widget.categoryId,);
               } else {
-                await controller.savaCategorycontroller(text, widget.businessId,);
+                await controller.savaCategory(text, widget.businessId,);
               }
-              ref.read(goRouterProvider).pop();
+              ref.read(goRouterProvider).pop(true);
             },
           ),
         ),
