@@ -95,10 +95,10 @@ class ProductDeleteDialog extends ConsumerWidget {
                   onPressed: () async {
                     // 1. Delete product
                     await ref.read(productControllerProvider.notifier)
-                        .deleteProductfromcontroller(productId);
+                        .deleteProduct(productId);
 
                     // 2. Refresh list
-                    await controller.getAllProductfromController(businessId);
+                    await controller.getAllProducts(businessId);
 
                     // 3. Close dialog and return true
                     Navigator.pop(context, true);

@@ -1,8 +1,9 @@
-// application/product_controller.dart
+
 import 'dart:typed_data';
 import 'package:core/core.dart';
 import 'package:core/models/category_model.dart'; // contains ProductModel
 import 'package:core/repositories/product_repository.dart';
+import 'package:eazy_order_admin/feature/catalog/application/category_controller.dart';
 import 'package:eazy_order_admin/feature/catalog/entity/product_entity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,20 +23,29 @@ class ProductController extends _$ProductController {
     return ProductEntity();
   }
 
-
-  Future<void> getAllProductfromController(String businessId) async {
+  Future<void> getAllProducts(String businessId) async {
     try {
       final productRepo = ref.read(productRepositoryProvider);
       final products = await productRepo.getAllProducts(businessId);
+      final categories = ref.read(categoryControllerProvider).categoriesList;
+      List<ProductModel> updatedResult = products;
+      for (int i = 0; i <categories.length; i++) {
+        final category = categories[i];
+        updatedResult = updatedResult.map((e) {
+          if (e.categoryId == category.categoryId) {
+            e.categoryName = category.categoryName;
+          }
+          return e;
+        }).toList();
+      }
 
-      state = state.copyWith(products: products);
+      state = state.copyWith(products: updatedResult);
     } catch (e) {
-      Fluttertoast.showToast(msg: "Failed to load products");
+      ToastUtils.error('Failed to load products');
     }
   }
 
-  /// Save product. Optional images can be passed; controller uploads them and sets imageUrls.
-  Future saveProductfromcontroller(
+  Future saveProduct(
     String productName,
     String businessId,
     String categoryId,
@@ -58,10 +68,7 @@ class ProductController extends _$ProductController {
 
     List<String> uploadedUrls = [];
     if (images.isNotEmpty) {
-      final imageFiles = images.map((bytes)=> XFile.fromData(
-        bytes,
-      name: '${productId}_${_uuid.v4()}.jpg')).toList();
-      uploadedUrls = await storage.uploadMultipleProductImages(imageFiles, businessId,);
+      uploadedUrls = await storage.uploadMultipleProductImagesWeb(images, businessId,);
     }
     final product = ProductModel(
       productId: productId,
@@ -80,11 +87,52 @@ class ProductController extends _$ProductController {
     await productRepo.addProduct(product);
 
     state = state.copyWith(products: [product, ...state.products],);
-    Fluttertoast.showToast(msg: "product Added");
-
+    Fluttertoast.showToast(msg: "Product added successfully...");
   }
 
-  Future<void> deleteProductfromcontroller(String productId) async {
+  Future updateProduct(
+      String productId,
+      String productName,
+      String businessId,
+      String categoryId,
+      String categoryName,
+      String price,
+      String description,
+      ) async {
+    if (productName.trim().isEmpty) {
+      Fluttertoast.showToast(msg: "Please enter product name");
+      return;
+    }
+    if (businessId.trim().isEmpty) {
+      Fluttertoast.showToast(msg: "businessId not found");
+      return;
+    }
+    final productRepo = ref.read(productRepositoryProvider);
+
+    final product = ProductModel(
+      productId: productId,
+      productName: productName,
+      businessId: businessId,
+      categoryName: categoryName,
+      categoryId: categoryId,
+      description: description,
+      price: double.tryParse(price) ?? 0.0,
+      isActive: true,
+    );
+    await productRepo.updateProduct(product);
+
+    state = state.copyWith(
+      products: state.products.map((e) {
+        if (e.productId == productId) {
+          return product;
+        }
+        return e;
+      }).toList()
+    );
+    Fluttertoast.showToast(msg: "Product updated successfully...");
+  }
+
+  Future<void> deleteProduct(String productId) async {
     try {
       final productRepo = ref.read(productRepositoryProvider);
       await productRepo.deleteProduct(productId);
@@ -93,5 +141,17 @@ class ProductController extends _$ProductController {
     } catch (e) {
       Fluttertoast.showToast(msg: "Failed to delete product");
     }
+  }
+
+  Future onActiveInActive(String productId, bool val) async {
+    List<ProductModel> list = state.products.toList();
+    list = list.map((e) {
+      if(e.productId == productId) {
+        e.isActive = val;
+      }
+      return e;
+    }).toList();
+    state = state.copyWith(products: list);
+    await ref.read(productRepositoryProvider).setActiveInActive(productId, val);
   }
 }

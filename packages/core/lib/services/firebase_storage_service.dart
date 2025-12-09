@@ -1,8 +1,11 @@
 
-import 'dart:io';
+import 'dart:io' as io;
+import 'package:mime/mime.dart';
+import 'package:web/web.dart' as web;
 
 import 'package:core/core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -34,8 +37,15 @@ class FirebaseStorageService {
   Future<String?> uploadBusinessImage(XFile imageFile, String mobile) async {
     try {
       final storageRef = _storage.ref().child('$_businessImagePath/$mobile');
-      await storageRef.putFile(File(imageFile.path));
-      return await storageRef.getDownloadURL();
+      if (kIsWeb) {
+        final bytes = await imageFile.readAsBytes();
+        //final metadata = SettableMetadata(contentType: 'image/jpeg',);
+        await storageRef.putData(bytes);
+        return await storageRef.getDownloadURL();
+      } else {
+        await storageRef.putFile(io.File(imageFile.path));
+        return await storageRef.getDownloadURL();
+      }
     } catch (e) {
       debugPrint('Upload error: $e');
       return null;
@@ -49,8 +59,39 @@ class FirebaseStorageService {
       final file = imageFiles[i];
       final uniqueId = const Uuid().v4();
       try {
+        if (kIsWeb) {
+          final storageRef = _storage.ref().child('$_productImagePath/$businessId/$uniqueId');
+          final bytes = await file.readAsBytes();
+          final mime = lookupMimeType('Image', headerBytes: bytes);
+          final metadata = SettableMetadata(contentType: mime ?? 'image/jpeg',);
+          await storageRef.putData(bytes, metadata);
+          final url = await storageRef.getDownloadURL();
+          downloadUrls.add(url);
+        } else {
+          final storageRef = _storage.ref().child('$_productImagePath/$businessId/$uniqueId');
+          await storageRef.putFile(io.File(file.path));
+          final url = await storageRef.getDownloadURL();
+          downloadUrls.add(url);
+        }
+      } catch (e) {
+        debugPrint('Upload error for image $i: $e');
+        // Optionally continue or break here depending on failure handling strategy
+      }
+    }
+    return downloadUrls;
+  }
+
+  Future<List<String>> uploadMultipleProductImagesWeb(List<Uint8List> imageFiles, String businessId,) async {
+    List<String> downloadUrls = [];
+
+    for (int i = 0; i < imageFiles.length; i++) {
+      final file = imageFiles[i];
+      final uniqueId = const Uuid().v4();
+      try {
         final storageRef = _storage.ref().child('$_productImagePath/$businessId/$uniqueId');
-        await storageRef.putFile(File(file.path));
+        final mime = lookupMimeType('Image', headerBytes: file);
+        final metadata = SettableMetadata(contentType: mime ?? 'image/jpeg',);
+        await storageRef.putData(file, metadata);
         final url = await storageRef.getDownloadURL();
         downloadUrls.add(url);
       } catch (e) {

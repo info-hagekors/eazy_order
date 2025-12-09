@@ -67,11 +67,8 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
   }
 
   Future pickMultipleImages() async {
-    // If already 3 images → do not allow more
     if (pickedImages.length >= 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You can upload maximum 3 images")),
-      );
+      ToastUtils.error("You can upload maximum 3 images");
       return;
     }
 
@@ -84,22 +81,16 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
     if (result != null && result.files.isNotEmpty) {
       // LIMIT: remaining allowed images
       int remaining = 3 - pickedImages.length;
-
       // take only allowed amount
       final newImages = result.files.take(remaining).toList();
-
       setState(() {
-        pickedImages.addAll(newImages.map((f) => f.bytes!).toList());
+        pickedImages.addAll(newImages.map((f) => f.bytes ?? Uint8List(0)).toList());
       });
 
       // If user picked more than allowed → show message
       if (result.files.length > remaining) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Only 3 images allowed")));
+        ToastUtils.error('Only 3 images allowed');
       }
-
-      _carouselController.animateToPage(pickedImages.length - 1);
     }
   }
 
@@ -512,7 +503,7 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
             );
             final selectedCategoryName = selCat.categoryName;
 
-            await controller.saveProductfromcontroller(
+            await controller.saveProduct(
               nameController.text,
               widget.businessId,
               selectedCategoryId!,
