@@ -448,28 +448,15 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
 
               Text('Description', style: labelStyle),
               SizedBox(
+                height: 120,
                 width: double.infinity,
-                child: TextField(
+                child: CommonTextFormField(
                   controller: descriptionController,
+                  hintText: " Enter product description",
                   keyboardType: TextInputType.multiline,
-                  minLines: 4,
-                  maxLines: 8,
-                  expands: false,
-                  decoration: InputDecoration(
-                    hintText: " Enter product description",
-                    hintStyle: GoogleFonts.poppins(fontSize: 15),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(
-                        color: AppColors.primaryButtonColor,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
+                  maxLines: 8, // ✅ multiline support
+                  onChanged: (value) {},
+                )
               ),
             ],
           ),
