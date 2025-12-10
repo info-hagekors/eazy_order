@@ -9,7 +9,7 @@ class ProductEntity {
   final bool isValid;
   final bool isLoading;
 
-  ProductEntity({
+    ProductEntity({
     this.images = const [],
     this.productName = '',
     this.price = 0.0,

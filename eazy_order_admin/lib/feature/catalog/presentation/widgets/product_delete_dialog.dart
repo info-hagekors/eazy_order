@@ -108,7 +108,7 @@ class ProductDeleteDialog extends ConsumerWidget {
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                   ),
                 )

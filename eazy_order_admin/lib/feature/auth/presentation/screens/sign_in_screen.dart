@@ -25,8 +25,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Responsive.isDesktop(context)
-      ?Colors.transparent
-      :Colors.white,   //this is for mobile.....
+      ?AppColors.transparent
+      :AppColors.white,   //this is for mobile.....
       body: Stack(
         children: [
           // 🔵 Background Image
@@ -94,7 +94,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           flex: 2,
           child: Container(
             height: double.infinity,
-            color: Colors.white,
+            color: AppColors.white,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

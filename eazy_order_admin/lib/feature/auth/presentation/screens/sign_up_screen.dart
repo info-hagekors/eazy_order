@@ -91,7 +91,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           flex: 2,
           child: Container(
             height: double.infinity,
-            color: Colors.white,
+            color: AppColors.white,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

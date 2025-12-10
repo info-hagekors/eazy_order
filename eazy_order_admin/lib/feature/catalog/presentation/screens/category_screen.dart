@@ -54,7 +54,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                     vertical: 18, horizontal: 20),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: AppColors.grey300),
                 ),
                 child: const Text(
                   "Categories",
@@ -77,7 +77,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 color: AppColors.white,
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: AppColors.grey300),
               ),
               child: LayoutBuilder(
                 builder: (context, constraints) {
@@ -137,7 +137,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                           borderRadius: 8,
                           textStyle: const TextStyle(
                             fontSize: 14,
-                            color: Colors.white,
+                            color: AppColors.white,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -186,7 +186,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                           borderRadius: 8,
                           textStyle: const TextStyle(
                             fontSize: 14,
-                            color: Colors.white,
+                            color: AppColors.white,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -216,38 +216,37 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                   ),
                 )
 
-                    : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    color: AppColors.white,
-                    width: 1230,
-                    child: DataTable(
-                      columnSpacing: 60,
-                      headingRowHeight: 46,
-                      dataRowHeight: 56,
-                      border: TableBorder.all(
-                        color: Colors.grey.shade300,
-                      ),
-                      headingRowColor:
-                      WidgetStateProperty.all(Colors.grey.shade100),
-
-                      columns: const [
-                        DataColumn(
-                          label: SizedBox(
-                              width: 200,
-                              child: Text("Category Name",style: TextStyle(fontSize: 16.5))),
+                    : Container(
+                      color: AppColors.white,
+                      width: double.infinity,
+                      child: DataTable(
+                        columnSpacing: 24,
+                        headingRowHeight: 46,
+                        dataRowHeight: 56,
+                        border: TableBorder.all(
+                          color: AppColors.grey300,
                         ),
-                        DataColumn(
-                          label: SizedBox(
-                              width: 120,
-                              child: Text("Action",style: TextStyle(fontSize: 16.5))),
-                        ),
-                      ],
+                        headingRowColor:
+                        MaterialStateProperty.all(
+                            AppColors.grey100),
 
-                      rows: filteredList.map((cat) {
-                        return DataRow(
-                          cells: [
-                            DataCell(Text(cat.categoryName)),
+                        columns: const [
+                          DataColumn(
+                            label: SizedBox(
+                                width: 200,
+                                child: Text("Category Name",style: TextStyle(fontSize: 16.5))),
+                          ),
+                          DataColumn(
+                            label: SizedBox(
+                                width: 120,
+                                child: Text("Action",style: TextStyle(fontSize: 16.5))),
+                          ),
+                        ],
+
+                        rows: filteredList.map((cat) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Text(cat.categoryName)),
 
                             DataCell(
                                 Row(

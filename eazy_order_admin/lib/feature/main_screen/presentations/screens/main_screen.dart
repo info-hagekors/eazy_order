@@ -7,11 +7,12 @@ import 'package:eazy_order_admin/feature/dashboard/application/menu_app_controll
 import 'package:eazy_order_admin/feature/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:eazy_order_admin/feature/dashboard/presentation/widgets/side_menu.dart';
 import 'package:eazy_order_admin/feature/main_screen/applications/main_screen_controller.dart';
+import 'package:eazy_order_admin/feature/profile/presentations/screen/profile_drawer.dart';
 import 'package:eazy_order_admin/feature/user/presentations/screens/user_screen.dart';
 import 'package:eazy_order_admin/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-//import 'package:provider/provider.dart';
+
 
 
 class MainScreen extends ConsumerStatefulWidget {
@@ -42,7 +43,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     return Scaffold(
       key: MenuAppController.scaffoldKey,
       backgroundColor: AppColors.background3,
-
+      endDrawer: const ProfileDrawer(),
       // Drawer appears ONLY on small screens
       drawer: isDesktop ? null : SideMenu(onItemClick: onMenuClick),
 

@@ -96,7 +96,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: AppColors.grey300),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -120,7 +120,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: AppColors.grey300),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +131,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade400),
+                            border: Border.all(color: AppColors.grey400),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: DropdownButton<int>(
@@ -196,7 +196,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                             borderRadius: 8,
                             textStyle: const TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
+                              color: AppColors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),

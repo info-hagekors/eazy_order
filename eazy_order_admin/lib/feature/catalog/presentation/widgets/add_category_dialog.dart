@@ -86,10 +86,10 @@ class _CategoryDialogState extends ConsumerState<AddCategoryDialog> {
                 decoration: InputDecoration(
                   hintText: "Enter Category Name",
                   filled: true,
-                  fillColor: Colors.grey.shade100,
+                  fillColor: AppColors.grey100,
                   contentPadding:
                   const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  labelStyle: TextStyle(color: Colors.grey.shade600),
+                  labelStyle: TextStyle(color: AppColors.grey600),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5),
                     borderSide: BorderSide(color: AppColors.background2),

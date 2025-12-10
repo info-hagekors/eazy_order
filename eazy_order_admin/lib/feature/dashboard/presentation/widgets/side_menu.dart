@@ -35,7 +35,7 @@ class _SideMenuState extends State<SideMenu> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white,
               border: Border(
                 bottom: BorderSide(
                   color: AppColors.black12,
@@ -64,28 +64,18 @@ class _SideMenuState extends State<SideMenu> {
                 ),
 
                 // 🔽 CATALOG MAIN TILE (Expandable)
-                ListTile(
-                  onTap: () {
-                    setState(() => catalogExpanded = !catalogExpanded);
-                  },
-                  horizontalTitleGap: 10,
-                  leading: SvgPicture.asset(
-                    "assets/icons/menu_store.svg",
-                    height: 16,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.primaryColor,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-                  title: Text(
-                    "Catalog",
-                    style: TextStyle(color: AppColors.primaryColor),
-                  ),
+                DrawerListTile(
+                  title: "Catalog",
+                  svgSrc: "assets/icons/menu_store.svg",
                   trailing: Icon(
                     catalogExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
                     color: AppColors.primaryColor,
                   ),
+                  press: () {
+                    setState(() =>  catalogExpanded = !catalogExpanded);
+                  },
                 ),
+
 
                 // 🔥 SUBMENU (Category + Product)
                 AnimatedContainer(
@@ -143,25 +133,34 @@ class DrawerListTile extends StatelessWidget {
     required this.title,
     required this.svgSrc,
     required this.press,
+    this.trailing,
   });
 
   final String title, svgSrc;
   final VoidCallback press;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: press,
       horizontalTitleGap: 10,
+      visualDensity: const VisualDensity(horizontal: -2),
       leading: SvgPicture.asset(
-        svgSrc,
-        colorFilter: ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
         height: 16,
+        svgSrc,
+        colorFilter: ColorFilter.mode(
+            AppColors.primaryColor,
+            BlendMode.srcIn
+        ),
       ),
       title: Text(
         title,
-        style: TextStyle(color: AppColors.primaryColor),
+        style: TextStyle(
+            color: AppColors.primaryColor
+        ),
       ),
+      trailing: trailing,
     );
   }
 }
