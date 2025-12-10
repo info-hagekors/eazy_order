@@ -1,11 +1,17 @@
-class ProductEntity {
+class ProfileEntity {
   final String username;
   final String role;
 
-  ProductEntity({this.username = "", this.role = ""});
+  ProfileEntity({
+    this.username = "",
+    this.role = ""
+  });
 
-  ProductEntity copyWith({String? username, String? role}) {
-    return ProductEntity(
+  ProfileEntity copyWith({
+    String? username,
+    String? role
+  }) {
+    return ProfileEntity(
       username: username ?? this.username,
       role: role ?? this.role,
     );

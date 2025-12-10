@@ -72,7 +72,14 @@ class _SideMenuState extends State<SideMenu> {
                     color: AppColors.primaryColor,
                   ),
                   press: () {
-                    setState(() =>  catalogExpanded = !catalogExpanded);
+                    if (!catalogExpanded) {
+                      // First click → open Category screen
+                      widget.onItemClick(3); // Category index
+                    }
+
+                    setState(() {
+                      catalogExpanded = !catalogExpanded;
+                    });
                   },
                 ),
 

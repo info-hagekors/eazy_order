@@ -166,14 +166,15 @@ class CommonDataTable<T> extends StatelessWidget {
           child: DataTable2(
             columns: columns,
             rows: buildRows(items),
+            dataRowColor: WidgetStatePropertyAll(AppColors.white),
             columnSpacing: 12,
             horizontalMargin: 12,
             minWidth: 600,
             empty: Center(child: Text('No Data Found.!'),),
             clipBehavior: Clip.antiAliasWithSaveLayer,
-            headingRowColor: WidgetStatePropertyAll(AppColors.primaryColor),
+            headingRowColor: WidgetStatePropertyAll(AppColors.white),
             headingTextStyle: GoogleFonts.poppins(
-              color: AppColors.white,
+              color: AppColors.black,
               fontSize: 16
             ),
             dataTextStyle: GoogleFonts.poppins(
@@ -185,8 +186,8 @@ class CommonDataTable<T> extends StatelessWidget {
             ),
             border: TableBorder.symmetric(
               outside: BorderSide(
-                color: AppColors.primaryColor,
-                width: 2,
+                color: AppColors.black26,
+                width: 1,
               ),
               borderRadius: BorderRadius.all(Radius.circular(5)),
             ),

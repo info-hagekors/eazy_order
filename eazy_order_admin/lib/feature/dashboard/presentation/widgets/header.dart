@@ -1,9 +1,9 @@
-
 import 'package:core/core.dart';
 import 'package:eazy_order_admin/constants.dart';
 import 'package:eazy_order_admin/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../application/menu_app_controller.dart';
 //import 'package:provider/provider.dart';
@@ -30,8 +30,12 @@ class Header extends StatelessWidget {
         if (!Responsive.isMobile(context))
           Text(
             "Hi ,  Welcome to Eazy Order ",
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,color: AppColors.primaryColor
+            style: Theme
+                .of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(
+                fontWeight: FontWeight.bold, color: AppColors.primaryColor
             ),
           ),
         if (!Responsive.isMobile(context))
@@ -42,6 +46,7 @@ class Header extends StatelessWidget {
     );
   }
 }
+
 class SearchField extends StatelessWidget {
   const SearchField({
     Key? key,
@@ -83,6 +88,7 @@ class SearchField extends StatelessWidget {
     );
   }
 }
+
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
     Key? key,
@@ -100,20 +106,20 @@ class ProfileCard extends StatelessWidget {
           MenuAppController.scaffoldKey.currentState?.openEndDrawer();
           debugPrint("Profile clicked");
         } else if (value == 1) {
-          // 👉 Logout logic
-          debugPrint("Logout clicked");
+          Fluttertoast.showToast(msg: "Logout clicked");
         }
       },
-      itemBuilder: (context) =>  [
+      itemBuilder: (context) =>
+      [
         PopupMenuItem<int>(
           value: 0,
           child: SizedBox(
             width: 150,
             child: Row(
               children: [
-                Icon(Icons.person_outline, size: 20,color: AppColors.black,),
+                Icon(Icons.person_outline, size: 20, color: AppColors.black,),
                 SizedBox(width: 20),
-                Text("Profile",style: TextStyle(color: AppColors.black)),
+                Text("Profile", style: TextStyle(color: AppColors.black)),
               ],
             ),
           ),
@@ -145,7 +151,7 @@ class ProfileCard extends StatelessWidget {
           color: AppColors.white,
           borderRadius: const BorderRadius.all(Radius.circular(5)),
           border: Border.all(
-              color: AppColors.black12,
+            color: AppColors.black12,
           ),
           boxShadow: [
             BoxShadow(
@@ -177,13 +183,13 @@ class ProfileCard extends StatelessWidget {
             if (!Responsive.isMobile(context))
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+                const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
                 child: SizedBox(
                   width: 110,
                   child: Text("Angelina Jolie",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: AppColors.black),),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: AppColors.black),),
                 ),
               ),
             Icon(Icons.keyboard_arrow_down, color: AppColors.black,),
