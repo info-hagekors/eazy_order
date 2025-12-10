@@ -9,6 +9,9 @@ class AppColors
   static const Color accentColor = Color(0xffF1E3D3);
 
   static const Color black = Colors.black;
+  static const Color black45 = Colors.black45;
+  static const Color black38 = Colors.black38;
+  static const Color black26 = Colors.black26;
   static const Color white = Colors.white;
   static const Color black12 = Colors.black12;
   static const Color transparent = Colors.transparent;
@@ -44,6 +47,14 @@ class AppColors
   static const Color link = Color(0xff0077b6);
   static const Color red = Colors.red;
   static const Color grey = Colors.grey;
+  static const Color grey50 = Color(0xFFFAFAFA);
+  static const Color grey100 = Color(0xFFF5F5F5);
+  static const Color grey300 = Color(0xFFE0E0E0);
+  static const Color grey400 = Color(0xFFBDBDBD);
+  static const Color grey600 = Color(0xFF757575);
+
+  static const Color blue = Colors.blue;
+
 
   static const Color verifyGreen = Color(0xff269A47);
 }

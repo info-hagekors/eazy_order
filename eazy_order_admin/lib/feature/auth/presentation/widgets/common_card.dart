@@ -1,3 +1,4 @@
+import 'package:core/config/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CommonCard extends StatelessWidget {
@@ -49,13 +50,13 @@ class CommonCard extends StatelessWidget {
           side: BorderSide(
               width: 1,
               color: Theme.of(context).cardTheme?.surfaceTintColor ??
-                  Colors.transparent),
+                  AppColors.transparent),
           borderRadius: BorderRadius.circular(2),
         ),
         shadows: [
           BoxShadow(
             color:
-                Theme.of(context).cardTheme?.shadowColor ?? Colors.transparent,
+                Theme.of(context).cardTheme?.shadowColor ?? AppColors.transparent,
             blurRadius: 13,
             offset: Offset(0, 8),
             spreadRadius: -3,

@@ -52,7 +52,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   Widget _webUI() {
     return Container(
       alignment: Alignment.center,
-      color: Colors.grey.shade50,
+      color: AppColors.grey50,
       child: _commonUI(),
     );
   }

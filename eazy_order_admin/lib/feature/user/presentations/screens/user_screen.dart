@@ -130,8 +130,6 @@ class _UserScreenState extends ConsumerState<UserScreen> {
       ref.read(userControllerProvider.notifier).getUserData();
     });
   }
-
-
 }
 
 class CommonDataTable<T> extends StatelessWidget {

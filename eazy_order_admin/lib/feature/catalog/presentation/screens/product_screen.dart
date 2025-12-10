@@ -30,32 +30,6 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
 
   final searchController = TextEditingController();
 
-/*
-  void _loadFromController() {
-    final state = ref.read(productControllerProvider);
-
-    // Filter by current category here
-    final controllerProducts = state.products
-        .where((p) => p.categoryId == widget.categoryId)
-        .toList();
-
-    setState(() {
-      product = controllerProducts.map((p) {
-        return {
-          "id": p.productId,
-          "name": p.productName,
-          "category": p.categoryName, // or categoryName if you have it
-          "price": p.price,
-          "imageUrls": p.imageUrls,
-        };
-      }).toList();
-
-      filteredProducts = product;
-    });
-  }
-*/
-
-
   @override
   void initState() {
     super.initState();
@@ -127,7 +101,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: AppColors.grey300),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,7 +125,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: AppColors.white,
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: AppColors.grey300),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,7 +136,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade400),
+                            border: Border.all(color: AppColors.grey400),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: DropdownButton<int>(
@@ -227,7 +201,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                             borderRadius: 8,
                             textStyle: const TextStyle(
                               fontSize: 14,
-                              color: Colors.white,
+                              color: AppColors.white,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -253,152 +227,150 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                     ),
                   ),
                 )
-                    : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    color: AppColors.white,
-                    width: 1230,
-                    child: DataTable(
-                      columnSpacing: 60,
-                      headingRowHeight: 46,
-                      dataRowHeight: 56,
-                      border: TableBorder.all(
-                        color: Colors.grey.shade300,
-                      ),
-                      headingRowColor: MaterialStateProperty.all(
-                          Colors.grey.shade100),
-                      columns: [
-                        DataColumn(
-                          label: SizedBox(width: 50, child: Text("Image")),
+                    : Container(
+                      color: AppColors.white,
+                      width: double.infinity,
+                      child: DataTable(
+                        columnSpacing: 24,
+                        headingRowHeight: 46,
+                        dataRowHeight: 56,
+                        border: TableBorder.all(
+                          color: AppColors.grey300,
                         ),
-                        DataColumn(
-                          label: SizedBox(width: 180, child: Text("Name")),
-                        ),
-                        DataColumn(
-                          label:
-                          SizedBox(width: 120, child: Text("Category")),
-                        ),
-                        DataColumn(
-                          label: SizedBox(width: 100, child: Text("Price")),
-                        ),
-                        DataColumn(
-                          label: SizedBox(width: 70, child: Text("Action")),
-                        ),
-                      ],
-                      rows: filteredProducts.map((product) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              SizedBox(
-                                width: 60,
-                                height: 50,
-                                child: (product.imageUrls != null && product.imageUrls.isNotEmpty)
-                                    ? CarouselSlider(
-                                  options: CarouselOptions(
-                                    height: 50,
-                                    autoPlay: true,
-                                    viewportFraction: 1,
-                                    enableInfiniteScroll: true,
-                                    autoPlayInterval: const Duration(seconds: 2),
-                                    autoPlayAnimationDuration: const Duration(seconds: 2),
-                                    scrollPhysics: const NeverScrollableScrollPhysics(),
-                                  ),
-                                  items: product.imageUrls.map<Widget>((imageUrls) {
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: Image.network(
-                                        imageUrls,
-                                        width: 60,
-                                        height: 50,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                  }).toList(),
-                                )
-                                    : Container(
+                        headingRowColor: MaterialStateProperty.all(
+                            AppColors.grey100),
+                        columns: [
+                          DataColumn(
+                            label: SizedBox(width: 50, child: Text("Image")),
+                          ),
+                          DataColumn(
+                            label: SizedBox(width: 180, child: Text("Name")),
+                          ),
+                          DataColumn(
+                            label:
+                            SizedBox(width: 120, child: Text("Category")),
+                          ),
+                          DataColumn(
+                            label: SizedBox(width: 100, child: Text("Price")),
+                          ),
+                          DataColumn(
+                            label: SizedBox(width: 70, child: Text("Action")),
+                          ),
+                        ],
+                        rows: filteredProducts.map((product) {
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                SizedBox(
                                   width: 60,
                                   height: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: AppColors.background2,
-                                  ),
-                                  child: const Icon(
-                                    Icons.image_not_supported_outlined,
-                                    size: 20,
-                                    color: Colors.grey,
+                                  child: (product.imageUrls != null && product.imageUrls.isNotEmpty)
+                                      ? CarouselSlider(
+                                    options: CarouselOptions(
+                                      height: 50,
+                                      autoPlay: true,
+                                      viewportFraction: 1,
+                                      enableInfiniteScroll: true,
+                                      autoPlayInterval: const Duration(seconds: 2),
+                                      autoPlayAnimationDuration: const Duration(seconds: 2),
+                                      scrollPhysics: const NeverScrollableScrollPhysics(),
+                                    ),
+                                    items: product.imageUrls.map<Widget>((imageUrls) {
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: Image.network(
+                                          imageUrls,
+                                          width: 60,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      );
+                                    }).toList(),
+                                  )
+                                      : Container(
+                                    width: 60,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: AppColors.background2,
+                                    ),
+                                    child: const Icon(
+                                      Icons.image_not_supported_outlined,
+                                      size: 20,
+                                      color: AppColors.grey,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            DataCell(Text(product.productName)),
-                            DataCell(Text(
-                                product.categoryName.isNotEmpty
-                            ? product.categoryName
-                            : product.categoryId
-                            ),
-                            ),
-                            DataCell(
-                              Text(
-                                "₹ ${product.price}",
-                                style: const TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
+                              DataCell(Text(product.productName)),
+                              DataCell(Text(
+                                  product.categoryName.isNotEmpty
+                              ? product.categoryName
+                              : product.categoryId
+                              ),
+                              ),
+                              DataCell(
+                                Text(
+                                  "₹ ${product.price}",
+                                  style: const TextStyle(
+                                    color: AppColors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            DataCell(
-                              SizedBox(
-                                width: 82,
-                                child: Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          color: Colors.blue),
-                                      onPressed: ()async {
-                                        showDialog(
+                              DataCell(
+                                SizedBox(
+                                  width: 82,
+                                  child: Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit,
+                                            color: AppColors.link
+                                        ),
+                                        onPressed: ()async {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context)=> EditProductDialog(
+                                                  businessId: widget.businessId,
+                                                  product: product
+                                              )
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete,
+                                            color: AppColors.red),
+
+                                        onPressed: () async{
+                                          final result= await showDialog(
                                             context: context,
-                                            builder: (context)=> EditProductDialog(
-                                                businessId: widget.businessId,
-                                                product: product
-                                            )
-                                        );
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: Colors.red),
-
-                                      onPressed: () async{
-                                        final result= await showDialog(
-                                          context: context,
-                                          builder: (context)=>ProductDeleteDialog(
-                                            productId: product.productId,
-                                            businessId: widget.businessId,
-                                            productName: product.productName,
-                                          ),
-                                        );
-                                        if(result == true){
+                                            builder: (context)=>ProductDeleteDialog(
+                                              productId: product.productId,
+                                              businessId: widget.businessId,
+                                              productName: product.productName,
+                                            ),
+                                          );
+                                          if(result == true){
 
 
-                                         await controller.deleteProductfromcontroller(product.productId);
+                                           await controller.deleteProductfromcontroller(product.productId);
 
-                                          await controller.getAllProductfromController(widget.businessId);
-                                          setState(() {
-                                            _filterProducts();
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                            await controller.getAllProductfromController(widget.businessId);
+                                            setState(() {
+                                              _filterProducts();
+                                            });
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
+                            ],
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ),
               ),
             ],
           ),

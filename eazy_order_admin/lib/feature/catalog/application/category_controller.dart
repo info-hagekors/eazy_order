@@ -39,9 +39,8 @@ class CategoryController extends _$CategoryController {
       return;
     }
     if(businessId.isNotEmpty){
-      Fluttertoast.showToast(msg: "save succesfully");
       final categoryRepo = ref.read(categoryRepositoryProvider);
-
+      Fluttertoast.showToast(msg: "save succesfully");
       CategoryModel category = CategoryModel(
         globalKey: GlobalKey(),
         categoryId: _generateRequestId(),

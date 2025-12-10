@@ -228,7 +228,7 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
                           color:
                           isHovering
                               ? AppColors.white.withAlpha(174)
-                              : Colors.transparent,
+                              : AppColors.transparent,
                           shape: BoxShape.circle,
                         ),
                         child: Stack(
@@ -245,7 +245,7 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
                                         onTap: pickMultipleImages,
                                         child: CircleAvatar(
                                           radius: 16,
-                                          backgroundColor: Colors.black,
+                                          backgroundColor: AppColors.black,
                                           child: Icon(
                                             Icons.add,
                                             color: AppColors.white,
@@ -263,7 +263,7 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
                                       onTap: deleteCurrentImage,
                                       child: CircleAvatar(
                                         radius: 16,
-                                        backgroundColor: Colors.black,
+                                        backgroundColor: AppColors.black,
                                         child: Icon(
                                           Icons.delete,
                                           color: AppColors.red,

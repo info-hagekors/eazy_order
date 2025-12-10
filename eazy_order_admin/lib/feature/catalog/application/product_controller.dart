@@ -79,7 +79,7 @@ class ProductController extends _$ProductController {
     );
     await productRepo.addProduct(product);
 
-    state = state.copyWith(products: [product, ...state.products],);
+    state = state.copyWith(products: [product, ...state.products]);
     Fluttertoast.showToast(msg: "product Added");
 
   }
