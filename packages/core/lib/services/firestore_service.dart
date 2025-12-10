@@ -64,12 +64,40 @@ class FirestoreService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> querySnapshotListData(String collection, String field, String value) async {
+  Future<List<Map<String, dynamic>>> querySnapshotListData(String collection, String field, String value, {bool isOrderBy = false}) async {
     try {
-      final querySnapshot = await _db
+      Query<Map<String, dynamic>> query = _db
           .collection(collection)
-          .where(field, isEqualTo: value)
-          .get();
+          .where(field, isEqualTo: value);
+
+      if (isOrderBy) {
+        query = query.orderBy('created_at', descending: true);
+      }
+
+      final querySnapshot = await query.get();
+
+      List<Map<String, dynamic>> dataList = querySnapshot.docs
+          .map((doc) => doc.data())
+          .toList();
+
+      return dataList;
+    } catch(e) {
+      debugPrint(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> querySnapshotListDataV2(String collection, Map<String, dynamic> conditions, {bool isOrderBy = false}) async {
+    try {
+      Query<Map<String, dynamic>> query = _db.collection(collection);
+      conditions.forEach((key, value) {
+        query = query.where(key, isEqualTo: value);
+      });
+      if (isOrderBy) {
+        query = query.orderBy('created_at', descending: true);
+      }
+
+      final querySnapshot = await query.get();
 
       List<Map<String, dynamic>> dataList = querySnapshot.docs
           .map((doc) => doc.data())

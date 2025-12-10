@@ -88,10 +88,10 @@ class _UserScreenState extends ConsumerState<UserScreen> {
                 buildRows: (items) => items.map((user) {
                   bool isAdmin = user.role == 'admin';
                   return DataRow(cells: [
-                    DataCell(Text(user.name ?? '')),
-                    DataCell(Text(user.email ?? '')),
-                    DataCell(Text(user.mobile ?? '')),
-                    DataCell(Text(user.role.capitalize() ?? '')),
+                    DataCell(Text(user.name)),
+                    DataCell(Text(user.email)),
+                    DataCell(Text(user.mobile)),
+                    DataCell(Text(user.role.capitalize())),
                     DataCell(Text(user.isEmailVerified ? 'Yes' : 'No')),
                     DataCell(Text(user.isMobileVerified ? 'Yes' : 'No')),
                     DataCell(

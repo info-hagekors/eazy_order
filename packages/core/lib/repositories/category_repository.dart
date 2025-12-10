@@ -25,7 +25,7 @@ class CategoryRepository {
   }
 
   Future<void> setActiveInActive(String categoryId, bool isActive) async {
-    await _firestoreService.updateDocument(FirestoreService.collectionCategory, categoryId, 'ia_active', isActive);
+    await _firestoreService.updateDocument(FirestoreService.collectionCategory, categoryId, 'is_active', isActive);
   }
 
   Future<List<CategoryModel>> getAllCategories(String businessId) async {
@@ -33,6 +33,17 @@ class CategoryRepository {
       FirestoreService.collectionCategory,
       'business_id',
       businessId,
+      isOrderBy: true
+    );
+    final catData = result.map((e)=> CategoryModel.fromJson(e)).toList();
+    return catData;
+  }
+
+  Future<List<CategoryModel>> getActiveCategories(String businessId) async {
+    final result = await _firestoreService.querySnapshotListDataV2(
+        FirestoreService.collectionCategory,
+        {'business_id' : businessId, 'is_active' : true},
+        isOrderBy: true
     );
     final catData = result.map((e)=> CategoryModel.fromJson(e)).toList();
     return catData;

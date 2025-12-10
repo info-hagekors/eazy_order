@@ -27,7 +27,7 @@ class ProductRepository{
   }
 
   Future<void> setActiveInActive(String productId, bool isActive) async {
-    await _firestoreService.updateDocument(FirestoreService.collectionProduct, productId, 'ia_active', isActive);
+    await _firestoreService.updateDocument(FirestoreService.collectionProduct, productId, 'is_active', isActive);
   }
 
   Future<List<ProductModel>> getAllProducts(String businessId) async {
