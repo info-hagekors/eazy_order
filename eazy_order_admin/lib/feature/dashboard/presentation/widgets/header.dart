@@ -142,6 +142,7 @@ class ProfileCard extends StatelessWidget {
         ),
       ],
       child: Container(
+        height:49,
         margin: EdgeInsets.only(left: defaultPadding),
         padding: EdgeInsets.symmetric(
           horizontal: defaultPadding / 1.5,
@@ -164,8 +165,8 @@ class ProfileCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 28,
+              height: 28,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -175,17 +176,18 @@ class ProfileCard extends StatelessWidget {
               ),
               child: ClipOval(
                 child: Image.asset(
-                  "assets/images/profile_pic.png",
-                  height: 38,
+                  "assets/images/placeholder.png",
+                  height: 28,
                 ),
               ),
             ),
+            SizedBox(width: 8),
             if (!Responsive.isMobile(context))
               Padding(
                 padding:
                 const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
                 child: SizedBox(
-                  width: 110,
+                  width: 150,
                   child: Text("Angelina Jolie",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

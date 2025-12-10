@@ -309,7 +309,6 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

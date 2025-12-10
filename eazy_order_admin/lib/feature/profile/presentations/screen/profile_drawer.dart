@@ -105,10 +105,10 @@ class _ProfileDrawerState extends ConsumerState<ProfileDrawer> {
                               backgroundImage: kIsWeb
                                   ? (webImageBytes != null
                                   ? MemoryImage(webImageBytes!)
-                                  : const AssetImage("assets/images/profile_pic.png"))
+                                  : const AssetImage("assets/images/placeholder.png"))
                                   : (profileImage != null
                                   ? FileImage(profileImage!)
-                                  : const AssetImage("assets/images/profile_pic.png"))
+                                  : const AssetImage("assets/images/placeholder.png"))
                               as ImageProvider,
                             ),
 
