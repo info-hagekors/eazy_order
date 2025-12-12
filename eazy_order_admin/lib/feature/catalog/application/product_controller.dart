@@ -6,7 +6,6 @@ import 'package:core/repositories/product_repository.dart';
 import 'package:eazy_order_admin/feature/catalog/application/category_controller.dart';
 import 'package:eazy_order_admin/feature/catalog/entity/product_entity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -90,41 +89,22 @@ class ProductController extends _$ProductController {
     Fluttertoast.showToast(msg: "Product added successfully...");
   }
 
-  Future updateProduct(
-      String productId,
-      String productName,
-      String businessId,
-      String categoryId,
-      String categoryName,
-      String price,
-      String description,
-      ) async {
-    if (productName.trim().isEmpty) {
+  Future updateProduct(ProductModel model) async {
+    if (model.productName.trim().isEmpty) {
       Fluttertoast.showToast(msg: "Please enter product name");
       return;
     }
-    if (businessId.trim().isEmpty) {
+    if (model.businessId.trim().isEmpty) {
       Fluttertoast.showToast(msg: "businessId not found");
       return;
     }
     final productRepo = ref.read(productRepositoryProvider);
-
-    final product = ProductModel(
-      productId: productId,
-      productName: productName,
-      businessId: businessId,
-      categoryName: categoryName,
-      categoryId: categoryId,
-      description: description,
-      price: double.tryParse(price) ?? 0.0,
-      isActive: true,
-    );
-    await productRepo.updateProduct(product);
+    await productRepo.updateProduct(model);
 
     state = state.copyWith(
       products: state.products.map((e) {
-        if (e.productId == productId) {
-          return product;
+        if (e.productId == model.productId) {
+          return model;
         }
         return e;
       }).toList()

@@ -5,8 +5,7 @@ import 'package:core/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/product_controller.dart';
-import '../widgets/add_product_dialog.dart';
-import '../widgets/edit_product_dialog.dart';
+import '../widgets/add_edit_product_dialog.dart';
 import '../widgets/product_delete_dialog.dart';
 
 class ProductScreen extends ConsumerStatefulWidget {
@@ -182,7 +181,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                             onPressed: () async{
                               final result = await showDialog(
                                   context: context,
-                                  builder: (context)=> AddProductDialog(
+                                  builder: (context)=> ProductAddEditDialog(
                                       businessId: widget.businessId
                                   )
                               );
@@ -329,13 +328,16 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                       icon: const Icon(Icons.edit,
                                           color: AppColors.blue),
                                       onPressed: ()async {
-                                        showDialog(
+                                        final result = await showDialog(
                                             context: context,
-                                            builder: (context)=> EditProductDialog(
+                                            builder: (context)=> ProductAddEditDialog(
                                                 businessId: widget.businessId,
                                                 product: product
                                             )
                                         );
+                                        if(result == true){
+                                          await loadProducts();
+                                        }
                                       },
                                     ),
                                     IconButton(
