@@ -1,8 +1,10 @@
 import 'package:core/config/app_colors.dart';
+import 'package:eazy_order_admin/core/routing/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CategoryDeleteDialog extends StatelessWidget {
+class CategoryDeleteDialog extends ConsumerWidget {
   final String categoryName;
   const CategoryDeleteDialog({
     super.key,
@@ -10,7 +12,8 @@ class CategoryDeleteDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final goroute = ref.read(goRouterProvider);
     return AlertDialog(
       insetPadding: EdgeInsets.symmetric(horizontal: 35, vertical: 24),
       backgroundColor: AppColors.white,
@@ -92,7 +95,7 @@ class CategoryDeleteDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () => ref.read(goRouterProvider).pop(false),
                   child: Text(
                     'Cancel',
                     style: GoogleFonts.poppins(

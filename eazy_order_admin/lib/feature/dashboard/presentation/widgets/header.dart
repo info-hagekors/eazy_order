@@ -1,7 +1,9 @@
 import 'package:core/core.dart';
 import 'package:eazy_order_admin/constants.dart';
+import 'package:eazy_order_admin/feature/profile/applications/profile_controller.dart';
 import 'package:eazy_order_admin/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -9,13 +11,14 @@ import '../../application/menu_app_controller.dart';
 //import 'package:provider/provider.dart';
 
 
-class Header extends StatelessWidget {
+class Header extends ConsumerWidget {
   const Header({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profile = ref.watch(profileControllerProvider);
     return Row(
       children: [
         if (!Responsive.isDesktop(context))
@@ -41,7 +44,7 @@ class Header extends StatelessWidget {
         if (!Responsive.isMobile(context))
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
         Expanded(child: SearchField()),
-        ProfileCard()
+        ProfileCard(profileName: profile.username)
       ],
     );
   }
@@ -90,8 +93,10 @@ class SearchField extends StatelessWidget {
 }
 
 class ProfileCard extends StatelessWidget {
+  final profileName;
   const ProfileCard({
     Key? key,
+    required this.profileName,
   }) : super(key: key);
 
   @override
@@ -188,7 +193,7 @@ class ProfileCard extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
                 child: SizedBox(
                   width: 150,
-                  child: Text("Angelina Jolie",
+                  child: Text(profileName.isEmpty ? "User": profileName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: AppColors.black),),

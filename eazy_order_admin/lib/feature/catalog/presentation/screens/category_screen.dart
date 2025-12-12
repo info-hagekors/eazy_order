@@ -268,7 +268,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                     IconButton(
                                       icon: const Icon(
                                           Icons.edit,
-                                          color: Colors.blue),
+                                          color: AppColors.blue),
                                       onPressed: () async {
                                         final result = await showDialog(
                                           context: context,
@@ -286,7 +286,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                     IconButton(
                                       icon: const Icon(
                                           Icons.delete,
-                                          color: Colors.red
+                                          color: AppColors.red
                                       ),
                                       onPressed: () async {
                                         final result = await showDialog(
