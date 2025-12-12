@@ -247,7 +247,7 @@ class _ProductDialogState extends ConsumerState<ProductAddEditDialog> {
                                   child: Visibility(
                                     visible:
                                         isHovering && pickedImages.length > 1,
-                                    child: InkWell(
+                                    child: GestureDetector(
                                       onTap: () {
                                         setState(() {
                                           currentIndex =
@@ -281,7 +281,7 @@ class _ProductDialogState extends ConsumerState<ProductAddEditDialog> {
                                   child: Visibility(
                                     visible:
                                         isHovering && pickedImages.length > 1,
-                                    child: InkWell(
+                                    child: GestureDetector(
                                       onTap: () {
                                         setState(() {
                                           currentIndex =

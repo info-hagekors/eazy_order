@@ -71,7 +71,6 @@ class SearchField extends StatelessWidget {
 
         // Border when NOT focused
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(5),
           borderSide: BorderSide(
               color: AppColors.black12
           ),
@@ -79,7 +78,6 @@ class SearchField extends StatelessWidget {
 
         // Border when FOCUSED
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50),
           borderSide: BorderSide(
             color: AppColors.black,
             width: 1,
