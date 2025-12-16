@@ -9,14 +9,12 @@ import '../widgets/add_edit_product_dialog.dart';
 import '../widgets/product_delete_dialog.dart';
 
 class ProductScreen extends ConsumerStatefulWidget {
-
   final String businessId;
-  final String categoryId;
 
   const ProductScreen({
     super.key,
     required this.businessId,
-    required this.categoryId
+
   });
 
   @override
