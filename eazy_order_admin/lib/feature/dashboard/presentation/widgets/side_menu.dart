@@ -123,7 +123,7 @@ class _SideMenuState extends State<SideMenu> {
                 DrawerListTile(
                   title: "Customers",
                   svgSrc: "assets/icons/menu_store.svg",
-                  press: () => widget.onItemClick(5),
+                  press: () => widget.onItemClick(6),
                 ),
               ],
             ),

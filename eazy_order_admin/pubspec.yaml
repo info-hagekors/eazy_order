@@ -85,6 +85,10 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   carousel_slider: ^5.0.0
   collection: ^1.19.1
+  paged_datatable: ^2.1.1
+
+dependency_overrides:
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

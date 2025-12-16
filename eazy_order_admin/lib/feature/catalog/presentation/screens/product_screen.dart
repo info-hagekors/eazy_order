@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core/config/app_colors.dart';
 import 'package:core/core.dart';
 import 'package:core/widgets/app_button.dart';
+import 'package:eazy_order_admin/feature/dashboard/presentation/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/product_controller.dart';
@@ -86,17 +87,18 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              AppHeader(),
 
-              // BOX 1 — TITLE
+              SizedBox(height: 20),
+
+              // BOX 2 — TITLE + SHOW ENTRIES + SEARCH + ADD BUTTON
               Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   border: Border.all(color: AppColors.grey300),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
                       "Products",
@@ -106,99 +108,48 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                         color: AppColors.primaryColor,
                       ),
                     ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 25),
-
-              // BOX 2 — SHOW ENTRIES + SEARCH + ADD BUTTON
-              Container(
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  border: Border.all(color: AppColors.grey300),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Text("Show "),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.grey400),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: DropdownButton<int>(
-                            underline: const SizedBox(),
-                            value: 10,
-                            items: const [
-                              DropdownMenuItem(
-                                value: 10,
-                                child: Text("10"),
-                              )
-                            ],
-                            onChanged: (value) {},
+                    Spacer(),
+                    SizedBox(
+                      height: 40,
+                      width: 220,
+                      child: TextField(
+                        controller: searchController,
+                        decoration: InputDecoration(
+                          hintText: "     Search...",
+                          contentPadding: EdgeInsets.zero,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
                           ),
                         ),
-                        const Text(" entries"),
-                      ],
+                      ),
                     ),
+                    const SizedBox(width: 20),
 
-                    Row(
-                      children: [
-                        const Text(
-                          "Search :  ",
-                          style: TextStyle(
-                            fontSize: 17.5,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    SizedBox(
+                      height: 40,
+                      child: AppButton(
+                        text: "+  Add Product",
+                        onPressed: () async{
+                          final result = await showDialog(
+                              context: context,
+                              builder: (context)=> ProductAddEditDialog(
+                                  businessId: widget.businessId
+                              )
+                          );
+                          if(result == true){
+                            await loadProducts();
+                          }
+                        },
+                        color: AppColors.link,
+                        width: 170,
+                        height: 40,
+                        borderRadius: 8,
+                        textStyle: const TextStyle(
+                          fontSize: 14,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w600,
                         ),
-                        SizedBox(
-                          height: 40,
-                          width: 220,
-                          child: TextField(
-                            controller: searchController,
-                            decoration: InputDecoration(
-                              hintText: "     Search...",
-                              contentPadding: EdgeInsets.zero,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-
-                        SizedBox(
-                          height: 40,
-                          child: AppButton(
-                            text: "+  Add Product",
-                            onPressed: () async{
-                              final result = await showDialog(
-                                  context: context,
-                                  builder: (context)=> ProductAddEditDialog(
-                                      businessId: widget.businessId
-                                  )
-                              );
-                              if(result == true){
-                                await loadProducts();
-                              }
-                            },
-                            color: AppColors.link,
-                            width: 170,
-                            height: 40,
-                            borderRadius: 8,
-                            textStyle: const TextStyle(
-                              fontSize: 14,
-                              color: AppColors.white,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
