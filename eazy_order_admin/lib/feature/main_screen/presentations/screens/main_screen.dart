@@ -1,8 +1,8 @@
 
 import 'package:core/core.dart';
-import 'package:core/utils/toast_utils.dart';
 import 'package:eazy_order_admin/feature/catalog/presentation/screens/category_screen.dart';
 import 'package:eazy_order_admin/feature/catalog/presentation/screens/product_screen.dart';
+import 'package:eazy_order_admin/feature/customer/presentation/screens/customer_screen.dart';
 import 'package:eazy_order_admin/feature/dashboard/application/menu_app_controller.dart';
 import 'package:eazy_order_admin/feature/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:eazy_order_admin/feature/dashboard/presentation/widgets/side_menu.dart';
@@ -86,7 +86,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         selectedScreen = OrderScreen();   //for order screen
         break;
       case 6:
-        selectedScreen = DashboardScreen();   //for customer screen
+        selectedScreen = CustomerScreen();   //for customer screen
         break;
 
       default:
