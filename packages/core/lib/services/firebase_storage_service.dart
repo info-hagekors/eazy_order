@@ -1,7 +1,6 @@
 
 import 'dart:io' as io;
 import 'package:mime/mime.dart';
-import 'package:web/web.dart' as web;
 
 import 'package:core/core.dart';
 import 'package:firebase_storage/firebase_storage.dart';

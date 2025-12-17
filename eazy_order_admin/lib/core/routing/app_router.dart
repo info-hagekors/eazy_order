@@ -31,11 +31,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/main_screen',
         builder: (context, state) {
-          //final args = state.extra as Map<String, dynamic>;
-          final businessId = state.uri.queryParameters['businessId'] ?? '';
-          print('Business Id >>> $businessId');
-          //final businessId = args['businessId'] ?? '';
-          return MainScreen(businessId: businessId,);
+          final args = state.extra as Map<String, dynamic>;
+          final businessId = args['business_id'] ?? '';
+          return MainScreen(businessId: businessId);
         },
       ),
       GoRoute(

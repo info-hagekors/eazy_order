@@ -14,6 +14,21 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+
+        maven { url = uri("https://storage.googleapis.com/download.flutter.io") }
+    }
+
+    plugins {
+        id("com.google.gms.google-services") version "4.3.15" // Add this line
+    }
+}
+
+dependencyResolutionManagement {
+    //repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://storage.googleapis.com/download.flutter.io") } // Ensure Flutter Maven is included
     }
 }
 

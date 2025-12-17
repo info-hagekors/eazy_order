@@ -23,18 +23,23 @@ class ProductListingController extends _$ProductListingController {
   ProductListingEntity build() {
     ref.keepAlive();
     return ProductListingEntity(
-      selectedOrderPreference: 'Dine In',
-      selectedPaymentOption: 'Online'
+      selectedOrderPreference: '',
+      selectedPaymentOption: 'Cash'
     );
   }
 
   Future getAllCategories(String businessId) async {
     await Future.delayed(Duration(milliseconds: 50));
-    final productListingRepo = ref.read(productListingRepositoryProvider);
-    List<CategoryModel> result = await productListingRepo.getAllCategories(businessId);
+    List<CategoryModel> categories = await ref.read(categoryRepositoryProvider).getAllCategories(businessId);
+    final products = await ref.read(productRepositoryProvider).getAllProducts(businessId);
+    for (int i = 0; i < categories.length; i++) {
+      final result = products.where((e) => e.categoryId == categories[i].categoryId).toList();
+      categories[i].products = result;
+    }
+
     state = state.copyWith(
-        categoryList: result,
-      searchedList: result,
+      categoryList: categories,
+      searchedList: categories,
       isLoading: false
     );
   }

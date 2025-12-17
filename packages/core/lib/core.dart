@@ -8,6 +8,7 @@ export 'widgets/common_text_field.dart';
 export 'widgets/common_text_form_field.dart';
 export 'widgets/common_switch.dart';
 export 'widgets/common_scaffold.dart';
+export 'widgets/loading_dialog.dart';
 
 //config
 export 'config/app_colors.dart';

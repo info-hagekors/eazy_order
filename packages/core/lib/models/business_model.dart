@@ -33,7 +33,7 @@ class BusinessModel {
   factory BusinessModel.fromJson(Map<String, dynamic> json) {
     return BusinessModel(
       logo: json['logo'] ?? '',
-      name: json['name'] ?? '',
+      name: json['business_name'] ?? '',
       address: json['address'] ?? '',
       businessId: json['business_id'] ?? '',
       mobile: json['mobile'] ?? '',

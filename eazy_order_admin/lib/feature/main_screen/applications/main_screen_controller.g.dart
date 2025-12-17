@@ -7,7 +7,7 @@ part of 'main_screen_controller.dart';
 // **************************************************************************
 
 String _$mainScreenControllerHash() =>
-    r'4f374fe5076fe349664b32f2cd74d2b5219ae2f2';
+    r'8f8224a93ddb6c6ee00e3dd42db2aaefe3fe335e';
 
 /// See also [MainScreenController].
 @ProviderFor(MainScreenController)

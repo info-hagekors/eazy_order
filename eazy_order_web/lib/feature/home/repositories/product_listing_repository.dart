@@ -11,8 +11,7 @@ class ProductListingRepository {
   ProductListingRepository(this._firestoreService);
 
   Future<List<CategoryModel>> getAllCategories(String businessId) async {
-    final result = await _firestoreService.querySnapshotListData(FirestoreService.collectionCatalog,
-        'business_id', businessId);
+    final result = await _firestoreService.querySnapshotListData(FirestoreService.collectionCatalog, 'business_id', businessId);
     final catData = result.map((e) => CategoryModel.fromJson(e)).toList();
     return catData;
   }

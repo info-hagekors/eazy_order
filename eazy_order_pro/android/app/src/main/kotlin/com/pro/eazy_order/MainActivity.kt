@@ -1,4 +1,4 @@
-package com.example.eazy_order_pro
+package com.pro.eazy_order
 
 import io.flutter.embedding.android.FlutterActivity
 
