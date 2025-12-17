@@ -1,3 +1,4 @@
+import 'package:core/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:eazy_order_pro/core/config/app_styles.dart';
@@ -18,6 +19,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         title: Text('Home', style: AppStyles.headerStyle,),
       ),

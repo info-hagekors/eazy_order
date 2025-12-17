@@ -47,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: 250.w,
                         height: 250.h,
                         alignment: Alignment.center,
-                        child: Image.asset(AppImages.appLogo),
+                        child: Image.asset("assets/images/app_logo_trans.png"),
                       ),
                       SizedBox(height: 12.h,),
                       Container(

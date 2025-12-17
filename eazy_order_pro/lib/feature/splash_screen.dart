@@ -10,6 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'catalog/presentation/screen/product_listing_screen.dart';
+
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -105,7 +107,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   void navigate() async {
     await Future.delayed(Duration(seconds: 2));
     if (ref.read(authServiceProvider).checkCurrentUser()) {
-      //ref.read(goRouterProvider).go(MainScreen.routeName);
+      ref.read(goRouterProvider).go(ProductListingScreen.routeName);
     } else {
       ref.read(goRouterProvider).go(LoginScreen.routeName);
     }
