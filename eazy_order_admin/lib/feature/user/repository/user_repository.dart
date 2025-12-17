@@ -31,6 +31,7 @@ class UserRepository {
     );
     await _authService.saveUserDetailsToFirestore(data);
     //ToDo::::Send Password Reset Link to email (result.resetLink)
+    print('Reset Link >>> ${result.resetLink}');
     return result;
   }
 }

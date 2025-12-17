@@ -5,10 +5,13 @@
 const { onRequest } = require("firebase-functions/v2/https");
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const { logger } = require("firebase-functions");
-const functions = require("firebase-functions");
-const { onUserUpdated } = require("firebase-functions/v2/auth");
+//const { onUserUpdated } = require("firebase-functions/v2/auth");
+//const { auth } = require("firebase-functions");
+const { auth } = require("firebase-functions/v1/auth");
 
 const axios = require("axios");
+//const functions = require("firebase-functions");
+const functions = require("firebase-functions/v1");
 const admin = require("firebase-admin");
 const Razorpay = require("razorpay");
 const cors = require("cors")
@@ -395,27 +398,34 @@ exports.api = onRequest({ region: "us-central1" }, app);
 // User Update Trigger (Detect when password is set or changed)
 // ===============================
 
-exports.onAuthUserUpdated = onUserUpdated(async (event) => {
-  const before = event.data.before;
-  const after = event.data.after;
-
+exports.onAuthUserUpdated = functions.auth.user().onUpdate(async (change) => {
+  const before = change.before;
+  const after = change.after;
   const uid = after.uid;
 
-  // When user sets password for first time
-  const passwordWasNull = !before.passwordHash;
-  const passwordIsNowSet = !!after.passwordHash;
+  const userRef = admin.firestore().collection("users").doc(uid);
+  const snap = await userRef.get();
+  if (!snap.exists) return;
 
-  if (passwordWasNull && passwordIsNowSet) {
-    console.log(`Password was set for user: ${uid}`);
+  const data = snap.data();
 
-    await admin.firestore().collection("users").doc(uid).update({
-      email_verified: true,
-      password_set: true,
-      password_set_at: admin.firestore.FieldValue.serverTimestamp(),
-    });
+  if (data.password_set === true) return;
 
-    console.log(`Firestore updated for ${uid}`);
-  }
+  if (before.metadata.lastSignInTime === after.metadata.lastSignInTime) return;
+
+  const hasPasswordProvider = after.providerData
+    .some(p => p.providerId === "password");
+
+  if (!hasPasswordProvider) return;
+
+  await admin.firestore().collection("users").doc(uid).update({
+    email_verified: true,
+    password_set: true,
+    password_set_at: admin.firestore.FieldValue.serverTimestamp(),
+    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+  });
+
+  console.log(`Password setup confirmed for user ${uid}`);
 });
 
 // ===============================

@@ -18,7 +18,7 @@ class FirebaseFunctionsService {
     required String amount,
   }) async {
     try {
-      final HttpsCallable callable = _functions.httpsCallable('notifyBusinessOnOrder');
+      final HttpsCallable callable = _functions.httpsCallable('notifyBusinessOnOrderApiV2');
       final response = await callable.call({
         'orderId': orderId,
         'orderNumber': orderNumber,
@@ -51,7 +51,7 @@ class FirebaseFunctionsService {
   }) async {
     try {
       final uri = Uri.parse(
-        'https://us-central1-eazy-order-fcb5b.cloudfunctions.net/createRazorpayOrderApi',
+        'https://us-central1-eazy-order-fcb5b.cloudfunctions.net/createRazorpayOrderApiV2',
       );
 
       final response = await http.post(
@@ -81,7 +81,7 @@ class FirebaseFunctionsService {
   }
 
   Future<void> sendWhatsAppMessage(OrderModel model, String businessName) async {
-    final url = Uri.parse('https://us-central1-eazy-order-fcb5b.cloudfunctions.net/sendWhatsappOrderConfirmationMessage');
+    final url = Uri.parse('https://us-central1-eazy-order-fcb5b.cloudfunctions.net/sendWhatsappOrderConfirmationMessageV2');
 
     final data = {
       'phoneNumber': '91${model.orderMobileNumber}',

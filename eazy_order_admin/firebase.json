@@ -1,0 +1,46 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "eazy-order-fcb5b",
+          "appId": "1:651913327335:android:5a4b11df270d3b35caa842",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "eazy-order-fcb5b",
+          "appId": "1:651913327335:ios:65af617393110408caa842",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "eazy-order-fcb5b",
+          "configurations": {
+            "android": "1:651913327335:android:5a4b11df270d3b35caa842",
+            "ios": "1:651913327335:ios:65af617393110408caa842",
+            "web": "1:651913327335:web:d4098b3140c4c3decaa842"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "target": "admin",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

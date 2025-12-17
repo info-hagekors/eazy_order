@@ -112,7 +112,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
     //AppConsts.setBusinessId = "eaf5a2b4-eb59-40f1-9ef9-bca4fbc4158c";
     //AppConsts.setBusinessId = "c9fda2e3-2c7d-430b-a2d4-73adaa0f56a1"; // Demo Shop
   //  AppConsts.setBusinessId = "eb011c87-43f9-4fe9-9bd5-0b417970f1f4"; // Neo Sports Store
-    AppConsts.setBusinessId = "a290aa24-5eee-4b3d-b317-0fcb0a1bc88c"; // Divy
+    //AppConsts.setBusinessId = "a290aa24-5eee-4b3d-b317-0fcb0a1bc88c"; // Divy
+    AppConsts.setBusinessId = "319cc0d5-0af5-4ab3-82f8-af91b40eab4c"; // Neo Multi Cusine Restaurant
     //AppConsts.setBusinessId = "6ae27183-4c61-4a50-9991-58244ea3f40b"; // Test 1
     if (AppConsts.businessId.isNotEmpty) {
       ref.read(goRouterProvider).go('${ProductListingScreen.routeName}/${AppConsts.businessId}');

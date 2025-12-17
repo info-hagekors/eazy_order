@@ -56,8 +56,8 @@ class SignInController extends _$SignInController {
           isLoading: false
       );
       if (r.businessId.isNotEmpty) {
-        //ref.read(goRouterProvider).go(MainScreen.routeName, extra: {'businessId': r.businessId});
-        ref.read(goRouterProvider).go('${MainScreen.routeName}?businessId=${r.businessId}');
+        ref.read(goRouterProvider).go(MainScreen.routeName, extra: {'business_id': r.businessId});
+        //ref.read(goRouterProvider).go('${MainScreen.routeName}?businessId=${r.businessId}');
       } else {
         if (r.role == 'admin') {
           ref.read(goRouterProvider).go(AddBusinessScreen.routeName);
