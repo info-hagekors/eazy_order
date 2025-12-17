@@ -39,11 +39,12 @@ class _CustomerScreenState extends State<CustomerScreen> {
         "status": "Blocked",
       },
     ];
+    filteredCustomers = List.from(customers);
   }
   void _onSearch(String value) {
     setState(() {
       if (value.isEmpty) {
-        filteredCustomers;
+        filteredCustomers = List.from(customers);
       } else {
         final query = value.toLowerCase();
         filteredCustomers = customers.where((customer) {
