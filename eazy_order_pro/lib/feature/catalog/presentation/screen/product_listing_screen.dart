@@ -1,4 +1,5 @@
 import 'package:core/config/app_colors.dart';
+import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,18 +22,17 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
     'Snacks',
     'Desserts',
     'Drinks',
-    'brunch'
-        'lunch dish'
-        'dinner dish',
+    'brunch',
+    'lunch dish',
+    'dinner dish',
   ];
-  bool _showBottomBar = false;
   final Map<String, int> _cart = {};
 
   int get totalItems => _cart.values.fold(0, (sum, qty) => sum + qty);
 
   int get totalPrice => _cart.values.fold(0, (sum, qty) => sum + (qty * 100));
 
-  final List<String> products = List.generate(10, (i) => 'Product ${i + 1}');
+  final List<String> products = List.generate(10, (i) => 'Grill Sandwich ${i + 1}');
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +40,11 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.white,
-        title: const Text("Products", style: TextStyle(color: AppColors.black)),
+        title: const Text("Menu", style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold)),
         elevation: 0,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,6 +63,16 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
 
             SizedBox(height: 24.h),
 
+            Text(
+              'Products :',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.black,
+              ),
+            ),
+
+            SizedBox(height: 12.h),
             /// 🔹 PRODUCT LIST (VERTICAL)
             Expanded(
               child: ListView.separated(
@@ -76,71 +86,116 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           ],
         ),
       ),
-      bottomNavigationBar:
-          _cart.isNotEmpty
-              ? Container(
-                height: 60.h,
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(12.r),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      bottomNavigationBar: _cart.isNotEmpty
+          ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                /// 🔹 LEFT : PRICE
+                Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '$totalItems Items | ₹$totalPrice',
+                      '₹$totalPrice',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
                       ),
                     ),
                     Text(
-                      'View Cart',
+                      'Total',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 12.sp,
+                        color: AppColors.grey600,
                       ),
                     ),
                   ],
                 ),
-              )
-              : null,
+
+                SizedBox(width: 12.w),
+
+                /// 🔹 RIGHT : BUTTON
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CartScreen(cart: _cart),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 70.h,
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 10,),
+                        Text(
+                          '$totalItems Items added',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 30,),
+                        Container(
+                          height: 26.h,
+                          width: 26.h,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                        SizedBox(width: 10,)
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+          : null,
     );
   }
 
   /// 🔹 CATEGORY ITEM (SQUARE)
   Widget _categoryItem(String title) {
     return Container(
-      width: 125.w,
+      width: 100.w,
       decoration: BoxDecoration(
-        color: AppColors.grey50,
+        color: AppColors.grey100,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.grey100),
+        border: Border.all(color: AppColors.grey400),
       ),
-      padding: EdgeInsets.all(8.w),
+      padding: EdgeInsets.all(2.w),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          SizedBox(
             height: 75.h,
-            width: 75.h,
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8.r),
+            width: 90.h,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Icon(Icons.restaurant,color: AppColors.bgColor2,size: 35,),
             ),
-            child: Image.asset("assets/images/burger.png"),
           ),
           SizedBox(height: 8.h),
           Text(
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 12.sp),
+            style: TextStyle(fontSize: 13.5.sp),
           ),
         ],
       ),
@@ -155,9 +210,9 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       duration: const Duration(milliseconds: 300),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppColors.grey100,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.grey100),
+        border: Border.all(color: AppColors.grey400),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +229,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 15.h),
                 Text(
                   '₹100/-',
                   style: TextStyle(
@@ -183,10 +238,10 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                     color: const Color(0xFF7A4A1D),
                   ),
                 ),
-                SizedBox(height: 6.h),
+                SizedBox(height: 10.h),
                 Text(
-                  'Plain dosa in oil',
-                  style: TextStyle(fontSize: 12.sp, color: AppColors.grey600),
+                  'slices of bread',
+                  style: TextStyle(fontSize: 15.sp, color: AppColors.grey600),
                 ),
               ],
             ),
@@ -195,14 +250,12 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           /// RIGHT IMAGE + CONTROLS
           Column(
             children: [
-              Container(
+              SizedBox(
                 height: 90.h,
-                width: 90.h,
-                decoration: BoxDecoration(
-                  color: AppColors.grey50,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Image.asset("assets/images/dish.png"),
+                width: 110.w,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                    child: Image.asset("assets/images/dish.png")),
               ),
               SizedBox(height: 8.h),
 
@@ -274,7 +327,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       duration: const Duration(milliseconds: 200),
       child: Container(
         height: 32.h,
-        width: 80.w,
+        width: 90.w,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: const Color(0xFF7A4A1D),

@@ -154,7 +154,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               Text(
-                '© Powered by Hagekors Technolabs',
+                '© 2025 Eazy Order ❤️ by Hagekors Technolabs',
                 style: GoogleFonts.poppins(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,

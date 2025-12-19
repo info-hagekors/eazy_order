@@ -41,8 +41,8 @@ class _VerifySuccessDialogState extends State<VerifySuccessDialog> {
           color: AppColors.white
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 24.h,),
             Container(
               height: 50.h,
               width: 50.w,
