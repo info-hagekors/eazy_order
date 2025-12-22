@@ -85,9 +85,9 @@ class _ProfileDrawerState extends ConsumerState<ProfileDrawer> {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [AppColors.accentColor, AppColors.accentColor],
+                    colors: [AppColors.accentColor, AppColors.bgColor2],
                     begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                    end: Alignment.topRight,
                   ),
                 ),
                 child: Padding(

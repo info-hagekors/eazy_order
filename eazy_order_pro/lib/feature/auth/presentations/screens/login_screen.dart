@@ -47,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: 250.w,
                         height: 250.h,
                         alignment: Alignment.center,
-                        child: Image.asset(AppImages.appLogo),
+                        child: Image.asset("assets/images/app_logo_trans.png"),
                       ),
                       SizedBox(height: 12.h,),
                       Container(
@@ -154,7 +154,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               Text(
-                '© Powered by Hagekors Technolabs',
+                '© 2025 Eazy Order ❤️ by Hagekors Technolabs',
                 style: GoogleFonts.poppins(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w400,

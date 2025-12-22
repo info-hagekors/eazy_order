@@ -1,12 +1,13 @@
 
 import 'package:core/core.dart';
-import 'package:core/utils/toast_utils.dart';
 import 'package:eazy_order_admin/feature/catalog/presentation/screens/category_screen.dart';
 import 'package:eazy_order_admin/feature/catalog/presentation/screens/product_screen.dart';
+import 'package:eazy_order_admin/feature/customer/presentation/screens/customer_screen.dart';
 import 'package:eazy_order_admin/feature/dashboard/application/menu_app_controller.dart';
 import 'package:eazy_order_admin/feature/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:eazy_order_admin/feature/dashboard/presentation/widgets/side_menu.dart';
 import 'package:eazy_order_admin/feature/main_screen/applications/main_screen_controller.dart';
+import 'package:eazy_order_admin/feature/order/presentations/screens/orderscreen.dart';
 import 'package:eazy_order_admin/feature/profile/presentations/screen/profile_drawer.dart';
 import 'package:eazy_order_admin/feature/user/presentations/screens/user_screen.dart';
 import 'package:eazy_order_admin/responsive.dart';
@@ -27,7 +28,6 @@ class MainScreen extends ConsumerStatefulWidget {
 }
 
 class _MainScreenState extends ConsumerState<MainScreen> {
-  final String _businessId =  '708100e7-1eef-41f9-8f66-f8173dfb41d7';
   Widget selectedScreen = DashboardScreen();
 
   @override
@@ -77,16 +77,16 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         selectedScreen = UserScreen();     //for user screen
         break;
       case 3:
-        selectedScreen = CategoryScreen(businessId: _businessId,);    // for catalog screen
+        selectedScreen = CategoryScreen(businessId: widget.businessId);    // for catalog screen
         break;
       case 4:
-        selectedScreen = ProductScreen(businessId: _businessId, categoryId: '');   //for product screen
+        selectedScreen = ProductScreen(businessId: widget.businessId);   //for product screen
         break;
       case 5:
-        selectedScreen = DashboardScreen();   //for order screen
+        selectedScreen = OrderScreen();   //for order screen
         break;
       case 6:
-        selectedScreen = DashboardScreen();   //for customer screen
+        selectedScreen = CustomerScreen();   //for customer screen
         break;
 
       default:

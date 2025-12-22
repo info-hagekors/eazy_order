@@ -1,5 +1,6 @@
 
 import 'package:core/core.dart';
+import 'package:eazy_order_admin/feature/dashboard/presentation/widgets/header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/category_controller.dart';
@@ -46,32 +47,11 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+               AppHeader(),
 
-              // ---------------- HEADER ----------------
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                    vertical: 18, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  border: Border.all(color: AppColors.grey300),
-                ),
-                child: const Text(
-                  "Categories",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ),
+              SizedBox(height: 20),
 
-              const SizedBox(height: 25),
-
-
-
-              // ---------------- SEARCH + ADD BUTTON ----------------
-
+              // ---------------- TEXT + SEARCH + ADD BUTTON ----------------
 
             Container(
               padding: const EdgeInsets.all(18),
@@ -87,6 +67,15 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                       ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                        "Categories",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+
                       const Text(
                         "Search :",
                         style: TextStyle(
@@ -145,8 +134,16 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                     ],
                   )
                       : Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      const Text(
+                        "Categories",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      const Spacer(),
                       SizedBox(
                         height: 40,
                         width: 220,

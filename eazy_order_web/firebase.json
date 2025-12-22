@@ -29,7 +29,6 @@
     }
   },
   "hosting": {
-    "target": "customer",
     "public": "build/web",
     "ignore": [
       "firebase.json",

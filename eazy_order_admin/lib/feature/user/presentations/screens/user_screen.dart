@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:eazy_order_admin/constants.dart';
+import 'package:eazy_order_admin/feature/dashboard/presentation/widgets/header.dart';
 import 'package:eazy_order_admin/feature/user/applications/user_controller.dart';
 import 'package:eazy_order_admin/feature/user/presentations/widgets/add_user_dialog.dart';
 import 'package:flutter/material.dart';
@@ -36,18 +37,19 @@ class _UserScreenState extends ConsumerState<UserScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            AppHeader(),
             SizedBox(height: 20,),
             Text(
               "Users",
               style: GoogleFonts.poppins(
                 fontSize: 28,
-                fontWeight: FontWeight.bold
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryColor
               ),
             ),
-            SizedBox(height: 20),
             Row(
               children: [
-                Expanded(child: SizedBox()),
+                Spacer(),
                 SizedBox(
                   width: 140,
                   height: 40,
