@@ -43,6 +43,17 @@ class ProductRepository{
   Future updateProducts(String categoryId, List<Map<String, dynamic>> products) async {
     await _firestoreService.updateListDocument(FirestoreService.collectionCatalog, categoryId, 'products', products);
   }
+
+  Future<List<ProductModel>> getProductsByCategoryId(String categoryId) async {
+    final result = await _firestoreService.querySnapshotListData(
+      FirestoreService.collectionProduct,
+      'category_id',
+      categoryId,
+      isOrderBy: true
+    );
+    final data = result.map((e)=> ProductModel.fromJson(e)).toList();
+    return data;
+  }
 }
 
 final productRepositoryProvider = Provider((ref)=> ProductRepository(ref.read(firestoreServiceProvider)));
