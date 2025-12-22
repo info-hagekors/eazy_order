@@ -7,6 +7,7 @@ import 'package:eazy_order_pro/core/routing/app_router.dart';
 import 'package:eazy_order_pro/feature/auth/entities/login_entity.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/screens/login_screen.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/widgets/verify_success_dialog.dart';
+import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:eazy_order_pro/feature/home/presentations/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -75,6 +76,7 @@ class LoginController extends _$LoginController {
       ToastUtils.error(l);
       return state;
     }, (r) {
+      ref.read(homeControllerProvider.notifier).setUserData(r);
       showLoginSuccessDialog(context);
       return state;
     });

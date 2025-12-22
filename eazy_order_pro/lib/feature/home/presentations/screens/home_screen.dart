@@ -19,14 +19,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final List<Widget> _pages = const [
     DashboardScreen(),
     SizedBox(),
-    SizedBox(),
-    SizedBox(),
   ];
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homeControllerProvider);
     return Scaffold(
+      backgroundColor: AppColors.white,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: state.selectedPage,
@@ -41,15 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_applications_sharp),
-            label: "RoadConfig",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dataset_outlined),
-            label: "Live Data",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.logo_dev),
-            label: "Log",
+            label: "Catalogue",
           ),
         ],
       ),
