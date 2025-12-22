@@ -1,8 +1,10 @@
 import 'package:core/config/app_colors.dart';
+import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProductListingScreen extends ConsumerStatefulWidget {
   const ProductListingScreen({super.key});
@@ -26,67 +28,107 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
     'lunch dish',
     'dinner dish',
   ];
-  final Map<String, int> _cart = {};
-
-  int get totalItems => _cart.values.fold(0, (sum, qty) => sum + qty);
-
-  int get totalPrice => _cart.values.fold(0, (sum, qty) => sum + (qty * 100));
-
   final List<String> products = List.generate(10, (i) => 'Grill Sandwich ${i + 1}');
+
+  int _selectedCategoryIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final cartState = ref.watch(productListingControllerProvider);
+    final cartController = ref.read(productListingControllerProvider.notifier);
+
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        title: const Text("Menu", style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold)),
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// 🔹 CATEGORY LIST (HORIZONTAL)
-            SizedBox(
-              height: 130.h,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                separatorBuilder: (_, __) => SizedBox(width: 12.w),
-                itemBuilder: (context, index) {
-                  return _categoryItem(categories[index]);
-                },
-              ),
-            ),
+      body: CustomScrollView(
+        slivers: [
 
-            SizedBox(height: 24.h),
-
-            Text(
-              'Products :',
+          /// 🔹 SLIVER APP BAR
+          SliverAppBar(
+            backgroundColor: AppColors.white,
+            pinned: false,
+            floating: true,
+            elevation: 0,
+            title: const Text(
+              "Menu",
               style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.bold,
               ),
             ),
+          ),
 
-            SizedBox(height: 12.h),
-            /// 🔹 PRODUCT LIST (VERTICAL)
-            Expanded(
-              child: ListView.separated(
-                itemCount: products.length,
-                separatorBuilder: (_, __) => SizedBox(height: 12.h),
-                itemBuilder: (context, index) {
-                  return _productItem(products[index]);
-                },
+          /// 🔹 CATEGORY LIST
+          SliverPadding(
+            padding: EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
+            sliver: SliverToBoxAdapter(
+              child: SizedBox(
+                height: 125.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categories.length,
+                  separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedCategoryIndex = index;
+                        });
+                      },
+                      child: _categoryItem(
+                        categories[index],
+                        isSelected: index == _selectedCategoryIndex,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+
+          /// 🔹 PRODUCTS TITLE
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Products :',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.black,
+                ),
+              ),
+            ),
+          ),
+
+          /// 🔹 PRODUCT LIST
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final title = products[index];
+                      final quantity = cartState.cart[title] ?? 0;
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 12.h),
+                    child: _productItem(
+                      title,
+                      quantity,
+                      cartController,
+                    ),
+                  );
+                },
+                childCount: products.length,
+              ),
+            ),
+          ),
+
+          /// 🔹 EXTRA SPACE FOR BOTTOM CART BAR
+          SliverToBoxAdapter(
+            child: SizedBox(height: 90.h),
+          ),
+        ],
       ),
-      bottomNavigationBar: _cart.isNotEmpty
+      bottomNavigationBar: cartState.cart.isNotEmpty
           ? Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,7 +138,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '₹$totalPrice',
+                      '₹${cartState.totalPrice}',
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
@@ -121,7 +163,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => CartScreen(cart: _cart),
+                        builder: (_) => const CartScreen(),
                       ),
                     );
                   },
@@ -136,7 +178,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       children: [
                         SizedBox(width: 10,),
                         Text(
-                          '$totalItems Items added',
+                          '${cartState.totalItems} Items added',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.sp,
@@ -170,27 +212,31 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
   }
 
   /// 🔹 CATEGORY ITEM (SQUARE)
-  Widget _categoryItem(String title) {
+  Widget _categoryItem(
+      String title, {
+        bool isSelected = false,
+  }) {
     return Container(
-      width: 100.w,
+      width: 90.w,
+      height: 80.h,
       decoration: BoxDecoration(
         color: AppColors.grey100,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.grey400),
+        border: Border.all(
+          color: isSelected ? AppColors.primaryColor : AppColors.grey400,
+          width: isSelected ? 1.5 : 0.5,
+        ),
       ),
-      padding: EdgeInsets.all(2.w),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            height: 75.h,
-            width: 90.h,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Icon(Icons.restaurant,color: AppColors.bgColor2,size: 35,),
+            height: 50.h,
+            width: 50.w,
+            child: SvgPicture.asset(
+              "assets/images/restaurant-plate-svgrepo-com.svg",
             ),
           ),
-          SizedBox(height: 8.h),
           Text(
             title,
             maxLines: 1,
@@ -203,9 +249,11 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
   }
 
   /// 🔹 PRODUCT ITEM (RECTANGLE)
-  Widget _productItem(String title) {
-    final quantity = _cart[title] ?? 0;
-
+  Widget _productItem(
+      String title,
+      int quantity,
+      dynamic controller,
+      ){
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       padding: EdgeInsets.all(12.w),
@@ -247,37 +295,62 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             ),
           ),
 
-          /// RIGHT IMAGE + CONTROLS
-          Column(
-            children: [
-              SizedBox(
-                height: 90.h,
-                width: 110.w,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                    child: Image.asset("assets/images/dish.png")),
-              ),
-              SizedBox(height: 8.h),
+          /// RIGHT IMAGE + OVERLAPPING BUTTON
+          SizedBox(
+            width: 110.w,
+            child: Column(
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  alignment: Alignment.center,
+                  children: [
+                    /// IMAGE
+                    SizedBox(
+                      height: 90.h,
+                      width: 110.w,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          "assets/images/dish.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
 
-              /// ➕➖ OR ADD
-              quantity == 0
-                  ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _cart[title] = 1;
-                      });
-                    },
-                    child: _addButton(),
-                  )
-                  : _quantitySelector(title, quantity),
-            ],
+                    /// ADD / QUANTITY (HALF IN - HALF OUT)
+                    Positioned(
+                      bottom: -16.h, // 👈 key line
+                      child: quantity == 0
+                          ? GestureDetector(
+                        onTap: () {
+                         controller.addItem(title);
+                        },
+                        child: _addButton(),
+                      )
+                          : _quantitySelector(
+                          title,
+                          quantity,
+                        controller,
+                      ),
+                    ),
+                  ],
+                ),
+
+                /// SPACE so button is not cut
+                SizedBox(height: 20.h),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _quantitySelector(String title, int quantity) {
+  Widget _quantitySelector(
+      String title,
+      int quantity,
+      dynamic controller,
+      ) {
     return Container(
       height: 32.h,
       width: 90.w,
@@ -290,13 +363,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
         children: [
           GestureDetector(
             onTap: () {
-              setState(() {
-                if (quantity == 1) {
-                  _cart.remove(title);
-                } else {
-                  _cart[title] = quantity - 1;
-                }
-              });
+                  controller.remove(title);
             },
             child: const Icon(Icons.remove, color: Colors.white, size: 16),
           ),
@@ -310,9 +377,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           ),
           GestureDetector(
             onTap: () {
-              setState(() {
-                _cart[title] = quantity + 1;
-              });
+                controller.addItem(title);
             },
             child: const Icon(Icons.add, color: Colors.white, size: 16),
           ),
@@ -327,7 +392,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       duration: const Duration(milliseconds: 200),
       child: Container(
         height: 32.h,
-        width: 90.w,
+        width: 75.w,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: const Color(0xFF7A4A1D),

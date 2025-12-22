@@ -1,27 +1,21 @@
 class ProductListEntity {
-  final String productname;
-  final int price;
-  final int quantity;
-  final String description;
+  final Map<String, int> cart;
 
-  ProductListEntity({
-    this.productname = "",
-    this.price = 0,
-    this.quantity = 0,
-    this.description = "",
+  const ProductListEntity({
+    this.cart = const {},
   });
 
+  int get totalItems =>
+      cart.values.fold(0, (sum, qty) => sum + qty);
+
+  int get totalPrice =>
+      cart.values.fold(0, (sum, qty) => sum + (qty * 100));
+
   ProductListEntity copyWith({
-    String? productname,
-    int? price,
-    int? quantity,
-    String? description,
+    Map<String, int>? cart,
   }) {
     return ProductListEntity(
-      productname: productname ?? this.productname,
-      price: price ?? this.price,
-      quantity: quantity ?? this.quantity,
-      description: description ?? this.description,
+      cart: cart ?? this.cart,
     );
   }
 }
