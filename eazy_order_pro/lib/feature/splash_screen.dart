@@ -4,13 +4,11 @@ import 'dart:async';
 import 'package:core/core.dart';
 import 'package:eazy_order_pro/core/routing/app_router.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/screens/login_screen.dart';
+import 'package:eazy_order_pro/feature/home/presentations/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
-import 'catalog/presentation/screen/product_listing_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -107,7 +105,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerPr
   void navigate() async {
     await Future.delayed(Duration(seconds: 2));
     if (ref.read(authServiceProvider).checkCurrentUser()) {
-      ref.read(goRouterProvider).go(ProductListingScreen.routeName);
+      ref.read(goRouterProvider).go(HomeScreen.routeName);
     } else {
       ref.read(goRouterProvider).go(LoginScreen.routeName);
     }

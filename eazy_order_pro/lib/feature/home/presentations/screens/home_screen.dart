@@ -1,3 +1,4 @@
+import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:eazy_order_pro/core/config/app_colors.dart';
@@ -18,7 +19,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   // Pages for each tab
   final List<Widget> _pages = const [
     DashboardScreen(),
-    SizedBox(),
+    ProductListingScreen(),
   ];
 
   @override
