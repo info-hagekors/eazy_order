@@ -61,7 +61,8 @@ class AuthService {
         uid: credential.user?.uid ?? '',
       );
       _currentUser = FirebaseAuth.instance.currentUser;
-      return Right(userModel);
+      final updatedUser = await getUser(userModel.uid);
+      return Right(updatedUser);
     } catch (e) {
       debugPrint('Login Error >>>> ${e.toString()}');
       return Left(e.toString());
