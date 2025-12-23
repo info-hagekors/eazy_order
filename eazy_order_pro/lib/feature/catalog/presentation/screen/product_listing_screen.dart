@@ -1,6 +1,7 @@
 import 'package:core/config/app_colors.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
+import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,24 +19,44 @@ class ProductListingScreen extends ConsumerStatefulWidget {
 
 class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
   // TEMP dummy data (replace with API later)
-  final List<String> categories = [
-    'Tea',
-    'Coffee',
-    'Snacks',
-    'Desserts',
-    'Drinks',
-    'brunch',
-    'lunch dish',
-    'dinner dish',
-  ];
-  final List<String> products = List.generate(10, (i) => 'Grill Sandwich ${i + 1}');
+  //final List<String> products = List.generate(10, (i) => 'Grill Sandwich ${i + 1}');
 
   int _selectedCategoryIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+
+    final homeState = ref.read(homeControllerProvider);
+    final businessId = homeState.currentUser.businessId;
+
+    final controller = ref.read(productListingControllerProvider.notifier);
+
+    controller.getactivecategory(businessId).then((_) {
+      final categories = ref.read(productListingControllerProvider).categories;
+      if (categories.isNotEmpty) {
+        controller.getactiveproduct(categories.first.categoryId!);
+      }
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(productListingControllerProvider);
-    final cartController = ref.read(productListingControllerProvider.notifier);
+    final controller = ref.read(productListingControllerProvider.notifier);
+    final categories = cartState.categories;
+    final products = cartState.products;
+    final totalItems =
+    cartState.cart.values.fold(0, (sum, qty) => sum + qty);
+    final totalPrice =
+    cartState.cart.entries.fold(0.0, (sum, e) {
+      final product = products
+          .firstWhere((p) => p.productId == e.key);
+      return sum + (product.price ?? 0) * e.value;
+    });
+
+
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -68,14 +89,19 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   itemCount: categories.length,
                   separatorBuilder: (_, __) => SizedBox(width: 12.w),
                   itemBuilder: (context, index) {
+                    final category = categories[index];
                     return GestureDetector(
                       onTap: () {
                         setState(() {
                           _selectedCategoryIndex = index;
                         });
+
+                        final categoryId = categories[index].categoryId!;
+                        controller.getactiveproduct(categoryId);
                       },
+
                       child: _categoryItem(
-                        categories[index],
+                        cartState.categories[index].categoryName ?? "",
                         isSelected: index == _selectedCategoryIndex,
                       ),
                     );
@@ -103,24 +129,36 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           /// 🔹 PRODUCT LIST
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final title = products[index];
-                      final quantity = cartState.cart[title] ?? 0;
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 12.h),
-                    child: _productItem(
-                      title,
-                      quantity,
-                      cartController,
-                    ),
-                  );
-                },
-                childCount: products.length,
+            sliver: cartState.isProductLoading
+                ? SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 50.h),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+             )
+                : SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final product = products[index];
+                        final title = product.productName ?? '';
+                        final quantity = cartState.cart[title] ?? 0;
+
+                        return Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: _productItem(
+                        title,
+                        quantity,
+                        controller,
+                      ),
+                    );
+                  },
+                  childCount: products.length,
+                ),
               ),
             ),
-          ),
+
 
           /// 🔹 EXTRA SPACE FOR BOTTOM CART BAR
           SliverToBoxAdapter(
@@ -138,7 +176,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '₹${cartState.totalPrice}',
+                      '₹$totalPrice',
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
@@ -178,7 +216,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       children: [
                         SizedBox(width: 10,),
                         Text(
-                          '${cartState.totalItems} Items added',
+                          '$totalItems Items added',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.sp,
