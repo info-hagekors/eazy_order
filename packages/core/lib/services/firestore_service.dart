@@ -87,7 +87,7 @@ class FirestoreService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> querySnapshotListDataV2(String collection, Map<String, dynamic> conditions, {bool isOrderBy = false}) async {
+  Future<List<Map<String, dynamic>>> querySnapshotListDataV2(String collection, Map<String, dynamic> conditions, {bool isOrderBy = false, int limit = 10}) async {
     try {
       Query<Map<String, dynamic>> query = _db.collection(collection);
       conditions.forEach((key, value) {
@@ -96,6 +96,7 @@ class FirestoreService {
       if (isOrderBy) {
         query = query.orderBy('created_at', descending: true);
       }
+      query = query.limit(limit);
 
       final querySnapshot = await query.get();
 
@@ -110,6 +111,18 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateMultiFieldDocument(String collectionPath, String docId, List<Map<String, String>> data) async {
+    final docRef = _db.collection(collectionPath).doc(docId);
+    final updateData = data.fold<Map<String, dynamic>>({}, (map, item) {
+      final field = item['field'];
+      if (field is String && field.isNotEmpty) {
+        map[field] = item['value'];
+      }
+      return map;
+    });
+    await docRef.update(updateData);
+  }
+
   Future<void> setDocument(String collection, String id, Map<String, dynamic> data) async {
     final docRef = _db.collection(collection).doc(id);
     try {
@@ -120,31 +133,26 @@ class FirestoreService {
     }
   }
 
-  Future<String> setOrderTransaction(String collection, String id, Map<String, dynamic> orderData) async {
+  Future<String> placeOrder(String collection, String id, Map<String, dynamic> order) async {
     final counterRef = _db.collection('orders_meta').doc('counter');
     final ordersRef = _db.collection(collection);
 
     String invoiceNo = '';
 
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
+    await _db.runTransaction((transaction) async {
       final counterSnapshot = await transaction.get(counterRef);
 
-      int lastOrderNumber = counterSnapshot.exists
-          ? counterSnapshot.get('last_order_number') as int
-          : 0;
+      int lastOrderNumber = counterSnapshot.exists ? counterSnapshot.get('last_order_number') as int : 0;
 
       int newOrderNumber = lastOrderNumber + 1;
       String formattedOrderNumber = newOrderNumber.toString().padLeft(3, '0');
-
-      // Update the counter
-      transaction.update(counterRef, {'last_order_number': newOrderNumber});
-
-      // Add the order with the formatted order number
-      orderData['order_invoice_number'] = formattedOrderNumber;
+      order['order_invoice_number'] = formattedOrderNumber;
       invoiceNo = formattedOrderNumber;
 
+      transaction.update(counterRef, {'last_order_number': newOrderNumber});
+
       final newOrderDoc = ordersRef.doc(id);
-      transaction.set(newOrderDoc, orderData);
+      transaction.set(newOrderDoc, order);
     });
     return invoiceNo;
   }
