@@ -10,22 +10,25 @@ class ProductListingController extends _$ProductListingController {
   ProductListEntity build() {
     return ProductListEntity();
   }
+  void reset() {
+    state = ProductListEntity();
+  }
 
-  void addItem(String title) {
+  void addItem(String productId) {
     final newCart = Map<String, int>.from(state.cart);
-    newCart[title] = (newCart[title] ?? 0) + 1;
+    newCart[productId] = (newCart[productId] ?? 0) + 1;
     state = state.copyWith(cart: newCart);
   }
 
-  void removeItem(String title) {
+  void removeItem(String productId) {
     final newCart = Map<String, int>.from(state.cart);
 
-    if (!newCart.containsKey(title)) return;
+    if (!newCart.containsKey(productId)) return;
 
-    if (newCart[title] == 1) {
-      newCart.remove(title);
+    if (newCart[productId] == 1) {
+      newCart.remove(productId);
     } else {
-      newCart[title] = newCart[title]! - 1;
+      newCart[productId] = newCart[productId]! - 1;
     }
 
     state = state.copyWith(cart: newCart);
@@ -40,13 +43,21 @@ class ProductListingController extends _$ProductListingController {
   Future<void> getactivecategory(String businessId) async {
     final category = ref.read(categoryRepositoryProvider);
     List<CategoryModel> result = await category.getActiveCategories(businessId);
-    state = state.copyWith(categories: result);
+    state = state.copyWith(
+        categories: result,
+        selectcategoryId: null
+    );
   }
 
   Future<void>getactiveproduct(String categoryId) async{
-    state = state.copyWith(isProductLoading: true);
+    state = state.copyWith(
+      isProductLoading: true,
+      products: [],
+      selectcategoryId: categoryId
+    );
     final product = ref.read(productRepositoryProvider);
     List<ProductModel> result = await product.getProductsByCategoryId(categoryId);
+
     state = state.copyWith(
         products: result,
       isProductLoading: false

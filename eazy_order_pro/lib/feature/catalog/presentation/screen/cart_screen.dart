@@ -16,8 +16,19 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(productListingControllerProvider);
-    final cartController =
-    ref.read(productListingControllerProvider.notifier);
+    final cartController = ref.read(productListingControllerProvider.notifier);
+    final totalPrice =
+    cartState.cart.entries.fold<double>(0, (sum, e) {
+      final product = cartState.products
+          .where((p) => p.productId == e.key)
+          .isNotEmpty
+          ? cartState.products.firstWhere((p) => p.productId == e.key)
+          : null;
+
+      if (product == null) return sum;
+      return sum + (product.price ?? 0) * e.value;
+    });
+
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -69,7 +80,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           SizedBox(height: 12.h),
 
           /// 🔹 GRAND TOTAL
-          _grandTotalCard(cartState.totalPrice),
+          _grandTotalCard(totalPrice),
 
           SizedBox(height: 100.h),
         ],
@@ -94,7 +105,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '₹${cartState.totalPrice}',
+                  '₹$totalPrice',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -156,6 +167,13 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       child: Column(
         children: [
           ...cartState.cart.entries.map((e) {
+            final product = cartState.products
+                .where((p) => p.productId == e.key)
+                .isNotEmpty
+                ? cartState.products.firstWhere((p) => p.productId == e.key)
+                : null;
+
+            if (product == null) return const SizedBox();
             return Padding(
               padding: EdgeInsets.only(bottom: 10.h),
               child: Row(
@@ -179,7 +197,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          e.key,
+                          product.productName ?? '',
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
@@ -187,7 +205,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          '₹100/-',
+                          '₹${product.price ?? 0}/-',
                           style: TextStyle(
                             fontSize: 13.sp,
                             color: AppColors.grey600,
@@ -199,7 +217,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
                   /// QTY BUTTON
                   _qtyButton(
-                    e.key,
+                    product.productId!,
                     e.value,
                     controller,
                   ),
@@ -212,7 +230,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
           /// ADD MORE ITEMS
           GestureDetector(
-             onTap: () => Navigator.pop(context),
+            onTap: () => Navigator.pop(context),
             child: Row(
               children: [
                 Text(
@@ -329,7 +347,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   /// 🔹 GRAND TOTAL CARD
-  Widget _grandTotalCard(int totalPrice) {
+  Widget _grandTotalCard(double totalPrice) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -350,7 +368,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
           ),
           Text(
-            '₹$totalPrice/-',
+            '₹${totalPrice.toStringAsFixed(0)}',
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w700,
