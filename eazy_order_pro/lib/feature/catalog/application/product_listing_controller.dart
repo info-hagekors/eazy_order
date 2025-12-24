@@ -42,7 +42,7 @@ class ProductListingController extends _$ProductListingController {
 
   Future<void> getactivecategory(String businessId) async {
     final category = ref.read(categoryRepositoryProvider);
-    List<CategoryModel> result = await category.getActiveCategories(businessId);
+    final result = await category.getActiveCategories(businessId);
     state = state.copyWith(
         categories: result,
         selectcategoryId: null
@@ -56,10 +56,17 @@ class ProductListingController extends _$ProductListingController {
       selectcategoryId: categoryId
     );
     final product = ref.read(productRepositoryProvider);
-    List<ProductModel> result = await product.getProductsByCategoryId(categoryId);
+    final result = await product.getProductsByCategoryId(categoryId);
+    final updatedAllProducts = Map<String, ProductModel>.from(state.allProducts);
 
+    for (final product in result) {
+      if (product.productId != null) {
+        updatedAllProducts[product.productId!] = product;
+      }
+    }
     state = state.copyWith(
         products: result,
+        allProducts: updatedAllProducts,
       isProductLoading: false
     );
   }

@@ -56,20 +56,12 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
     final products = cartState.products;
     final totalItems =
     cartState.cart.values.fold(0, (sum, qty) => sum + qty);
-    final totalPrice =
-    cartState.cart.entries.fold<double>(0, (sum, e) {
-      final product = cartState.products
-          .where((p) => p.productId == e.key)
-          .isNotEmpty
-          ? cartState.products.firstWhere((p) => p.productId == e.key)
-          : null;
-
+    final subTotal =
+    cartState.cart.entries.fold<double>(0, (sum, entry) {
+      final product = cartState.allProducts[entry.key];
       if (product == null) return sum;
-
-      return sum + (product.price ?? 0) * e.value;
+      return sum + (product.price ?? 0) * entry.value;
     });
-
-
 
 
     return Scaffold(
@@ -190,7 +182,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '₹$totalPrice',
+                      '₹$subTotal',
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
