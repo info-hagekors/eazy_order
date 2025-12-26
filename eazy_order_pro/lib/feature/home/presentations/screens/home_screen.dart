@@ -1,3 +1,4 @@
+import 'package:eazy_order_pro/feature/catalog/presentation/screen/Order_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final List<Widget> _pages = const [
     DashboardScreen(),
     ProductListingScreen(),
+    OrderScreen(),
   ];
 
   @override
@@ -30,8 +32,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: state.selectedPage,
-        selectedItemColor: AppColors.primaryColor,   // Replace with AppColors.primaryColor
-        unselectedItemColor: AppColors.background2,
+        selectedItemColor: AppColors.primaryColor,
+        unselectedItemColor: AppColors.background4,
         elevation: 0,
         onTap: ref.read(homeControllerProvider.notifier).onPageChange,
         items: const [
@@ -42,6 +44,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_applications_sharp),
             label: "Catalogue",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.reorder),
+            label: "Order",
           ),
         ],
       ),

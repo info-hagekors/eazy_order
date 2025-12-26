@@ -102,7 +102,7 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/animation/
+    - assets/animations/
     - assets/icons/
 
 flutter_launcher_icons:

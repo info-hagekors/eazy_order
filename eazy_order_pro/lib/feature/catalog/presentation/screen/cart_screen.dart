@@ -1,5 +1,6 @@
 import 'package:core/config/app_colors.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
+import 'package:eazy_order_pro/feature/catalog/presentation/widget/order_confirm_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -68,7 +69,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(productListingControllerProvider);
@@ -131,14 +131,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
           SizedBox(height: 12.h),
 
-          /// 🔹 GRAND TOTAL
           _grandTotalCard(totalPrice),
 
           SizedBox(height: 100.h),
         ],
       ),
 
-      /// 🔹 BOTTOM BAR
       bottomNavigationBar: cartState.cart.isEmpty
           ? null
           : Container(
@@ -185,7 +183,22 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  final result = await showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => const OrderConfirmDialog(),
+                  );
+
+                  if (result == true && context.mounted) {
+                    // Clear cart (important)
+                    ref.read(productListingControllerProvider.notifier).clearCart();
+
+                    // Go back to product listing screen
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  }
+                },
+
                 child: Text(
                   'Place order',
                   style: TextStyle(

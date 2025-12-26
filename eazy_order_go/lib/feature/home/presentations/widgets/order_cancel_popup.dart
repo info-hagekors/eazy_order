@@ -13,7 +13,7 @@ class OrderCancelPopup extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       title: Text(
         'Cancel Order?',
-        style: GoogleFonts.nunito(
+        style: GoogleFonts.poppins(
             fontSize: 24.sp,
             fontWeight: FontWeight.w500,
             color: AppColors.black
@@ -24,7 +24,7 @@ class OrderCancelPopup extends StatelessWidget {
         children: [
           Text(
             'Are you sure you want to cancel the order?,\nthis action cannot be undone.',
-            style: GoogleFonts.nunito(
+            style: GoogleFonts.poppins(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
                 color: AppColors.black
@@ -41,7 +41,7 @@ class OrderCancelPopup extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
                 color: AppColors.white,
                 height: 45.h,
-                textStyle: GoogleFonts.nunito(
+                textStyle: GoogleFonts.poppins(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.black
@@ -55,7 +55,7 @@ class OrderCancelPopup extends StatelessWidget {
                 height: 45.h,
                 onPressed: () => Navigator.of(context).pop(true),
                 color: AppColors.primaryColor,
-                textStyle: GoogleFonts.nunito(
+                textStyle: GoogleFonts.poppins(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w400,
                     color: AppColors.white

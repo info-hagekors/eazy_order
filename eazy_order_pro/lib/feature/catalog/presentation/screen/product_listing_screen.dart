@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core/config/app_colors.dart';
 import 'package:core/models/category_model.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
@@ -35,8 +36,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       controller.getactivecategory(businessId);
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +357,30 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       width: 110.w,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
+                        child: (product.imageUrls != null && product.imageUrls.isNotEmpty)
+                            ? CarouselSlider(
+                          options: CarouselOptions(
+                            height: 90.h,
+                            viewportFraction: 1,
+                            autoPlay: product.imageUrls.length > 1,
+                            enableInfiniteScroll: product.imageUrls.length > 1,
+                            autoPlayInterval: const Duration(seconds: 2),
+                            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                            scrollPhysics: const NeverScrollableScrollPhysics(),
+                          ),
+                          items: product.imageUrls.map<Widget>((imgUrl) {
+                            return Image.network(
+                              imgUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.broken_image,
+                                color: Colors.grey,
+                              ),
+                            );
+                          }).toList(),
+                        )
+                            : Image.asset(
                           "assets/images/dish.png",
                           fit: BoxFit.cover,
                         ),
