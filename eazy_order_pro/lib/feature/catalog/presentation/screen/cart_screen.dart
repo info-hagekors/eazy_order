@@ -3,6 +3,7 @@ import 'package:eazy_order_pro/feature/catalog/application/product_listing_contr
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -13,11 +14,73 @@ class CartScreen extends ConsumerStatefulWidget {
 
 class _CartScreenState extends ConsumerState<CartScreen> {
 
+  Widget _emptyCartView(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SvgPicture.asset(
+            'assets/icons/empty-cart.svg',
+            height: 200.h,
+            fit: BoxFit.contain,
+          ),
+          SizedBox(height: 20.h),
+          Text(
+            'Your cart is empty',
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: AppColors.black,
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Add items from the menu to start ordering',
+            style: TextStyle(
+              fontSize: 13.sp,
+              color: AppColors.grey600,
+            ),
+          ),
+          SizedBox(height: 20.h),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryColor,
+              padding: EdgeInsets.symmetric(
+                horizontal: 28.w,
+                vertical: 12.h,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Browse Menu',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(productListingControllerProvider);
-    final cartController =
-    ref.read(productListingControllerProvider.notifier);
+    final cartController = ref.read(productListingControllerProvider.notifier);
+    final totalPrice =
+    cartState.cart.entries.fold<double>(0, (sum, e) {
+      final product = cartState.allProducts[e.key];
+
+      if (product == null) return sum;
+      return sum + (product.price ?? 0) * e.value;
+    });
+
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -35,7 +98,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
       /// 🔹 BODY
       body: cartState.cart.isEmpty
-          ? const Center(child: Text('Cart is empty'))
+          ? _emptyCartView(context)
           : ListView(
         padding: EdgeInsets.all(16.w),
         children: [
@@ -69,7 +132,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           SizedBox(height: 12.h),
 
           /// 🔹 GRAND TOTAL
-          _grandTotalCard(cartState.totalPrice),
+          _grandTotalCard(totalPrice),
 
           SizedBox(height: 100.h),
         ],
@@ -94,7 +157,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '₹${cartState.totalPrice}',
+                  '₹$totalPrice',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -124,9 +187,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 ),
                 onPressed: () {},
                 child: Text(
-                  'Pay Now',
+                  'Place order',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 17.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.white,
                   ),
@@ -156,6 +219,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       child: Column(
         children: [
           ...cartState.cart.entries.map((e) {
+            final product = cartState.allProducts[e.key];
+
+            if (product == null) return const SizedBox();
             return Padding(
               padding: EdgeInsets.only(bottom: 10.h),
               child: Row(
@@ -179,7 +245,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          e.key,
+                          product.productName ?? '',
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
@@ -187,7 +253,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
                         SizedBox(height: 4.h),
                         Text(
-                          '₹100/-',
+                          '₹${product.price ?? 0}/-',
                           style: TextStyle(
                             fontSize: 13.sp,
                             color: AppColors.grey600,
@@ -199,7 +265,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
                   /// QTY BUTTON
                   _qtyButton(
-                    e.key,
+                    product.productId!,
                     e.value,
                     controller,
                   ),
@@ -212,7 +278,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
           /// ADD MORE ITEMS
           GestureDetector(
-             onTap: () => Navigator.pop(context),
+            onTap: () => Navigator.pop(context),
             child: Row(
               children: [
                 Text(
@@ -329,7 +395,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   /// 🔹 GRAND TOTAL CARD
-  Widget _grandTotalCard(int totalPrice) {
+  Widget _grandTotalCard(double totalPrice) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -350,7 +416,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             ),
           ),
           Text(
-            '₹$totalPrice/-',
+            '₹${totalPrice.toStringAsFixed(0)}',
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: FontWeight.w700,

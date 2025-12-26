@@ -1,6 +1,8 @@
 import 'package:core/config/app_colors.dart';
+import 'package:core/models/category_model.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
+import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,25 +19,50 @@ class ProductListingScreen extends ConsumerStatefulWidget {
 }
 
 class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
-  // TEMP dummy data (replace with API later)
-  final List<String> categories = [
-    'Tea',
-    'Coffee',
-    'Snacks',
-    'Desserts',
-    'Drinks',
-    'brunch',
-    'lunch dish',
-    'dinner dish',
-  ];
-  final List<String> products = List.generate(10, (i) => 'Grill Sandwich ${i + 1}');
 
   int _selectedCategoryIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      final homeState = ref.read(homeControllerProvider);
+      final businessId = homeState.currentUser.businessId;
+      final controller = ref.read(productListingControllerProvider.notifier);
+
+      controller.reset();
+      controller.getactivecategory(businessId);
+    });
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
+    ref.listen(productListingControllerProvider, (prev, next) {
+      if (prev?.categories.isEmpty == true &&
+          next.categories.isNotEmpty &&
+          next.selectcategoryId == null) {
+        ref
+            .read(productListingControllerProvider.notifier)
+            .getactiveproduct(next.categories.first.categoryId!);
+      }
+    });
+
     final cartState = ref.watch(productListingControllerProvider);
-    final cartController = ref.read(productListingControllerProvider.notifier);
+    final controller = ref.read(productListingControllerProvider.notifier);
+    final categories = cartState.categories;
+    final products = cartState.products;
+    final totalItems =
+    cartState.cart.values.fold(0, (sum, qty) => sum + qty);
+    final subTotal =
+    cartState.cart.entries.fold<double>(0, (sum, entry) {
+      final product = cartState.allProducts[entry.key];
+      if (product == null) return sum;
+      return sum + (product.price ?? 0) * entry.value;
+    });
+
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -68,14 +95,19 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   itemCount: categories.length,
                   separatorBuilder: (_, __) => SizedBox(width: 12.w),
                   itemBuilder: (context, index) {
+                    final category = categories[index];
                     return GestureDetector(
                       onTap: () {
                         setState(() {
                           _selectedCategoryIndex = index;
                         });
+
+                        final categoryId = categories[index].categoryId!;
+                        controller.getactiveproduct(categoryId);
                       },
+
                       child: _categoryItem(
-                        categories[index],
+                        cartState.categories[index].categoryName ?? "",
                         isSelected: index == _selectedCategoryIndex,
                       ),
                     );
@@ -103,24 +135,36 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           /// 🔹 PRODUCT LIST
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final title = products[index];
-                      final quantity = cartState.cart[title] ?? 0;
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 12.h),
-                    child: _productItem(
-                      title,
-                      quantity,
-                      cartController,
-                    ),
-                  );
-                },
-                childCount: products.length,
+            sliver: cartState.isProductLoading
+                ? SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 50.h),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+             )
+                : SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final product = products[index];
+                        final productId = product.productId!;
+                        final quantity = cartState.cart[productId] ?? 0;
+
+                        return Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: _productItem(
+                        product,
+                        quantity,
+                        controller,
+                      ),
+                    );
+                  },
+                  childCount: products.length,
+                ),
               ),
             ),
-          ),
+
 
           /// 🔹 EXTRA SPACE FOR BOTTOM CART BAR
           SliverToBoxAdapter(
@@ -138,7 +182,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '₹${cartState.totalPrice}',
+                      '₹$subTotal',
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.w700,
@@ -178,7 +222,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       children: [
                         SizedBox(width: 10,),
                         Text(
-                          '${cartState.totalItems} Items added',
+                          '$totalItems Items added',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 15.sp,
@@ -250,10 +294,14 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
 
   /// 🔹 PRODUCT ITEM (RECTANGLE)
   Widget _productItem(
-      String title,
+      ProductModel product,
       int quantity,
-      dynamic controller,
+      ProductListingController controller,
       ){
+    final title = product.productName ?? '';
+    final price = product.price ?? 0;
+    final productId = product.productId!;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       padding: EdgeInsets.all(12.w),
@@ -279,7 +327,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                 ),
                 SizedBox(height: 15.h),
                 Text(
-                  '₹100/-',
+                    '₹$price/-',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w700,
@@ -288,7 +336,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  'slices of bread',
+                  product.description ?? '',
                   style: TextStyle(fontSize: 15.sp, color: AppColors.grey600),
                 ),
               ],
@@ -323,13 +371,13 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       child: quantity == 0
                           ? GestureDetector(
                         onTap: () {
-                         controller.addItem(title);
+                         controller.addItem(productId);
                         },
-                        child: _addButton(),
+                        child: _addButton(productId, controller),
                       )
                           : _quantitySelector(
-                          title,
-                          quantity,
+                        productId,
+                        quantity,
                         controller,
                       ),
                     ),
@@ -347,9 +395,9 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
   }
 
   Widget _quantitySelector(
-      String title,
+      String productId,
       int quantity,
-      dynamic controller,
+      ProductListingController controller,
       ) {
     return Container(
       height: 32.h,
@@ -363,7 +411,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
         children: [
           GestureDetector(
             onTap: () {
-                  controller.remove(title);
+                  controller.removeItem(productId);
             },
             child: const Icon(Icons.remove, color: Colors.white, size: 16),
           ),
@@ -377,7 +425,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           ),
           GestureDetector(
             onTap: () {
-                controller.addItem(title);
+                controller.addItem(productId);
             },
             child: const Icon(Icons.add, color: Colors.white, size: 16),
           ),
@@ -386,7 +434,10 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
     );
   }
 
-  Widget _addButton() {
+  Widget _addButton(
+      String productId,
+      ProductListingController controller,
+      ) {
     return AnimatedScale(
       scale: 1,
       duration: const Duration(milliseconds: 200),

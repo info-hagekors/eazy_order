@@ -2,7 +2,6 @@ import 'package:core/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:eazy_order_pro/core/config/app_styles.dart';
-import 'package:eazy_order_pro/core/routing/app_router.dart';
 import 'package:eazy_order_pro/feature/auth/applications/login_controller.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
