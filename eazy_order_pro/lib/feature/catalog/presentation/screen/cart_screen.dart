@@ -1,10 +1,16 @@
 import 'package:core/config/app_colors.dart';
+import 'package:core/models/order_model.dart';
+import 'package:eazy_order_pro/feature/catalog/application/orderlist_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
+import 'package:eazy_order_pro/feature/catalog/entity/product_list_entity.dart';
+import 'package:eazy_order_pro/feature/catalog/presentation/widget/contact_dialog.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/widget/order_confirm_dialog.dart';
+import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:uuid/uuid.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -14,6 +20,71 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
+  String? userName;
+  String? mobileNumber;
+
+  // -------------------- HELPERS --------------------
+
+  double _calculateTotal(ProductListEntity cartState) {
+    return cartState.cart.entries.fold<double>(0, (sum, e) {
+      final product = cartState.allProducts[e.key];
+      return sum + ((product?.price ?? 0) * e.value);
+    });
+  }
+
+  List<OrderItems> _buildOrderItems(ProductListEntity productState) {
+    return productState.cart.entries.map((entry) {
+      final product = productState.allProducts[entry.key]!;
+
+      return OrderItems(
+        orderItemId: const Uuid().v4(),
+        productName: product.productName,
+        price: product.price,
+        quantity: entry.value,
+        categoryName: product.categoryName ?? '',
+        description: product.description,
+        imageUrls: product.imageUrls,
+      );
+    }).toList();
+  }
+
+  Future<void> _placeOrder(double totalPrice) async {
+    if (userName == null || mobileNumber == null || mobileNumber!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter contact details')),
+      );
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const OrderConfirmDialog(),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final homeState = ref.read(homeControllerProvider);
+    final productState = ref.read(productListingControllerProvider);
+
+    final orderId = const Uuid().v4();
+    final invoiceNumber = 'INV-${DateTime.now().millisecondsSinceEpoch}';
+
+    await ref.read(orderListControllerProvider.notifier).orderPlace(
+      homeState.currentUser.businessId,
+      orderId,
+      invoiceNumber,
+      userName!,
+      mobileNumber!,
+      _buildOrderItems(productState),
+      totalPrice,
+    );
+
+    ref.read(productListingControllerProvider.notifier).clearCart();
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  }
+
+  // -------------------- UI --------------------
 
   Widget _emptyCartView(BuildContext context) {
     return Center(
@@ -23,7 +94,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           SvgPicture.asset(
             'assets/icons/empty-cart.svg',
             height: 200.h,
-            fit: BoxFit.contain,
           ),
           SizedBox(height: 20.h),
           Text(
@@ -31,38 +101,22 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
-              color: AppColors.black,
             ),
           ),
           SizedBox(height: 8.h),
           Text(
             'Add items from the menu to start ordering',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: AppColors.grey600,
-            ),
+            style: TextStyle(fontSize: 13.sp, color: AppColors.grey600),
           ),
           SizedBox(height: 20.h),
           ElevatedButton(
+            onPressed: () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
-              padding: EdgeInsets.symmetric(
-                horizontal: 28.w,
-                vertical: 12.h,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.r),
-              ),
+              padding:
+              EdgeInsets.symmetric(horizontal: 28.w, vertical: 12.h),
             ),
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Browse Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            child: const Text('Browse Menu'),
           ),
         ],
       ),
@@ -72,174 +126,67 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(productListingControllerProvider);
-    final cartController = ref.read(productListingControllerProvider.notifier);
-    final totalPrice =
-    cartState.cart.entries.fold<double>(0, (sum, e) {
-      final product = cartState.allProducts[e.key];
-
-      if (product == null) return sum;
-      return sum + (product.price ?? 0) * e.value;
-    });
-
+    final cartController =
+    ref.read(productListingControllerProvider.notifier);
+    final totalPrice = _calculateTotal(cartState);
 
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+        title: const Text('My Cart'),
         backgroundColor: AppColors.white,
         elevation: 0,
-        title: Text(
-          'My Cart',
-          style: TextStyle(
-            color: AppColors.primaryColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
       ),
-
-      /// 🔹 BODY
       body: cartState.cart.isEmpty
           ? _emptyCartView(context)
           : ListView(
         padding: EdgeInsets.all(16.w),
         children: [
-          /// 🔹 CART ITEMS
-          _cartItemsCard(
-            cartState,
-            cartController,
-          ),
-
+          _cartItemsCard(cartState, cartController),
           SizedBox(height: 16.h),
-
-          /// 🔹 CONTACT CARD
           _contactCard(),
-
           SizedBox(height: 10.h),
-
           Text(
             'Please enter your WhatsApp number to receive order updates.',
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppColors.grey600,
-            ),
+            style:
+            TextStyle(fontSize: 12.sp, color: AppColors.grey600),
           ),
-
           SizedBox(height: 16.h),
-
           _simpleTile(Icons.receipt_long, 'Order Preference'),
           SizedBox(height: 12.h),
           _simpleTile(Icons.payment, 'Payment Options'),
-
           SizedBox(height: 12.h),
-
           _grandTotalCard(totalPrice),
-
           SizedBox(height: 100.h),
         ],
       ),
-
       bottomNavigationBar: cartState.cart.isEmpty
           ? null
-          : Container(
-        padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 16.h),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 8),
-          ],
-        ),
-        child: Row(
-          children: [
-            /// TOTAL
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '₹$totalPrice',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Grand Total',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.grey600,
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(width: 16.w),
-
-            /// PAY NOW
-            Expanded(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6B4A2D),
-                  padding: EdgeInsets.symmetric(vertical: 14.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-                onPressed: () async {
-                  final result = await showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) => const OrderConfirmDialog(),
-                  );
-
-                  if (result == true && context.mounted) {
-                    // Clear cart (important)
-                    ref.read(productListingControllerProvider.notifier).clearCart();
-
-                    // Go back to product listing screen
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  }
-                },
-
-                child: Text(
-                  'Place order',
-                  style: TextStyle(
-                    fontSize: 17.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+          : _bottomBar(totalPrice),
     );
   }
 
-  /// 🔹 CART ITEMS CARD
   Widget _cartItemsCard(
-      dynamic cartState,
-      dynamic controller,
+      ProductListEntity cartState,
+      ProductListingController controller,
       ) {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
       child: Column(
         children: [
           ...cartState.cart.entries.map((e) {
             final product = cartState.allProducts[e.key];
-
             if (product == null) return const SizedBox();
+
             return Padding(
               padding: EdgeInsets.only(bottom: 10.h),
               child: Row(
                 children: [
-                  /// IMAGE
                   Container(
                     height: 50.h,
                     width: 50.h,
@@ -249,59 +196,36 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     ),
                     child: const Icon(Icons.restaurant),
                   ),
-
                   SizedBox(width: 12.w),
-
-                  /// NAME & PRICE
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          product.productName ?? '',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        Text(product.productName ?? '',
+                            style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600)),
                         SizedBox(height: 4.h),
-                        Text(
-                          '₹${product.price ?? 0}/-',
-                          style: TextStyle(
-                            fontSize: 13.sp,
-                            color: AppColors.grey600,
-                          ),
-                        ),
+                        Text('₹${product.price ?? 0}/-',
+                            style: TextStyle(
+                                fontSize: 13.sp,
+                                color: AppColors.grey600)),
                       ],
                     ),
                   ),
-
-                  /// QTY BUTTON
-                  _qtyButton(
-                    product.productId!,
-                    e.value,
-                    controller,
-                  ),
+                  _qtyButton(product.productId!, e.value, controller),
                 ],
               ),
             );
           }),
-
           const Divider(),
-
-          /// ADD MORE ITEMS
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Row(
-              children: [
-                Text(
-                  '+  Add more items',
-                  style: TextStyle(
-                    color: const Color(0xFF6B4A2D),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+            child: const Text(
+              '+  Add more items',
+              style: TextStyle(
+                  color: Color(0xFF6B4A2D),
+                  fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -309,11 +233,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  /// 🔹 QTY BUTTON
   Widget _qtyButton(
-      String title,
+      String productId,
       int qty,
-      dynamic controller,
+      ProductListingController controller,
       ) {
     return Container(
       height: 28.h,
@@ -326,113 +249,133 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           GestureDetector(
-            onTap: () => controller.removeItem(title),
-            child: const Icon(Icons.remove,
-                size: 16, color: Colors.white),
+            onTap: () => controller.removeItem(productId),
+            child: const Icon(Icons.remove, size: 16, color: Colors.white),
           ),
-          Text(
-            '$qty',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColors.white,
-            ),
-          ),
+          Text('$qty',
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.white)),
           GestureDetector(
-            onTap: () => controller.addItem(title),
-            child: const Icon(Icons.add,
-                size: 16, color: Colors.white),
+            onTap: () => controller.addItem(productId),
+            child: const Icon(Icons.add, size: 16, color: Colors.white),
           ),
         ],
       ),
     );
   }
 
-  /// 🔹 CONTACT CARD
   Widget _contactCard() {
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.call),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'Divy Patel',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  '+91 8755088550',
-                  style: TextStyle(color: AppColors.grey600),
-                ),
-              ],
+    return GestureDetector(
+      onTap: () async {
+        final result = await showDialog<Map<String, String>>(
+          context: context,
+          builder: (_) => const ContactDialog(),
+        );
+
+        if (result != null) {
+          setState(() {
+            userName = result['name'];
+            mobileNumber = result['mobile'];
+          });
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.call, color: AppColors.primaryColor),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(userName ?? 'User name',
+                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  Text(mobileNumber ?? '+91 XXXXXXXX',
+                      style: const TextStyle(color: AppColors.grey600)),
+                ],
+              ),
             ),
-          ),
-          const Icon(Icons.arrow_forward_ios, size: 16),
-        ],
+            const Icon(Icons.arrow_forward_ios, size: 16),
+          ],
+        ),
       ),
     );
   }
 
-  /// 🔹 SIMPLE TILE
   Widget _simpleTile(IconData icon, String title) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
       child: Row(
         children: [
           Icon(icon),
           SizedBox(width: 12.w),
-          Text(
-            title,
-            style: TextStyle(fontSize: 15.sp),
-          ),
+          Text(title, style: TextStyle(fontSize: 15.sp)),
         ],
       ),
     );
   }
 
-  /// 🔹 GRAND TOTAL CARD
   Widget _grandTotalCard(double totalPrice) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Grand Total',
-            style: TextStyle(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w600,
-            ),
+          const Text('Grand Total',
+              style: TextStyle(fontWeight: FontWeight.w600)),
+          Text('₹${totalPrice.toStringAsFixed(0)}',
+              style: const TextStyle(fontWeight: FontWeight.w700)),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomBar(double totalPrice) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 16.h),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('₹$totalPrice',
+                  style: TextStyle(
+                      fontSize: 18.sp, fontWeight: FontWeight.bold)),
+              Text('Grand Total',
+                  style:
+                  TextStyle(fontSize: 12.sp, color: AppColors.grey600)),
+            ],
           ),
-          Text(
-            '₹${totalPrice.toStringAsFixed(0)}',
-            style: TextStyle(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w700,
+          SizedBox(width: 16.w),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () => _placeOrder(totalPrice),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor,
+                padding: EdgeInsets.symmetric(vertical: 14.h),
+              ),
+              child: const Text('Place order',style: TextStyle(color: AppColors.white,fontSize: 15,fontWeight: FontWeight.w600),),
             ),
           ),
         ],

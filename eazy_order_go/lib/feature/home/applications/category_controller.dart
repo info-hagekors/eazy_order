@@ -1,7 +1,6 @@
 
 import 'package:core/core.dart';
 import 'package:eazy_order_go/feature/home/entities/category_entity.dart';
-import 'package:eazy_order_go/feature/home/repository/category_repository.dart' hide categoryRepositoryProvider;
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

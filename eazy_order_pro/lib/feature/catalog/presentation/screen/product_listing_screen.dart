@@ -67,8 +67,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       backgroundColor: AppColors.white,
       body: CustomScrollView(
         slivers: [
-
-          /// 🔹 SLIVER APP BAR
           SliverAppBar(
             backgroundColor: AppColors.white,
             pinned: false,
@@ -83,7 +81,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             ),
           ),
 
-          /// 🔹 CATEGORY LIST
           SliverPadding(
             padding: EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
             sliver: SliverToBoxAdapter(
@@ -116,7 +113,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             ),
           ),
 
-          /// 🔹 PRODUCTS TITLE
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             sliver: SliverToBoxAdapter(
@@ -131,7 +127,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             ),
           ),
 
-          /// 🔹 PRODUCT LIST
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             sliver: cartState.isProductLoading
@@ -164,97 +159,100 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
               ),
             ),
 
-
-          /// 🔹 EXTRA SPACE FOR BOTTOM CART BAR
           SliverToBoxAdapter(
             child: SizedBox(height: 90.h),
           ),
         ],
       ),
       bottomNavigationBar: cartState.cart.isNotEmpty
-          ? Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// 🔹 LEFT : PRICE
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '₹$subTotal',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.black,
-                      ),
-                    ),
-                    Text(
-                      'Total',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.grey600,
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(width: 12.w),
-
-                /// 🔹 RIGHT : BUTTON
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const CartScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 70.h,
-                    padding: EdgeInsets.all(16.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryColor,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(width: 10,),
-                        Text(
-                          '$totalItems Items added',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
+          ? Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 8),
+          ],
+        ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '₹$subTotal',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.black,
                         ),
-                        SizedBox(width: 30,),
-                        Container(
-                          height: 26.h,
-                          width: 26.h,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 14,
-                            color: AppColors.primaryColor,
-                          ),
+                      ),
+                      Text(
+                        'Total',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: AppColors.grey600,
                         ),
-                        SizedBox(width: 10,)
-                      ],
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(width: 12.w),
+
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>  CartScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 70.h,
+                      padding: EdgeInsets.all(16.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10,),
+                          Text(
+                            '$totalItems Items added',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(width: 30,),
+                          Container(
+                            height: 26.h,
+                            width: 26.h,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 14,
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                          SizedBox(width: 10,)
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           )
           : null,
     );
   }
 
-  /// 🔹 CATEGORY ITEM (SQUARE)
   Widget _categoryItem(
       String title, {
         bool isSelected = false,
@@ -291,7 +289,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
     );
   }
 
-  /// 🔹 PRODUCT ITEM (RECTANGLE)
   Widget _productItem(
       ProductModel product,
       int quantity,
@@ -312,7 +309,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// LEFT CONTENT
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,7 +339,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             ),
           ),
 
-          /// RIGHT IMAGE + OVERLAPPING BUTTON
           SizedBox(
             width: 110.w,
             child: Column(
@@ -387,9 +383,8 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       ),
                     ),
 
-                    /// ADD / QUANTITY (HALF IN - HALF OUT)
                     Positioned(
-                      bottom: -16.h, // 👈 key line
+                      bottom: -16.h,
                       child: quantity == 0
                           ? GestureDetector(
                         onTap: () {
@@ -406,7 +401,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   ],
                 ),
 
-                /// SPACE so button is not cut
                 SizedBox(height: 20.h),
               ],
             ),
