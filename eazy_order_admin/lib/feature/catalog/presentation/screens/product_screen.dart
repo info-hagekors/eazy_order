@@ -12,18 +12,13 @@ import '../widgets/product_delete_dialog.dart';
 class ProductScreen extends ConsumerStatefulWidget {
   final String businessId;
 
-  const ProductScreen({
-    super.key,
-    required this.businessId,
-
-  });
+  const ProductScreen({super.key, required this.businessId});
 
   @override
   ConsumerState<ProductScreen> createState() => _ProductScreenState();
 }
 
 class _ProductScreenState extends ConsumerState<ProductScreen> {
-
   List product = [];
   List<ProductModel> filteredProducts = [];
 
@@ -33,12 +28,13 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
   void initState() {
     super.initState();
     Future.microtask(() async {
-      await ref.read(productControllerProvider.notifier).getAllProducts(widget.businessId);
+      await ref
+          .read(productControllerProvider.notifier)
+          .getAllProducts(widget.businessId);
       _filterProducts();
       searchController.addListener(_filterProducts);
     });
   }
-
 
   @override
   void dispose() {
@@ -51,34 +47,38 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
     final state = ref.read(productControllerProvider);
     final allProductsForCategory = state.products;
 
-// apply search filter
+    // apply search filter
     final query = searchController.text.toLowerCase();
 
     setState(() {
-      filteredProducts = query.isEmpty
-          ? allProductsForCategory
-          : allProductsForCategory.where((p) {
-        final name = p.productName.toLowerCase();
-        final category = p.categoryName.toLowerCase(); // or categoryName if you have one
-        final price = p.price.toString();
+      filteredProducts =
+          query.isEmpty
+              ? allProductsForCategory
+              : allProductsForCategory.where((p) {
+                final name = p.productName.toLowerCase();
+                final category =
+                    p.categoryName
+                        .toLowerCase(); // or categoryName if you have one
+                final price = p.price.toString();
 
-        return name.contains(query) ||
-            category.contains(query) ||
-            price.contains(query);
-        }).toList();
+                return name.contains(query) ||
+                    category.contains(query) ||
+                    price.contains(query);
+              }).toList();
     });
   }
 
-
   Future loadProducts() async {
-    await ref.read(productControllerProvider.notifier).getAllProducts(widget.businessId);
+    await ref
+        .read(productControllerProvider.notifier)
+        .getAllProducts(widget.businessId);
     _filterProducts();
   }
 
   @override
   Widget build(BuildContext context) {
-    final controller= ref.read(productControllerProvider.notifier);
-    final state = ref.watch(productControllerProvider);
+    final controller = ref.read(productControllerProvider.notifier);
+    final productstate = ref.watch(productControllerProvider);
     return Scaffold(
       backgroundColor: const Color(0xfff8f8fb),
       body: SingleChildScrollView(
@@ -129,14 +129,15 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                       height: 40,
                       child: AppButton(
                         text: "+  Add Product",
-                        onPressed: () async{
+                        onPressed: () async {
                           final result = await showDialog(
-                              context: context,
-                              builder: (context)=> ProductAddEditDialog(
-                                  businessId: widget.businessId
-                              )
+                            context: context,
+                            builder:
+                                (context) => ProductAddEditDialog(
+                                  businessId: widget.businessId,
+                                ),
                           );
-                          if(result == true){
+                          if (result == true) {
                             await loadProducts();
                           }
                         },
@@ -160,168 +161,248 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
               // BOX 3 — TABLE OR EMPTY STATE
               Container(
                 width: double.infinity,
-                child: filteredProducts.isEmpty
-                    ? SizedBox(
-                  height: 400,
-                  child: Center(
-                    child: Text(
-                      "No Product Found !",
-                      style: TextStyle(fontSize: 22),
-                    ),
-                  ),
-                )
-                    : Container(
-                      color: AppColors.white,
-                      width: double.infinity,
-                      child: DataTable(
-                        columnSpacing: 24,
-                        headingRowHeight: 46,
-                        dataRowHeight: 56,
-                        border: TableBorder.all(
-                          color: AppColors.grey300,
-                        ),
-                        headingRowColor: MaterialStateProperty.all(
-                            AppColors.grey100),
-                        columns: [
-                          DataColumn(
-                            label: SizedBox(width: 50, child: Text("Image")),
+                color: AppColors.background3,
+                child: productstate.isLoading
+                        ? SizedBox(
+                          height: 400,
+                          child: Center(
+                              child: CircularProgressIndicator(),
                           ),
-                          DataColumn(
-                            label: SizedBox(width: 180, child: Text("Name")),
+                        )
+                        : filteredProducts.isEmpty
+                        ? SizedBox(
+                          height: 400,
+                          child: Center(
+                            child: Text(
+                              "No Product Found !",
+                              style: TextStyle(fontSize: 22),
+                            ),
                           ),
-                          DataColumn(
-                            label:
-                            SizedBox(width: 120, child: Text("Category")),
-                          ),
-                          DataColumn(
-                            label: SizedBox(width: 100, child: Text("Price")),
-                          ),
-                          DataColumn(
-                            label: SizedBox(width: 70, child: Text("Action")),
-                          ),
-                        ],
-                        rows: filteredProducts.map((product) {
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                SizedBox(
-                                  width: 60,
-                                  height: 50,
-                                  child: (product.imageUrls != null && product.imageUrls.isNotEmpty)
-                                      ? CarouselSlider(
-                                    options: CarouselOptions(
-                                      height: 50,
-                                      autoPlay: true,
-                                      viewportFraction: 1,
-                                      enableInfiniteScroll: true,
-                                      autoPlayInterval: const Duration(seconds: 2),
-                                      autoPlayAnimationDuration: const Duration(seconds: 2),
-                                      scrollPhysics: const NeverScrollableScrollPhysics(),
-                                    ),
-                                    items: product.imageUrls.map<Widget>((imageUrls) {
-                                      return ClipRRect(
-                                        borderRadius: BorderRadius.circular(4),
-                                        child: Image.network(
-                                          imageUrls,
-                                          width: 60,
-                                          height: 50,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      );
-                                    }).toList(),
-                                  )
-                                      : Container(
-                                    width: 60,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: AppColors.background2,
-                                    ),
-                                    child: const Icon(
-                                      Icons.image_not_supported_outlined,
-                                      size: 20,
-                                      color: AppColors.grey,
-                                    ),
-                                  ),
+                        )
+                        : Container(
+                          color: AppColors.white,
+                          width: double.infinity,
+                          child: DataTable(
+                            columnSpacing: 24,
+                            headingRowHeight: 46,
+                            dataRowHeight: 56,
+                            border: TableBorder.all(color: AppColors.grey300),
+                            headingRowColor: MaterialStateProperty.all(
+                              AppColors.grey100,
+                            ),
+                            columns: [
+                              DataColumn(
+                                label: SizedBox(
+                                  width: 50,
+                                  child: Text("Image"),
                                 ),
                               ),
-                              DataCell(Text(product.productName)),
-                              DataCell(Text(product.categoryName.isNotEmpty ? product.categoryName : '-'),),
-                              DataCell(
-                                Text(
-                                  "₹ ${product.price}",
-                                  style: const TextStyle(
-                                    color: AppColors.green,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              DataColumn(
+                                label: SizedBox(
+                                  width: 180,
+                                  child: Text("Name"),
                                 ),
                               ),
-                              DataCell(
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: product.isActive,
-                                      onChanged: (val) {
-                                        filteredProducts = filteredProducts.map((e) {
-                                          if(e.productId == product.productId) {
-                                            e.isActive = val ?? false;
-                                          }
-                                          return e;
-                                        }).toList();
-                                        //ToDo::: Needs to remove
-                                        setState(() { });
-                                        ref.read(productControllerProvider.notifier).onActiveInActive(product.productId, val ?? false);
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.edit,
-                                          color: AppColors.blue),
-                                      onPressed: ()async {
-                                        final result = await showDialog(
-                                            context: context,
-                                            builder: (context)=> ProductAddEditDialog(
-                                                businessId: widget.businessId,
-                                                product: product
-                                            )
-                                        );
-                                        if(result == true){
-                                          await loadProducts();
-                                        }
-                                      },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete,
-                                          color: AppColors.red),
-
-                                      onPressed: () async{
-                                        final result= await showDialog(
-                                          context: context,
-                                          builder: (context)=>ProductDeleteDialog(
-                                            productId: product.productId,
-                                            businessId: widget.businessId,
-                                            productName: product.productName,
-                                          ),
-                                        );
-                                        if(result == true){
-
-
-                                         await controller.deleteProduct(product.productId);
-
-                                          await controller.getAllProducts(widget.businessId);
-                                          setState(() {
-                                            _filterProducts();
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ],
+                              DataColumn(
+                                label: SizedBox(
+                                  width: 120,
+                                  child: Text("Category"),
+                                ),
+                              ),
+                              DataColumn(
+                                label: SizedBox(
+                                  width: 100,
+                                  child: Text("Price"),
+                                ),
+                              ),
+                              DataColumn(
+                                label: SizedBox(
+                                  width: 70,
+                                  child: Text("Action"),
                                 ),
                               ),
                             ],
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                            rows:
+                                filteredProducts.map((product) {
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(
+                                        SizedBox(
+                                          width: 60,
+                                          height: 50,
+                                          child:
+                                              (product.imageUrls != null &&
+                                                      product
+                                                          .imageUrls
+                                                          .isNotEmpty)
+                                                  ? CarouselSlider(
+                                                    options: CarouselOptions(
+                                                      height: 50,
+                                                      autoPlay: true,
+                                                      viewportFraction: 1,
+                                                      enableInfiniteScroll:
+                                                          true,
+                                                      autoPlayInterval:
+                                                          const Duration(
+                                                            seconds: 2,
+                                                          ),
+                                                      autoPlayAnimationDuration:
+                                                          const Duration(
+                                                            seconds: 2,
+                                                          ),
+                                                      scrollPhysics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                    ),
+                                                    items:
+                                                        product.imageUrls.map<
+                                                          Widget
+                                                        >((imageUrls) {
+                                                          return ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  4,
+                                                                ),
+                                                            child: Image.network(
+                                                              imageUrls,
+                                                              width: 60,
+                                                              height: 50,
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                  )
+                                                  : Container(
+                                                    width: 60,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            4,
+                                                          ),
+                                                      color:
+                                                          AppColors.background2,
+                                                    ),
+                                                    child: const Icon(
+                                                      Icons
+                                                          .image_not_supported_outlined,
+                                                      size: 20,
+                                                      color: AppColors.grey,
+                                                    ),
+                                                  ),
+                                        ),
+                                      ),
+                                      DataCell(Text(product.productName)),
+                                      DataCell(
+                                        Text(
+                                          product.categoryName.isNotEmpty
+                                              ? product.categoryName
+                                              : '-',
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          "₹ ${product.price}",
+                                          style: const TextStyle(
+                                            color: AppColors.green,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Row(
+                                          children: [
+                                            Checkbox(
+                                              value: product.isActive,
+                                              onChanged: (val) {
+                                                filteredProducts =
+                                                    filteredProducts.map((e) {
+                                                      if (e.productId ==
+                                                          product.productId) {
+                                                        e.isActive =
+                                                            val ?? false;
+                                                      }
+                                                      return e;
+                                                    }).toList();
+                                                //ToDo::: Needs to remove
+                                                setState(() {});
+                                                ref
+                                                    .read(
+                                                      productControllerProvider
+                                                          .notifier,
+                                                    )
+                                                    .onActiveInActive(
+                                                      product.productId,
+                                                      val ?? false,
+                                                    );
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.edit,
+                                                color: AppColors.blue,
+                                              ),
+                                              onPressed: () async {
+                                                final result = await showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (context) =>
+                                                          ProductAddEditDialog(
+                                                            businessId:
+                                                                widget
+                                                                    .businessId,
+                                                            product: product,
+                                                          ),
+                                                );
+                                                if (result == true) {
+                                                  await loadProducts();
+                                                }
+                                              },
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.delete,
+                                                color: AppColors.red,
+                                              ),
+
+                                              onPressed: () async {
+                                                final result = await showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (
+                                                        context,
+                                                      ) => ProductDeleteDialog(
+                                                        productId:
+                                                            product.productId,
+                                                        businessId:
+                                                            widget.businessId,
+                                                        productName:
+                                                            product.productName,
+                                                      ),
+                                                );
+                                                if (result == true) {
+                                                  await controller
+                                                      .deleteProduct(
+                                                        product.productId,
+                                                      );
+
+                                                  await controller
+                                                      .getAllProducts(
+                                                        widget.businessId,
+                                                      );
+                                                  setState(() {
+                                                    _filterProducts();
+                                                  });
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                          ),
+                        ),
               ),
             ],
           ),

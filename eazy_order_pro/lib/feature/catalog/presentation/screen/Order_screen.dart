@@ -39,7 +39,10 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
         backgroundColor: AppColors.white,
         elevation: 0,
       ),
-      body: orders.isEmpty
+      body: orderState.isLoading
+          ? const Center(child: CircularProgressIndicator(),
+      ) :
+      orders.isEmpty
           ? _emptyOrders()
           : ListView.separated(
         padding: EdgeInsets.all(16.w),

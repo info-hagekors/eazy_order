@@ -167,9 +167,9 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       bottomNavigationBar: cartState.cart.isNotEmpty
           ? Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           boxShadow: [
-            BoxShadow(color: Colors.black12, blurRadius: 8),
+            BoxShadow(color: AppColors.black12, blurRadius: 8),
           ],
         ),
             child: Padding(
@@ -221,7 +221,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                           Text(
                             '$totalItems Items added',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.white,
                               fontSize: 15.sp,
                               fontWeight: FontWeight.w600,
                             ),
@@ -231,7 +231,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                             height: 26.h,
                             width: 26.h,
                             decoration: const BoxDecoration(
-                              color: Colors.white,
+                              color: AppColors.white,
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -386,7 +386,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                     Positioned(
                       bottom: -16.h,
                       child: quantity == 0
-                          ? GestureDetector(
+                          ? InkWell(
                         onTap: () {
                          controller.addItem(productId);
                         },
@@ -416,34 +416,35 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       ProductListingController controller,
       ) {
     return Container(
-      height: 32.h,
+      height: 38.h,
       width: 90.w,
       decoration: BoxDecoration(
-        color: const Color(0xFF7A4A1D),
+        color: AppColors.white,
+        border: Border.all(),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () {
                   controller.removeItem(productId);
             },
-            child: const Icon(Icons.remove, color: Colors.white, size: 16),
+            child: const Icon(Icons.remove, color: AppColors.green, size: 17),
           ),
           Text(
             '$quantity',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.black,
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
-          GestureDetector(
+          InkWell(
             onTap: () {
                 controller.addItem(productId);
             },
-            child: const Icon(Icons.add, color: Colors.white, size: 16),
+            child: const Icon(Icons.add, color: AppColors.green, size: 17),
           ),
         ],
       ),
@@ -462,13 +463,14 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
         width: 75.w,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: const Color(0xFF7A4A1D),
+          color: AppColors.white,
+          border: Border.all(),
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Text(
           'ADD',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.green,
             fontSize: 13.sp,
             fontWeight: FontWeight.w600,
           ),

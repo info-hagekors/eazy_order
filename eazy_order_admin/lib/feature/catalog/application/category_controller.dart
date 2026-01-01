@@ -19,8 +19,10 @@ class CategoryController extends _$CategoryController {
 
   Future<void> getAllCategories(String businessId) async {
     final categoryRepo = ref.read(categoryRepositoryProvider);
-    List<CategoryModel> result = await categoryRepo.getAllCategories(businessId);
+    state = state.copyWith(isLoading: true);
+    final result = await categoryRepo.getAllCategories(businessId);
     state = state.copyWith(
+      isLoading: false,
       categoriesList: result
     );
   }

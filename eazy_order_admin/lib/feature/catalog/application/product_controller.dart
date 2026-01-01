@@ -25,6 +25,7 @@ class ProductController extends _$ProductController {
   Future<void> getAllProducts(String businessId) async {
     try {
       final productRepo = ref.read(productRepositoryProvider);
+      state = state.copyWith(isLoading: true);
       final products = await productRepo.getAllProducts(businessId);
       final categories = ref.read(categoryControllerProvider).categoriesList;
       List<ProductModel> updatedResult = products;
@@ -38,7 +39,10 @@ class ProductController extends _$ProductController {
         }).toList();
       }
 
-      state = state.copyWith(products: updatedResult);
+      state = state.copyWith(
+          products: updatedResult,
+        isLoading: false
+      );
     } catch (e) {
       ToastUtils.error('Failed to load products');
     }

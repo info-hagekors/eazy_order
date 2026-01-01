@@ -49,13 +49,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   }
 
   Future<void> _placeOrder(double totalPrice) async {
-    if (userName == null || mobileNumber == null || mobileNumber!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter contact details')),
-      );
-      return;
-    }
-
     final confirmed = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -74,8 +67,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       homeState.currentUser.businessId,
       orderId,
       invoiceNumber,
-      userName!,
-      mobileNumber!,
+      userName?.trim().isNotEmpty == true ? userName! : '',
+      mobileNumber?.trim().isNotEmpty == true ? mobileNumber! : '',
       _buildOrderItems(productState),
       totalPrice,
     );
@@ -116,7 +109,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               padding:
               EdgeInsets.symmetric(horizontal: 28.w, vertical: 12.h),
             ),
-            child: const Text('Browse Menu'),
+            child: const Text('Browse Menu',style: TextStyle(color: AppColors.white),),
           ),
         ],
       ),
@@ -131,11 +124,15 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     final totalPrice = _calculateTotal(cartState);
 
     return Scaffold(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.grey100,
       appBar: AppBar(
-        title: const Text('My Cart'),
+        title: const Text('My Cart',style: TextStyle(color: AppColors.primaryColor,fontWeight: FontWeight.w600),),
         backgroundColor: AppColors.white,
         elevation: 0,
+        leading: IconButton(
+            onPressed: (){
+              Navigator.pop(context);
+            }, icon: Icon(Icons.arrow_back_ios,color: AppColors.primaryColor,size: 22.sp)),
       ),
       body: cartState.cart.isEmpty
           ? _emptyCartView(context)
@@ -173,7 +170,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
@@ -191,12 +188,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     height: 50.h,
                     width: 50.h,
                     decoration: BoxDecoration(
-                      color: AppColors.grey100,
+                      color: AppColors.grey300,
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: const Icon(Icons.restaurant),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: 16.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,14 +216,29 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             );
           }),
           const Divider(),
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: const Text(
-              '+  Add more items',
-              style: TextStyle(
-                  color: Color(0xFF6B4A2D),
-                  fontWeight: FontWeight.w600),
-            ),
+          Row(mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 13,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    //border: Border.all(color: AppColors.grey600,width: 1),
+                      borderRadius: BorderRadius.circular(12.r)
+                  ),
+                  child: const Text(
+                    '+  Add items',
+                    style: TextStyle(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -242,7 +254,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       height: 28.h,
       width: 80.w,
       decoration: BoxDecoration(
-        color: AppColors.primaryColor,
+        border: Border.all(color: AppColors.grey600),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
@@ -250,14 +262,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         children: [
           GestureDetector(
             onTap: () => controller.removeItem(productId),
-            child: const Icon(Icons.remove, size: 16, color: Colors.white),
+            child: const Icon(Icons.remove, size: 16, color: AppColors.green),
           ),
           Text('$qty',
               style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.white)),
+                  fontWeight: FontWeight.bold, color: AppColors.black)),
           GestureDetector(
             onTap: () => controller.addItem(productId),
-            child: const Icon(Icons.add, size: 16, color: Colors.white),
+            child: const Icon(Icons.add, size: 16, color: AppColors.green),
           ),
         ],
       ),
@@ -280,7 +292,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         }
       },
       child: Container(
-        padding: EdgeInsets.all(12.w),
+        padding: EdgeInsets.all(15.w),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.r),
@@ -288,20 +300,20 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.call, color: AppColors.primaryColor),
-            SizedBox(width: 12.w),
+            const Icon(Icons.call, size: 25, color: AppColors.green),
+            SizedBox(width: 20.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(userName ?? 'User name',
-                      style: TextStyle(fontWeight: FontWeight.w600)),
+                  Text(userName ?? 'username',
+                      style: const TextStyle(color: AppColors.grey600)),
                   Text(mobileNumber ?? '+91 XXXXXXXX',
                       style: const TextStyle(color: AppColors.grey600)),
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 16),
+            const Icon(Icons.arrow_forward_ios, size: 16,color: AppColors.black,fontWeight: FontWeight.w600,),
           ],
         ),
       ),
@@ -312,14 +324,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
       ),
       child: Row(
         children: [
-          Icon(icon),
-          SizedBox(width: 12.w),
+          Icon(icon,color: AppColors.grey600,),
+          SizedBox(width: 16.w),
           Text(title, style: TextStyle(fontSize: 15.sp)),
         ],
       ),
