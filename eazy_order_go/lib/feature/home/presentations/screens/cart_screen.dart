@@ -69,7 +69,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   Expanded(
                     child: Text(
                       'Please enter your WhatsApp number to receive your order updates...',
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.poppins(
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
                           color: AppColors.black
@@ -125,7 +125,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 SizedBox(width: 8,),
                 Text(
                   'Add more items',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: AppColors.supporting
@@ -164,7 +164,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     children: [
                       Text(
                         cartModel?.userName ?? '',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                             color: AppColors.supporting
@@ -172,7 +172,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       ),
                       Text(
                         '+91 ${cartModel?.mobile ?? ''}',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
                             color: AppColors.supporting
@@ -181,7 +181,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     ],
                   ) : Text(
                     'Enter Mobile Number',
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         color: AppColors.black
@@ -219,7 +219,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   children: [
                     Text(
                       'Grand Total',
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           color: AppColors.supporting
@@ -230,7 +230,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               ),
               Text(
                 '${AppConsts.currencySymbol} ${cartModel?.cartTotal ?? 0}/-',
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.supporting
@@ -263,7 +263,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               children: [
                 Text(
                   product.productName,
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: AppColors.heading
@@ -271,7 +271,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 ),
                 Text(
                   '${AppConsts.currencySymbol} ${product.price * product.quantity}/-',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: AppColors.supporting
@@ -301,7 +301,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 Expanded(
                   child: Text(
                     '${product.quantity}',
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: AppColors.white
@@ -376,7 +376,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       children: [
                         Text(
                           'I agree to the ',
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black
@@ -386,7 +386,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           onTap: () => launchUrl(Uri.parse(AppConsts.termsCondition)),
                           child: Text(
                               "Terms & Conditions",
-                              style: GoogleFonts.nunito(
+                              style: GoogleFonts.poppins(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.primaryColor,
@@ -396,7 +396,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
                         Text(
                           ' and ',
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black
@@ -406,7 +406,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           onTap: () => launchUrl(Uri.parse(AppConsts.privacyPolicy)),
                           child: Text(
                               "Privacy Policy",
-                              style: GoogleFonts.nunito(
+                              style: GoogleFonts.poppins(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.primaryColor,
@@ -416,7 +416,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
                         Text(
                           ' and ',
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.poppins(
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black
@@ -426,7 +426,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           onTap: () => launchUrl(Uri.parse(AppConsts.refundPolicy)),
                           child: Text(
                               "Refund Policy",
-                              style: GoogleFonts.nunito(
+                              style: GoogleFonts.poppins(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.primaryColor,
@@ -450,7 +450,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     children: [
                       Text(
                         '${AppConsts.currencySymbol} ${cartModel?.cartTotal ?? 0}',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                             color: AppColors.black
@@ -458,7 +458,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       ),
                       Text(
                         'Grand Total',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
                             color: AppColors.black
@@ -481,7 +481,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       } : null,
                       child: Text(
                         'Pay Now',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                             color: AppColors.white
@@ -515,7 +515,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               Expanded(
                 child: Text(
                   'Order Preference',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: AppColors.supporting
@@ -544,7 +544,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 controlAffinity: ListTileControlAffinity.trailing,
                 title: Text(
                   item,
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.black
@@ -575,7 +575,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               Expanded(
                 child: Text(
                   'Payment Options',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                       color: AppColors.supporting
@@ -604,7 +604,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 controlAffinity: ListTileControlAffinity.trailing,
                 title: Text(
                   item,
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: AppColors.black

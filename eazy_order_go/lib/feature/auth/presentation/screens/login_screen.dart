@@ -49,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   Text(
                     'Enter Mobile number to continue',
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                     ),
@@ -63,7 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   SizedBox(height: 24.h),
                   AppButton(
                     text: 'Login',
-                    textStyle: GoogleFonts.nunito(
+                    textStyle: GoogleFonts.poppins(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.white

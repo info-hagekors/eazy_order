@@ -37,7 +37,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Today's Report",
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 22.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.black
@@ -91,7 +91,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
             ),
             child: Text(
               title,
-              style: GoogleFonts.nunito(
+              style: GoogleFonts.poppins(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.black
@@ -114,7 +114,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 24.h),
             child: Text(
               value,
-              style: GoogleFonts.nunito(
+              style: GoogleFonts.poppins(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black
@@ -153,7 +153,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                   flex: 4,
                   child: Text(
                     title,
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.black
@@ -163,7 +163,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                 Expanded(
                   child: Text(
                     'Qty',
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.black
@@ -175,7 +175,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                 Expanded(
                   child: Text(
                     'Amt',
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: AppColors.black
@@ -229,7 +229,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                         flex: 4,
                         child: Text(
                           item.name,
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.poppins(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black
@@ -239,7 +239,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                       Expanded(
                         child: Text(
                           item.orders.toString(),
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black
@@ -251,7 +251,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
                       Expanded(
                         child: Text(
                           item.revenue.toString(),
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w400,
                               color: AppColors.black
@@ -269,7 +269,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
               alignment: Alignment.center,
               child: Text(
                 'No Data',
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.poppins(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.black
@@ -305,7 +305,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
             ),
             child: Text(
               title,
-              style: GoogleFonts.nunito(
+              style: GoogleFonts.poppins(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                   color: AppColors.black

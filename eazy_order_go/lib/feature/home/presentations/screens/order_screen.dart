@@ -56,7 +56,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                     Expanded(
                       child: Text(
                         "Today's Order",
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 22.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.black
@@ -65,7 +65,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                     ),
                     Text(
                       "Order History",
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.poppins(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
                           color: AppColors.secondary,

@@ -154,7 +154,7 @@ class _BusinessSetupScreenState extends ConsumerState<BusinessSetupScreen> {
               Expanded(
                 child: Text(
                   'Order Preference',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w500,
                       color: AppColors.supporting

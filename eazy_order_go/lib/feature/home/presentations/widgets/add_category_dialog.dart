@@ -40,7 +40,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
             SizedBox(height: 4.h),
             Text(
               '${widget.categoryId.isNotEmpty ? 'Update' : 'Create'} Category',
-              style: GoogleFonts.nunito(
+              style: GoogleFonts.poppins(
                 fontSize: 25.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryColor
@@ -49,7 +49,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
             SizedBox(height: 6.h,),
             Text(
                 widget.categoryId.isNotEmpty ? 'Update category name' : 'Create Category to add products in it',
-                style: GoogleFonts.nunito(
+                style: GoogleFonts.poppins(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                     color: AppColors.black.withAlpha(128)
@@ -90,7 +90,7 @@ class _AddCategoryDialogState extends ConsumerState<AddCategoryDialog> {
                   width: 130.w,
                   height: 45.h,
                   borderRadius: 12.r,
-                  textStyle: GoogleFonts.nunito(
+                  textStyle: GoogleFonts.poppins(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.white

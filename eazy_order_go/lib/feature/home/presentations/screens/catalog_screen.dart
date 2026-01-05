@@ -163,7 +163,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                     SizedBox(height: 40.h),
                     Text(
                       'No Products',
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.poppins(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: AppColors.black,
@@ -179,7 +179,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                       width: 100.w,
                       height: 35.h,
                       borderRadius: 32.r,
-                      textStyle: GoogleFonts.nunito(
+                      textStyle: GoogleFonts.poppins(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w300,
                         color: AppColors.white,
@@ -302,7 +302,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                           height: 45.h,
                           borderRadius: 11.r,
                           // fully circular
-                          textStyle: GoogleFonts.nunito(
+                          textStyle: GoogleFonts.poppins(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.white,
@@ -352,7 +352,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                     children: [
                       Text(
                         product.productName,
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                           fontSize: 19.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primaryColor,
@@ -360,7 +360,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                       ),
                       Text(
                         '${AppConsts.currencySymbol} ${product.price}/-',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w400,
                           color: AppColors.heading,
@@ -370,7 +370,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                         children: [
                           Text(
                             'Edit',
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.poppins(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                               color: AppColors.black,

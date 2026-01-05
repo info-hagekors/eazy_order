@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core/config/app_colors.dart';
+import 'package:core/config/app_images.dart';
 import 'package:core/models/category_model.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
@@ -275,7 +276,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             height: 50.h,
             width: 50.w,
             child: SvgPicture.asset(
-              "assets/images/restaurant-plate-svgrepo-com.svg",
+              AppImages.restaurant
             ),
           ),
           Text(
@@ -371,13 +372,13 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                               width: double.infinity,
                               errorBuilder: (_, __, ___) => const Icon(
                                 Icons.broken_image,
-                                color: Colors.grey,
+                                color: AppColors.grey,
                               ),
                             );
                           }).toList(),
                         )
                             : Image.asset(
-                          "assets/images/dish.png",
+                          AppImages.dish,
                           fit: BoxFit.cover,
                         ),
                       ),
