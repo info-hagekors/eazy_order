@@ -37,7 +37,7 @@ class DeleteCategoryDialog extends StatelessWidget {
           // 🔸 Title
           Text(
             'Delete Category',
-            style: GoogleFonts.nunito(
+            style: GoogleFonts.poppins(
               fontSize: 20.sp,
               fontWeight: FontWeight.w700,
               color: AppColors.primaryColor,
@@ -49,7 +49,7 @@ class DeleteCategoryDialog extends StatelessWidget {
           Text(
             'Are you sure you want to delete this category?',
             textAlign: TextAlign.center,
-            style: GoogleFonts.nunito(
+            style: GoogleFonts.poppins(
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: AppColors.black.withAlpha(180),
@@ -70,7 +70,7 @@ class DeleteCategoryDialog extends StatelessWidget {
               Expanded(
                 child: Text(
                   'By deleting this category, all products associated with it will also be deleted.',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                     fontSize: 12.sp,
                     color: AppColors.black.withAlpha(150),
                     fontWeight: FontWeight.w500,
@@ -89,7 +89,7 @@ class DeleteCategoryDialog extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryColor,
                   ),
@@ -109,7 +109,7 @@ class DeleteCategoryDialog extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text(
                   'Delete',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

@@ -38,7 +38,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
       backgroundColor: AppColors.white,
       appBar: CommonAppBar(
         title: 'Place New Order',
-        titleStyle: GoogleFonts.nunito(
+        titleStyle: GoogleFonts.poppins(
           fontSize: 23.sp,
           fontWeight: FontWeight.w600,
           color: AppColors.primaryColor,
@@ -89,7 +89,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                       alignment: Alignment.center,
                       child: Text(
                         'No Products found.!',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                             color: AppColors.black
@@ -141,7 +141,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     category.categoryName,
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
                         color: AppColors.black
@@ -199,7 +199,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                     SizedBox(height: 10,),
                     Text(
                       product.productName,
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.poppins(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                           color: AppColors.heading
@@ -208,7 +208,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                     SizedBox(height: 4,),
                     Text(
                       '${AppConsts.currencySymbol} ${product.price}/-',
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: AppColors.supporting
@@ -217,7 +217,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                     SizedBox(height: 4,),
                     Text(
                       product.description,
-                      style: GoogleFonts.nunito(
+                      style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.supporting
@@ -271,7 +271,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                             Expanded(
                               child: Text(
                                 '${itemFromCart.quantity}',
-                                style: GoogleFonts.nunito(
+                                style: GoogleFonts.poppins(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.white
@@ -319,7 +319,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
           children: [
             Text(
               'ADD',
-              style: GoogleFonts.nunito(
+              style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: AppColors.white
@@ -356,7 +356,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
               children: [
                 Text(
                   '${AppConsts.currencySymbol} ${cartModel?.cartTotal ?? 0}',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                       color: AppColors.black
@@ -364,7 +364,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                 ),
                 Text(
                   'Total',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
                       color: AppColors.black
@@ -388,7 +388,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                     children: [
                       Text(
                         '${cartModel?.cartItems.length ?? 0} Items added',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
                             color: AppColors.white
@@ -420,7 +420,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                 onChanged: (val) => ref.read(newOrderControllerProvider.notifier).onSearch(val),
                 hintText: 'Search Item',
                 controller: _searchController,
-                hintStyle: GoogleFonts.nunito(
+                hintStyle: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.black
@@ -473,7 +473,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             e.categoryName,
-                            style: GoogleFonts.nunito(
+                            style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.black
@@ -495,7 +495,7 @@ class _NewOrderScreenState extends ConsumerState<NewOrderScreen> {
                 alignment: Alignment.center,
                 child: Text(
                   'Menu',
-                  style: GoogleFonts.nunito(
+                  style: GoogleFonts.poppins(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.white

@@ -65,7 +65,7 @@ class _AddProductDialogState extends ConsumerState<AddProductDialog> {
                 children: [
                   Text(
                     'Add Product',
-                    style: GoogleFonts.nunito(
+                    style: GoogleFonts.poppins(
                       fontSize: 25.sp,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryColor,

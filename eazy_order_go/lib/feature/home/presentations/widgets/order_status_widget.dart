@@ -72,7 +72,7 @@ class OrderStatusWidget extends ConsumerWidget {
                       SizedBox(width: 4.w,),
                       Text(
                         displayStatus,
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                             color: AppColors.green
@@ -110,7 +110,7 @@ class OrderStatusWidget extends ConsumerWidget {
                       SizedBox(width: 4.w,),
                       Text(
                         'Cancel',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.poppins(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                             color: AppColors.lightRed

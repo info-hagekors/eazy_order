@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'order_details_screen.dart';
+
 class OrderScreen extends ConsumerStatefulWidget {
   const OrderScreen({super.key});
 
@@ -35,17 +37,21 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     return Scaffold(
       backgroundColor: AppColors.grey100,
       appBar: AppBar(
-        title: const Text('My Orders',style: TextStyle(color: AppColors.primaryColor,fontWeight: FontWeight.bold),),
+        title: const Text('My Orders',
+          style: TextStyle(
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.bold),
+        ),
         backgroundColor: AppColors.white,
-        elevation: 0,
+        elevation: 0.5,
+        centerTitle: true,
       ),
       body: orderState.isLoading
-          ? const Center(child: CircularProgressIndicator(),
-      ) :
-      orders.isEmpty
+          ? const Center(child: CircularProgressIndicator(),)
+          : orders.isEmpty
           ? _emptyOrders()
           : ListView.separated(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(horizontal:16.w, vertical: 12.h),
         itemCount: orders.length,
         separatorBuilder: (_, __) => SizedBox(height: 12.h),
         itemBuilder: (context, index) {
@@ -87,100 +93,132 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
 
   /// 🔹 ORDER CARD
   Widget _orderCard(order) {
-    return Container(
-      padding: EdgeInsets.all(14.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 4),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// HEADER
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'Order #${order.orderId}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14.sp,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder:(context)=> const OrderDetailsScreen()));
+      },
+      child: Container(
+        padding: EdgeInsets.all(14.w),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow:  [
+            BoxShadow(
+                color: AppColors.black.withOpacity(0.05),
+                blurRadius: 10,
+            offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// HEADER
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${order.orderId}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
+                    ),
                   ),
                 ),
-              ),
-              _statusChip(order.orderStatus),
-            ],
-          ),
-
-          SizedBox(height: 8.h),
-
-          /// ITEMS COUNT
-          Text(
-            '${order.items.length} items',
-            style: TextStyle(
-              fontSize: 13.sp,
-              color: AppColors.grey600,
+                _statusChip(order.orderStatus),
+              ],
             ),
-          ),
 
-          SizedBox(height: 8.h),
+            SizedBox(height: 10.h),
 
-          /// TOTAL
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: AppColors.grey600,
+
+
+            /// ITEMS COUNT
+            Row(
+              children: [
+                Icon(Icons.shopping_bag_rounded,
+                  size: 18.sp,
+                  color: AppColors.grey600),
+                SizedBox(width: 6.w),
+                Text(
+                  '${order.items.length} items',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: AppColors.grey600,
+                  ),
                 ),
-              ),
-              Text(
-                '₹${order.orderTotal.toStringAsFixed(0)}',
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w700,
+              ],
+            ),
+
+            SizedBox(height: 12.h),
+            Divider(color: AppColors.grey300),
+            SizedBox(height: 8.h),
+            /// TOTAL
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total Amount',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: AppColors.grey600,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                Text(
+                  '₹${order.orderTotal.toStringAsFixed(0)}',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
   /// 🔹 STATUS CHIP
   Widget _statusChip(String status) {
-    Color color;
+    final normalized = status.toLowerCase();
 
-    switch (status.toLowerCase()) {
+    Color color;
+    IconData icon;
+
+    switch (normalized) {
       case 'completed':
-        color = Colors.green;
+        color = AppColors.green;
+        icon = Icons.check_circle_outline;
         break;
       case 'cancelled':
-        color = Colors.red;
+        color = AppColors.red;
+        icon = Icons.cancel_outlined;
         break;
       default:
-        color = Colors.orange;
+        color = AppColors.confirm;
+        icon = Icons.pending_outlined;
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(20.r),
       ),
-      child: Text(
-        status.isEmpty ? 'Pending' : status,
-        style: TextStyle(
-          color: color,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
-        ),
+      child: Row(
+        children: [
+          Icon(icon,size: 14.sp,color: color),
+          SizedBox(width: 4.w),
+          Text(
+            status.isEmpty ? 'Pending' : status,
+            style: TextStyle(
+              color: color,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }

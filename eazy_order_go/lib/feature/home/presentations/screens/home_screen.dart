@@ -184,7 +184,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           backgroundColor: AppColors.imageBgColor,
           appBar: CommonAppBar(
             title: 'Home',
-            titleStyle: GoogleFonts.nunito(
+            titleStyle: GoogleFonts.poppins(
               fontSize: 24.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.primaryColor,

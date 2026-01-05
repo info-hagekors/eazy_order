@@ -250,124 +250,126 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
             ),
             const SizedBox(height: 20),
 
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(color: AppColors.white),
-              child: SingleChildScrollView(
-                child: DataTable(
-                  headingRowHeight: 48,
-                  dataRowHeight: 47,
-                  columnSpacing: 32,
-                  dividerThickness: 0.01,
-                  headingRowColor: MaterialStateProperty.all(AppColors.grey300),
-                  columns: const [
-                    DataColumn(
-                      label: Text("Order ID", style: TextStyle(fontSize: 14)),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Date & Time",
-                        style: TextStyle(fontSize: 14),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(color: AppColors.white),
+                child: SingleChildScrollView(
+                  child: DataTable(
+                    headingRowHeight: 48,
+                    dataRowHeight: 47,
+                    columnSpacing: 32,
+                    dividerThickness: 0.01,
+                    headingRowColor: MaterialStateProperty.all(AppColors.grey300),
+                    columns: const [
+                      DataColumn(
+                        label: Text("Order ID", style: TextStyle(fontSize: 14)),
                       ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Customer Name",
-                        style: TextStyle(fontSize: 14),
+                      DataColumn(
+                        label: Text(
+                          "Date & Time",
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Order Status",
-                        style: TextStyle(fontSize: 14),
+                      DataColumn(
+                        label: Text(
+                          "Customer Name",
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Text(
-                        "Total Amount",
-                        style: TextStyle(fontSize: 14),
+                      DataColumn(
+                        label: Text(
+                          "Order Status",
+                          style: TextStyle(fontSize: 14),
+                        ),
                       ),
-                    ),
-                    DataColumn(
-                      label: Text("Action", style: TextStyle(fontSize: 14)),
-                    ),
-                  ],
-                  rows:
-                      _paginatedOrders.map((order) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              Text(
-                                order["id"],
-                                style: TextStyle(color: AppColors.black45),
+                      DataColumn(
+                        label: Text(
+                          "Total Amount",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text("Action", style: TextStyle(fontSize: 14)),
+                      ),
+                    ],
+                    rows:
+                        _paginatedOrders.map((order) {
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Text(
+                                  order["id"],
+                                  style: TextStyle(color: AppColors.black45),
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              Text(
-                                order["date"],
-                                style: TextStyle(fontSize: 13),
+                              DataCell(
+                                Text(
+                                  order["date"],
+                                  style: TextStyle(fontSize: 13),
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              Text(
-                                order["customer"],
-                                style: TextStyle(fontSize: 13),
+                              DataCell(
+                                Text(
+                                  order["customer"],
+                                  style: TextStyle(fontSize: 13),
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    order["status"].toString().statusIcon,
-                                    size: 15,
-                                    color:
-                                        order["status"].toString().statusColor,
-                                  ),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    order["status"],
-                                    style: TextStyle(
-                                      fontSize: 13,
+                              DataCell(
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      order["status"].toString().statusIcon,
+                                      size: 15,
                                       color:
-                                          order["status"]
-                                              .toString()
-                                              .statusColor,
-                                      fontWeight: FontWeight.w500,
+                                          order["status"].toString().statusColor,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      order["status"],
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color:
+                                            order["status"]
+                                                .toString()
+                                                .statusColor,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              Text(
-                                order["amount"],
-                                style: TextStyle(fontSize: 13),
+                              DataCell(
+                                Text(
+                                  order["amount"],
+                                  style: TextStyle(fontSize: 13),
+                                ),
                               ),
-                            ),
-                            DataCell(
-                              Row(
-                                children: [
-                                  Builder(
-                                    builder: (context) {
-                                      return IconButton(
-                                        icon: const Icon(
-                                          Icons.visibility,
-                                          color: AppColors.blue,
-                                          size: 18,
-                                        ),
-                                        onPressed: () {
-                                          Scaffold.of(context).openEndDrawer();
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ],
+                              DataCell(
+                                Row(
+                                  children: [
+                                    Builder(
+                                      builder: (context) {
+                                        return IconButton(
+                                          icon: const Icon(
+                                            Icons.visibility,
+                                            color: AppColors.blue,
+                                            size: 18,
+                                          ),
+                                          onPressed: () {
+                                            Scaffold.of(context).openEndDrawer();
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
+                            ],
+                          );
+                        }).toList(),
+                  ),
                 ),
               ),
             ),
