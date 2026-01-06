@@ -313,7 +313,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                   totalPrice,
                                   selectedOrderPreference
                                 );
-                            
+
                             ref.read(productListingControllerProvider.notifier).clearCart();
                             ref.read(orderListControllerProvider.notifier).clear();
 
