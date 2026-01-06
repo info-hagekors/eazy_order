@@ -129,19 +129,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    selectedOrderPreference = 'dine_in';
-                                  });
+                                  ref.read(orderListControllerProvider.notifier).orderpreference('dine_in');
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(vertical: 12.h),
                                   decoration: BoxDecoration(
-                                    color: selectedOrderPreference == 'dine_in'
-                                        ? AppColors.green.withOpacity(0.15)
+                                    color: orderState.orderpreference == 'dine_in'
+                                        ? AppColors.green.withAlpha(38)
                                         : AppColors.white,
                                     borderRadius: BorderRadius.circular(10.r),
                                     border: Border.all(
-                                      color: selectedOrderPreference == 'dine_in'
+                                      color: orderState.orderpreference == 'dine_in'
                                           ? AppColors.green
                                           : AppColors.grey400,
                                       width: 1.5,
@@ -153,7 +151,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       Icon(
                                         Icons.dining_outlined,
                                         size: 18,
-                                        color: selectedOrderPreference == 'dine_in'
+                                        color: orderState.orderpreference == 'dine_in'
                                             ? AppColors.green
                                             : AppColors.black,
                                       ),
@@ -163,7 +161,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w600,
-                                          color: selectedOrderPreference == 'dine_in'
+                                          color: orderState.orderpreference == 'dine_in'
                                               ? AppColors.green
                                               : AppColors.black,
                                         ),
@@ -180,19 +178,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  setState(() {
-                                    selectedOrderPreference = 'take_away';
-                                  });
+                                  ref.read(orderListControllerProvider.notifier).orderpreference('take_away');
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(vertical: 12.h),
                                   decoration: BoxDecoration(
-                                    color: selectedOrderPreference == 'take_away'
+                                    color: orderState.orderpreference == 'take_away'
                                         ? AppColors.green.withAlpha(38)
                                         : AppColors.white,
                                     borderRadius: BorderRadius.circular(10.r),
                                     border: Border.all(
-                                      color: selectedOrderPreference == 'take_away'
+                                      color: orderState.orderpreference == 'take_away'
                                           ? AppColors.green
                                           : AppColors.grey400,
                                       width: 1.5,
@@ -204,7 +200,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       Icon(
                                         Icons.restaurant_menu_rounded,
                                         size: 18,
-                                        color: selectedOrderPreference == 'take_away'
+                                        color: orderState.orderpreference == 'take_away'
                                             ? AppColors.green
                                             : AppColors.black,
                                       ),
@@ -214,7 +210,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w600,
-                                          color: selectedOrderPreference == 'take_away'
+                                          color: orderState.orderpreference == 'take_away'
                                               ? AppColors.green
                                               : AppColors.black,
                                         ),
@@ -311,7 +307,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                   orderState.mobilenumber,
                                   orderItems,
                                   totalPrice,
-                                  selectedOrderPreference
+                                  orderState.orderpreference
                                 );
                             
                             ref.read(productListingControllerProvider.notifier).clearCart();
