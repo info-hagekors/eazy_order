@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:core/models/create_user_response_model.dart';
 import 'package:core/models/user_model.dart';
+import 'package:core/utils/pin_hasher.dart';
 import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,6 +49,31 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       debugPrint("Linking failed: ${e.message}");
       return Left(e.message.toString());
+    }
+  }
+
+  Future<Either<String, UserModel>> registerWithEmail(String email, String password) async {
+    try {
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      UserModel userModel = UserModel(
+        uid: credential.user?.uid ?? '',
+      );
+      _currentUser = FirebaseAuth.instance.currentUser;
+      return Right(userModel);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          return Left('Email is already registered');
+        case 'invalid-email':
+          return Left('Invalid email address');
+        case 'weak-password':
+          return Left('Password should be at least 6 characters');
+        default:
+          return Left('Registration failed. Try again.');
+      }
     }
   }
 
@@ -248,6 +274,20 @@ class AuthService {
 
     return CreateUserResponseModel.fromJson(jsonDecode(response.body));
   }
+
+  Future<void> savePin({required String userId, required String pin,}) async {
+    final salt = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final pinHash = PinHasher.hashPin(pin, salt: salt);
+
+    await _db.collection(_collectionUsers).doc(userId).set({
+      'pin_hash': pinHash,
+      'pin_salt': salt,
+      'pin_set_at': DateTime.now().toIso8601String(),
+      'updatedAt': DateTime.now().toIso8601String(),
+    }, SetOptions(merge: true));
+  }
+
 
   void _onAuthStateChanged(User? user) {
     _currentUser = user;

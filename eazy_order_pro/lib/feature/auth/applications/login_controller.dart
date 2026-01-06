@@ -6,6 +6,7 @@ import 'package:eazy_order_pro/core/config/app_images.dart';
 import 'package:eazy_order_pro/core/routing/app_router.dart';
 import 'package:eazy_order_pro/feature/auth/entities/login_entity.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/screens/login_screen.dart';
+import 'package:eazy_order_pro/feature/auth/presentations/screens/register_screen.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/widgets/verify_success_dialog.dart';
 import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:eazy_order_pro/feature/home/presentations/screens/home_screen.dart';
@@ -143,6 +144,10 @@ class LoginController extends _$LoginController {
 
   void navigateToForgotPassword() {
     //ref.read(goRouterProvider).push(ChangePassword.routeName);
+  }
+
+  void onRegisterPress() {
+    ref.read(goRouterProvider).push(RegisterScreen.routeName);
   }
 
   void validateTokenAndNavigate() async {

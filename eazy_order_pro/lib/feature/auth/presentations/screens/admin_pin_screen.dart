@@ -3,26 +3,24 @@ import 'package:core/widgets/app_button.dart';
 import 'package:core/widgets/common_text_field.dart';
 import 'package:eazy_order_pro/core/config/app_colors.dart';
 import 'package:eazy_order_pro/core/config/app_images.dart';
-import 'package:eazy_order_pro/core/config/app_styles.dart';
 import 'package:eazy_order_pro/feature/auth/applications/login_controller.dart';
 import 'package:eazy_order_pro/feature/auth/entities/login_entity.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class AdminPinScreen extends ConsumerStatefulWidget {
+  const AdminPinScreen({super.key});
 
-  static const String routeName = '/login';
+  static const String routeName = '/admin_pin';
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<AdminPinScreen> createState() => _AdminPinScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _AdminPinScreenState extends ConsumerState<AdminPinScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -149,27 +147,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ref.read(loginControllerProvider.notifier).userLogin(context);
                           //ref.read(loginControllerProvider.notifier).showOtpDialog(context);
                         },
-                      ),
-                      SizedBox(height: 12.h,),
-                      RichText(
-                        text: TextSpan(
-                            children: [
-                              TextSpan(
-                                  text: 'New User? ',
-                                  style: AppStyles.smallBodyStyle
-                              ),
-                              TextSpan(
-                                text: 'Register here.!',
-                                recognizer: TapGestureRecognizer()..onTap = () {
-                                  ref.read(loginControllerProvider.notifier).onRegisterPress();
-                                },
-                                style: AppStyles.smallBodyStyle.copyWith(
-                                    decoration: TextDecoration.underline,
-                                    color: AppColors.primaryColor
-                                ),
-                              ),
-                            ]
-                        ),
                       ),
                       SizedBox(height: 32.h,),
                     ],

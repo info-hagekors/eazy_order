@@ -86,4 +86,10 @@ class AppStyles {
       fontWeight: FontWeight.w500,
       color: AppColors.white
   );
+
+  static final smallBodyStyle = GoogleFonts.poppins(
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w500,
+      color: AppColors.black
+  );
 }
