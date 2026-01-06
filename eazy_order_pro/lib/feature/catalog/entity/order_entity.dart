@@ -12,8 +12,8 @@ class OrderEntity {
     this.isLoading = false,
     this.username = '',
     this.mobilenumber = '',
-    String? orderpreference,
-  }): orderpreference = orderpreference ?? 'dine_in';
+    this.orderpreference= 'dine_in',
+  });
 
   OrderEntity copyWith({
     List<OrderModel>? orderslist,

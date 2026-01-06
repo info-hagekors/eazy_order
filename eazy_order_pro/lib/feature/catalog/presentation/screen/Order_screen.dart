@@ -95,7 +95,11 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
   Widget _orderCard(order) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder:(context)=> const OrderDetailsScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(
+            builder:(context)=>  OrderDetailsScreen(orderId: order.orderId)
+          )
+        );
       },
       child: Container(
         padding: EdgeInsets.all(14.w),

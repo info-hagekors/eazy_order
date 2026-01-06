@@ -57,10 +57,7 @@ class OrderListController extends _$OrderListController {
     );
   }
   void clear(){
-    state = state.copyWith(
-      username: '',
-      mobilenumber: ''
-    );
+    state = OrderEntity();
   }
 
   void orderpreference(String preference){
