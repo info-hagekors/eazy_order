@@ -60,7 +60,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             icon: Icon(
               Icons.arrow_back_ios_new,
               size: 22.sp,
-              fontWeight: FontWeight.w600,
               color: AppColors.primaryColor,)),
         backgroundColor: AppColors.white,
         elevation: 0,

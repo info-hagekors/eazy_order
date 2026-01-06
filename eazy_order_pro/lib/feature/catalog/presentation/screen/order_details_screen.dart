@@ -35,7 +35,6 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
             Icons.arrow_back_ios_new,
             size: 22.sp,
             color: AppColors.primaryColor,
-            fontWeight: FontWeight.w600,
           ),
         ),
         title: Text(
