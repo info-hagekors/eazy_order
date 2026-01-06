@@ -1,5 +1,6 @@
 
 import 'package:eazy_order_pro/feature/auth/presentations/screens/login_screen.dart';
+import 'package:eazy_order_pro/feature/auth/presentations/screens/register_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/Order_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
 import 'package:eazy_order_pro/feature/home/presentations/screens/home_screen.dart';
@@ -22,6 +23,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/home',

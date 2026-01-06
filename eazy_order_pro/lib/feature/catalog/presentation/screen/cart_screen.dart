@@ -313,7 +313,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 ],
               ),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 16,color: AppColors.black,fontWeight: FontWeight.w600,),
+            const Icon(Icons.arrow_forward_ios, size: 16,color: AppColors.black,),
           ],
         ),
       ),
