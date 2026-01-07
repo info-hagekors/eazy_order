@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
   const CartScreen({super.key});
@@ -65,9 +66,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         elevation: 0,
         title: Text(
           'My Cart',
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             color: AppColors.primaryColor,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -91,7 +92,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
                   Text(
                     'Please enter your WhatsApp number to receive order updates.',
-                    style: TextStyle(fontSize: 12.sp, color: AppColors.grey600),
+                    style: GoogleFonts.poppins(fontSize: 12.sp, color: AppColors.grey600),
                   ),
 
                   SizedBox(height: 16.h),
@@ -115,7 +116,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             SizedBox(width: 16.w),
                             Text(
                               'Order Preference',
-                              style: TextStyle(fontSize: 15.sp),
+                              style: GoogleFonts.poppins(fontSize: 15.sp),
                             ),
                           ],
                         ),
@@ -157,8 +158,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       SizedBox(width: 8.w),
                                       Text(
                                         'Dine In',
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 15.sp,
                                           fontWeight: FontWeight.w600,
                                           color: orderState.orderpreference == 'dine_in'
                                               ? AppColors.green
@@ -206,8 +207,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       SizedBox(width: 8.w),
                                       Text(
                                         'Take Away',
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 15.sp,
                                           fontWeight: FontWeight.w600,
                                           color: orderState.orderpreference == 'take_away'
                                               ? AppColors.green
@@ -253,14 +254,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       children: [
                         Text(
                           '₹$totalPrice',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           'Grand Total',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 12.sp,
                             color: AppColors.grey600,
                           ),
@@ -317,7 +318,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         },
 
                         text: 'Place order',
-                        textStyle: TextStyle(
+                        textStyle: GoogleFonts.poppins(
                           fontSize: 17.sp,
                           fontWeight: FontWeight.w600,
                           color: AppColors.white,
@@ -366,7 +367,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       children: [
                         Text(
                           product.productName ?? '',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),
@@ -374,7 +375,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         SizedBox(height: 4.h),
                         Text(
                           '₹${product.price ?? 0}/-',
-                          style: TextStyle(
+                          style: GoogleFonts.poppins(
                             fontSize: 13.sp,
                             color: AppColors.grey600,
                           ),
@@ -405,9 +406,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     border: Border.all(color: AppColors.grey600, width: 1),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
-                  child: const Text(
+                  child: Text(
                     '+  Add items',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       color: AppColors.black,
                       fontWeight: FontWeight.w500,
                     ),
@@ -434,7 +435,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           SizedBox(height: 20.h),
           Text(
             'Your cart is empty',
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
               color: AppColors.black,
@@ -443,7 +444,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           SizedBox(height: 8.h),
           Text(
             'Add items from the menu to start ordering',
-            style: TextStyle(fontSize: 13.sp, color: AppColors.grey600),
+            style: GoogleFonts.poppins(fontSize: 13.sp, color: AppColors.grey600),
           ),
           SizedBox(height: 20.h),
           AppButton(
@@ -452,7 +453,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             width: 150.w,
             onPressed: () => Navigator.pop(context),
             text: 'Browse Menu',
-            textStyle: TextStyle(
+            textStyle: GoogleFonts.poppins(
               fontSize: 14.sp,
               color: AppColors.white,
               fontWeight: FontWeight.w600,
@@ -480,7 +481,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
           Text(
             '$qty',
-            style: const TextStyle(
+            style: GoogleFonts.poppins(
               fontWeight: FontWeight.bold,
               color: AppColors.black,
             ),
@@ -528,12 +529,12 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   Text(
                      orderState.username.isEmpty
                          ? 'username': orderState.username,
-                    style: TextStyle(color: AppColors.black),
+                    style: GoogleFonts.poppins(color: AppColors.black),
                   ),
                   Text(
                     orderState.mobilenumber.isEmpty
                         ? '+91 XXXXXXXX': orderState.mobilenumber,
-                    style: const TextStyle(color: AppColors.black),
+                    style: GoogleFonts.poppins(color: AppColors.black),
                   ),
                 ],
               ),
@@ -562,7 +563,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         children: [
           Icon(icon, color: AppColors.grey600),
           SizedBox(width: 16.w),
-          Text(title, style: TextStyle(fontSize: 15.sp)),
+          Text(title, style: GoogleFonts.poppins(fontSize: 15.sp)),
         ],
       ),
     );
@@ -581,11 +582,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         children: [
           Text(
             'Grand Total',
-            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w600),
+            style: GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w600),
           ),
           Text(
             '₹${totalPrice.toStringAsFixed(0)}',
-            style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w700),
+            style: GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w700),
           ),
         ],
       ),

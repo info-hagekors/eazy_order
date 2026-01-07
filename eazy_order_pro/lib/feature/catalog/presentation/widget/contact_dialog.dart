@@ -4,6 +4,7 @@ import 'package:core/widgets/common_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ContactDialog extends StatefulWidget {
   const ContactDialog({super.key});
@@ -30,7 +31,7 @@ class _ContactDialogState extends State<ContactDialog> {
           children: [
             Text(
               'Contact Details :',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
                 color: AppColors.primaryColor,
@@ -72,7 +73,7 @@ class _ContactDialogState extends State<ContactDialog> {
                   },
                   child: Text(
                     "cancel",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
                       color: AppColors.black,
@@ -92,7 +93,7 @@ class _ContactDialogState extends State<ContactDialog> {
                   },
                   text: 'Save',
                   borderRadius: 28.r,
-                  textStyle: TextStyle(
+                  textStyle: GoogleFonts.poppins(
                     color: AppColors.white,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -109,7 +110,7 @@ class _ContactDialogState extends State<ContactDialog> {
   Widget _label(String text) {
     return Text(
       '$text :',
-      style: TextStyle(
+      style: GoogleFonts.poppins(
         fontSize: 15.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.grey600,

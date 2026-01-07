@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:core/config/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class OrderConfirmDialog extends StatefulWidget {
@@ -46,7 +47,7 @@ class _OrderConfirmDialogState extends State<OrderConfirmDialog> {
             SizedBox(height: 16.h),
             Text(
               'Order Confirmed!',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -55,7 +56,7 @@ class _OrderConfirmDialogState extends State<OrderConfirmDialog> {
             Text(
               'Your order has been placed successfully',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 13.sp,
                 color: Colors.grey[600],
               ),

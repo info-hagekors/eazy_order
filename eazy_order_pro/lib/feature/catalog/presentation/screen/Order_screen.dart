@@ -4,6 +4,7 @@ import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'order_details_screen.dart';
 
@@ -37,10 +38,11 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     return Scaffold(
       backgroundColor: AppColors.grey100,
       appBar: AppBar(
-        title: const Text('My Orders',
-          style: TextStyle(
+        title:  Text('My Orders',
+          style: GoogleFonts.poppins(
               color: AppColors.primaryColor,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.w600
+          ),
         ),
         backgroundColor: AppColors.white,
         elevation: 0.5,
@@ -73,7 +75,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           SizedBox(height: 16.h),
           Text(
             'No orders yet',
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -81,7 +83,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           SizedBox(height: 6.h),
           Text(
             'Place your first order to see it here',
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 13.sp,
               color: AppColors.grey600,
             ),
@@ -123,7 +125,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                 Expanded(
                   child: Text(
                     '${order.orderId}',
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600,
                       fontSize: 14.sp,
                     ),
@@ -146,7 +148,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                 SizedBox(width: 6.w),
                 Text(
                   '${order.items.length} items',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 13.sp,
                     color: AppColors.grey600,
                   ),
@@ -157,22 +159,22 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
             SizedBox(height: 12.h),
             Divider(color: AppColors.grey300),
             SizedBox(height: 8.h),
-            /// TOTAL
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Total Amount',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
                     fontSize: 13.sp,
                     color: AppColors.grey600,
                   ),
                 ),
                 Text(
                   '₹${order.orderTotal.toStringAsFixed(0)}',
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w700,
+                  style: GoogleFonts.poppins(
+                    fontSize: 15.5.sp,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -216,7 +218,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           SizedBox(width: 4.w),
           Text(
             status.isEmpty ? 'Pending' : status,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               color: color,
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,

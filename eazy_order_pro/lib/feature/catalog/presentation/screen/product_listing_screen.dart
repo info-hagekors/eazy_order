@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProductListingScreen extends ConsumerStatefulWidget {
   const ProductListingScreen({super.key});
@@ -73,11 +74,11 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             pinned: false,
             floating: true,
             elevation: 0,
-            title: const Text(
+            title: Text(
               "Menu",
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -119,7 +120,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             sliver: SliverToBoxAdapter(
               child: Text(
                 'Products :',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
                   color: AppColors.black,
@@ -182,15 +183,15 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                     children: [
                       Text(
                         '₹$subTotal',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 18.sp,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                           color: AppColors.black,
                         ),
                       ),
                       Text(
                         'Total',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
                           fontSize: 12.sp,
                           color: AppColors.grey600,
                         ),
@@ -221,7 +222,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                           SizedBox(width: 10,),
                           Text(
                             '$totalItems Items added',
-                            style: TextStyle(
+                            style: GoogleFonts.poppins(
                               color: AppColors.white,
                               fontSize: 15.sp,
                               fontWeight: FontWeight.w600,
@@ -283,7 +284,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 13.5.sp),
+            style: GoogleFonts.poppins(fontSize: 13.5.sp),
           ),
         ],
       ),
@@ -317,24 +318,24 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 15.sp,
+                  style: GoogleFonts.poppins(
+                    fontSize: 15.5.sp,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 SizedBox(height: 15.h),
                 Text(
                     '₹$price/-',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF7A4A1D),
+                  style: GoogleFonts.poppins(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryColor,
                   ),
                 ),
                 SizedBox(height: 10.h),
                 Text(
                   product.description ?? '',
-                  style: TextStyle(fontSize: 15.sp, color: AppColors.grey600),
+                  style: GoogleFonts.poppins(fontSize: 15.sp, color: AppColors.grey600),
                 ),
               ],
             ),
@@ -435,7 +436,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           ),
           Text(
             '$quantity',
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               color: AppColors.black,
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
@@ -470,7 +471,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
         ),
         child: Text(
           'ADD',
-          style: TextStyle(
+          style: GoogleFonts.poppins(
             color: AppColors.green,
             fontSize: 13.sp,
             fontWeight: FontWeight.w600,
