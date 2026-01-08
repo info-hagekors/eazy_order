@@ -74,4 +74,11 @@ class ProductListingController extends _$ProductListingController {
       isProductLoading: false
     );
   }
+
+  void loadproductforedit(order) {
+    state = state.copyWith(
+      selectcategoryId: order.categoryId,
+      cart: order.items.asMap(),
+    );
+  }
 }

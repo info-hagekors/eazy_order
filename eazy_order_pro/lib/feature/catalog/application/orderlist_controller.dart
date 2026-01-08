@@ -30,7 +30,7 @@ class OrderListController extends _$OrderListController {
       orderInvoiceNumber: _generatedInvoiceNumber(),
       orderUserName: userName,
       orderMobileNumber: mobileNumber,
-      orderStatus: 'pending',
+      orderStatus: 'placed',
       orderPreference: orderpreferences,
       paymentStatus: 'pending',
       items: items,

@@ -1,5 +1,7 @@
 import 'package:core/config/app_colors.dart';
+import 'package:core/core.dart';
 import 'package:eazy_order_pro/feature/catalog/application/orderlist_controller.dart';
+import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
 import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,7 +66,6 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     );
   }
 
-  /// 🔹 EMPTY STATE
   Widget _emptyOrders() {
     return Center(
       child: Column(
@@ -93,7 +94,6 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
     );
   }
 
-  /// 🔹 ORDER CARD
   Widget _orderCard(order) {
     return GestureDetector(
       onTap: () {
@@ -103,89 +103,113 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
           )
         );
       },
-      child: Container(
-        padding: EdgeInsets.all(14.w),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(12.r),
-          boxShadow:  [
-            BoxShadow(
-                color: AppColors.black.withOpacity(0.05),
-                blurRadius: 10,
-            offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// HEADER
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '${order.orderId}',
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
+      child: Card(
+        color: AppColors.white,
+        elevation: 3,
+        child: Container(
+          padding: EdgeInsets.all(14.w),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${order.orderUserName}',
+                      style: GoogleFonts.poppins(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 17.sp,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                ),
-                _statusChip(order.orderStatus),
-              ],
-            ),
+                  _statusChip(order.orderStatus),
 
-            SizedBox(height: 10.h),
+                  SizedBox(width: 10.w),
 
+                  Icon(Icons.arrow_forward_ios,color: AppColors.black,size: 15.sp),
+                ],
+              ),
+              SizedBox(height: 5.h),
 
+              Row(
+                children: [
+                  Text('# ${order.orderInvoiceNumber} / ${order.orderPreference}')
+                ],
+              ),
+              SizedBox(height: 10.h),
 
-            /// ITEMS COUNT
-            Row(
-              children: [
-                Icon(Icons.shopping_bag_rounded,
-                  size: 18.sp,
-                  color: AppColors.grey600),
-                SizedBox(width: 6.w),
-                Text(
-                  '${order.items.length} items',
-                  style: GoogleFonts.poppins(
-                    fontSize: 13.sp,
-                    color: AppColors.grey600,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '🛍️  ${order.items.length} items',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14.sp,
+                      color: AppColors.grey600,
+                    ),
                   ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 12.h),
-            Divider(color: AppColors.grey300),
-            SizedBox(height: 8.h),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Total Amount',
-                  style: GoogleFonts.poppins(
-                    fontSize: 13.sp,
-                    color: AppColors.grey600,
+                  SizedBox(width: 20.w),
+                  InkWell(
+                    onTap: (){
+                      Navigator.push(
+                          context, MaterialPageRoute(
+                          builder: (context)=> ProductListingScreen())
+                       );
+                      },
+                    child: Container(
+                        decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.grey600),
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text("✏️  Edit order",
+                          style: GoogleFonts.poppins(
+                              fontSize: 15.sp,
+                              color: AppColors.green,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    ),
                   ),
-                ),
-                Text(
-                  '₹${order.orderTotal.toStringAsFixed(0)}',
-                  style: GoogleFonts.poppins(
-                    fontSize: 15.5.sp,
-                    fontWeight: FontWeight.w600,
+                ],
+              ),
+              SizedBox(height: 5.h),
+              Divider(color: AppColors.grey400),
+              SizedBox(height: 8.h),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total Amount',
+                    style: GoogleFonts.poppins(
+                      fontSize: 13.sp,
+                      color: AppColors.grey600,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                  Text(
+                    '₹${order.orderTotal.toStringAsFixed(0)}',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15.5.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  /// 🔹 STATUS CHIP
   Widget _statusChip(String status) {
     final normalized = status.toLowerCase();
 
@@ -194,30 +218,39 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
 
     switch (normalized) {
       case 'completed':
-        color = AppColors.green;
+        color = AppColors.complete;
         icon = Icons.check_circle_outline;
         break;
       case 'cancelled':
-        color = AppColors.red;
+        color = AppColors.cancel;
         icon = Icons.cancel_outlined;
         break;
-      default:
+      case 'preparing':
         color = AppColors.confirm;
-        icon = Icons.pending_outlined;
+        icon = Icons.query_builder;
+        break;
+      case 'ready':
+        color = AppColors.confirm;
+        icon = Icons.next_plan_rounded;
+        break;
+
+      default:
+        color = AppColors.placed;
+        icon = Icons.place_outlined;
     }
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(20.r),
+        color: color.withAlpha(31),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
           Icon(icon,size: 14.sp,color: color),
           SizedBox(width: 4.w),
           Text(
-            status.isEmpty ? 'Pending' : status,
+            status.isNotEmpty ? 'placed' : status,
             style: GoogleFonts.poppins(
               color: color,
               fontSize: 12.sp,

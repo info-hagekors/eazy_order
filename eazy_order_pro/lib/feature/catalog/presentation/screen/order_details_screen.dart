@@ -9,7 +9,9 @@ import 'package:google_fonts/google_fonts.dart';
 class OrderDetailsScreen extends ConsumerStatefulWidget {
   final String orderId;
 
-  const OrderDetailsScreen({super.key, required this.orderId});
+  static const String routeName = '/order-details';
+
+  const OrderDetailsScreen({super.key, this.orderId=''});
   @override
   ConsumerState<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
 }
@@ -101,9 +103,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
                                         border: Border.all(
                                           color: AppColors.grey600,
                                         ),
-                                        borderRadius: BorderRadius.circular(
-                                          8.r,
-                                        ),
+                                        borderRadius: BorderRadius.circular(8.r),
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.all(4),

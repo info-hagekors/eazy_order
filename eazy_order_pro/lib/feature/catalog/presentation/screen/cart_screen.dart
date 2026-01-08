@@ -1,7 +1,7 @@
 import 'package:core/config/app_colors.dart';
 import 'package:core/config/app_images.dart';
-import 'package:core/core.dart';
 import 'package:core/models/order_model.dart';
+import 'package:core/widgets/app_button.dart';
 import 'package:eazy_order_pro/feature/catalog/application/orderlist_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/widget/contact_dialog.dart';
@@ -73,19 +73,15 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
       ),
 
-      /// 🔹 BODY
-      body:
-          cartState.cart.isEmpty
+      body: cartState.cart.isEmpty
               ? _emptyCartView(context)
               : ListView(
                 padding: EdgeInsets.all(16.w),
-                children: [
-                  /// 🔹 CART ITEMS
+        children: [
                   _cartItemsCard(cartState, cartController),
 
                   SizedBox(height: 16.h),
 
-                  /// 🔹 CONTACT CARD
                   _contactCard(orderState),
 
                   SizedBox(height: 10.h),
@@ -94,7 +90,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     'Please enter your WhatsApp number to receive order updates.',
                     style: GoogleFonts.poppins(fontSize: 12.sp, color: AppColors.grey600),
                   ),
-
                   SizedBox(height: 16.h),
 
                   Container(
@@ -109,7 +104,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /// TITLE
                         Row(
                           children: [
                             Icon(Icons.receipt_long, color: AppColors.grey600),
@@ -120,12 +114,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             ),
                           ],
                         ),
-
                         SizedBox(height: 20.h),
 
                         Row(
                           children: [
-                            /// DINE IN
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
@@ -171,10 +163,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                 ),
                               ),
                             ),
-
                             SizedBox(width: 12.w),
 
-                            /// TAKE AWAY
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
@@ -226,7 +216,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                     ),
                   ),
                   SizedBox(height: 20.h),
-                  _simpleTile(Icons.payment, 'Payment Options'),
+
+                  _paymentcard(Icons.payment, 'Payment Options'),
 
                   SizedBox(height: 20.h),
 
@@ -236,8 +227,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 ],
               ),
 
-      bottomNavigationBar:
-          cartState.cart.isEmpty
+      bottomNavigationBar: cartState.cart.isEmpty
               ? null
               : Container(
                 padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 16.h),
@@ -247,7 +237,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 ),
                 child: Row(
                   children: [
-                    /// TOTAL
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -256,7 +245,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                           '₹$totalPrice',
                           style: GoogleFonts.poppins(
                             fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -268,10 +257,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ),
                       ],
                     ),
-
                     SizedBox(width: 16.w),
 
-                    /// PAY NOW
                     Expanded(
                       child: AppButton(
                         color: AppColors.primaryColor,
@@ -482,7 +469,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           Text(
             '$qty',
             style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: AppColors.black,
             ),
           ),
@@ -511,7 +498,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         }
       },
       child: Container(
-        padding: EdgeInsets.all(15.w),
+        padding: EdgeInsets.all(13.w),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12.r),
@@ -531,6 +518,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                          ? 'username': orderState.username,
                     style: GoogleFonts.poppins(color: AppColors.black),
                   ),
+                  SizedBox(height: 2.h),
                   Text(
                     orderState.mobilenumber.isEmpty
                         ? '+91 XXXXXXXX': orderState.mobilenumber,
@@ -551,7 +539,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  Widget _simpleTile(IconData icon, String title) {
+  Widget _paymentcard(IconData icon, String title) {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
@@ -586,7 +574,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           ),
           Text(
             '₹${totalPrice.toStringAsFixed(0)}',
-            style: GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w700),
+            style: GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w600),
           ),
         ],
       ),

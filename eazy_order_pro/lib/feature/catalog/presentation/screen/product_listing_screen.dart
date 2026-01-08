@@ -388,7 +388,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                     Positioned(
                       bottom: -16.h,
                       child: quantity == 0
-                          ? InkWell(
+                          ? GestureDetector(
                         onTap: () {
                          controller.addItem(productId);
                         },
@@ -428,7 +428,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          InkWell(
+          GestureDetector(
             onTap: () {
                   controller.removeItem(productId);
             },
@@ -442,7 +442,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          InkWell(
+          GestureDetector(
             onTap: () {
                 controller.addItem(productId);
             },
