@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:core/config/app_colors.dart';
 import 'package:core/config/app_images.dart';
 import 'package:core/models/category_model.dart';
+import 'package:eazy_order_pro/feature/catalog/application/orderlist_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
 import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
@@ -12,7 +13,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductListingScreen extends ConsumerStatefulWidget {
-  const ProductListingScreen({super.key});
+  final String? orderId;
+  const ProductListingScreen({super.key, this.orderId});
 
   static const String routeName = '/product_listing';
 
@@ -36,6 +38,14 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
 
       controller.reset();
       controller.getactivecategory(businessId);
+
+      /*WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (widget.orderId != null) {
+          ref
+              .read(orderListControllerProvider.notifier)
+              .loadOrderForEdit(widget.orderId!);
+        }
+      });*/
     });
   }
 
@@ -51,19 +61,19 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       }
     });
 
-    final cartState = ref.watch(productListingControllerProvider);
+    final productState = ref.watch(productListingControllerProvider);
+    final orderState = ref.watch(orderListControllerProvider);
     final controller = ref.read(productListingControllerProvider.notifier);
-    final categories = cartState.categories;
-    final products = cartState.products;
+    final categories = productState.categories;
+    final products = productState.products;
     final totalItems =
-    cartState.cart.values.fold(0, (sum, qty) => sum + qty);
+    productState.cart.values.fold(0, (sum, qty) => sum + qty);
     final subTotal =
-    cartState.cart.entries.fold<double>(0, (sum, entry) {
-      final product = cartState.allProducts[entry.key];
+    productState.cart.entries.fold<double>(0, (sum, entry) {
+      final product = productState.allProducts[entry.key];
       if (product == null) return sum;
       return sum + (product.price ?? 0) * entry.value;
     });
-
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -82,7 +92,6 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
               ),
             ),
           ),
-
           SliverPadding(
             padding: EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
             sliver: SliverToBoxAdapter(
@@ -105,7 +114,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       },
 
                       child: _categoryItem(
-                        cartState.categories[index].categoryName ?? "",
+                        productState.categories[index].categoryName ?? "",
                         isSelected: index == _selectedCategoryIndex,
                       ),
                     );
@@ -131,7 +140,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
 
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            sliver: cartState.isProductLoading
+            sliver: productState.isProductLoading
                 ? SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.only(top: 50.h),
@@ -145,7 +154,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       (context, index) {
                         final product = products[index];
                         final productId = product.productId!;
-                        final quantity = cartState.cart[productId] ?? 0;
+                        final quantity = productState.cart[productId] ?? 0;
 
                         return Padding(
                       padding: EdgeInsets.only(bottom: 12.h),
@@ -166,7 +175,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: cartState.cart.isNotEmpty
+      bottomNavigationBar: productState.cart.isNotEmpty
           ? Container(
         decoration: BoxDecoration(
           color: AppColors.white,

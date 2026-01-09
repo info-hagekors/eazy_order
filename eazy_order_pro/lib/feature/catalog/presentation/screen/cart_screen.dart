@@ -336,7 +336,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               padding: EdgeInsets.only(bottom: 10.h),
               child: Row(
                 children: [
-
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
                     child: SizedBox(
@@ -345,7 +344,6 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                       child: Image.asset(AppImages.dish, fit: BoxFit.cover),
                     ),
                   ),
-
                   SizedBox(width: 16.w),
 
                   Expanded(

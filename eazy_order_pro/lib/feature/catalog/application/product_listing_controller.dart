@@ -45,9 +45,11 @@ class ProductListingController extends _$ProductListingController {
   }
 
   Future<void> getactivecategory(String businessId) async {
+    state = state.copyWith(isLoading: true);
     final category = ref.read(categoryRepositoryProvider);
     final result = await category.getActiveCategories(businessId);
     state = state.copyWith(
+      isLoading: false,
         categories: result,
         selectcategoryId: null
     );

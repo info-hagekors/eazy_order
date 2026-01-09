@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 
 class ProductListEntity {
+  final bool isLoading;
   final bool isProductLoading;
   final List<CategoryModel> categories;
   final List<ProductModel> products;
@@ -9,6 +10,7 @@ class ProductListEntity {
   final String? selectcategoryId;
 
   const ProductListEntity({
+    this.isLoading = false,
     this.isProductLoading = false,
     this.categories = const [],
     this.products = const [],
@@ -18,6 +20,7 @@ class ProductListEntity {
   });
 
   ProductListEntity copyWith({
+    bool? isLoading,
     bool? isProductLoading,
     List<CategoryModel>? categories,
     List<ProductModel>? products,
@@ -26,6 +29,7 @@ class ProductListEntity {
     String? selectcategoryId,
   }) {
     return ProductListEntity(
+      isLoading: isLoading ?? this.isLoading,
       isProductLoading: isProductLoading ?? this.isProductLoading,
       categories: categories ?? this.categories,
       products: products ?? this.products,

@@ -25,7 +25,7 @@ class OrderListController extends _$OrderListController {
     final orderRepo = ref.read(orderRepositoryProvider);
 
     OrderModel order = OrderModel(
-      orderId: _generatedRequestid(),
+      orderId: state.isEdit ? state.orderId! : _generatedRequestid(),
       businessId: businessId,
       orderInvoiceNumber: _generatedInvoiceNumber(),
       orderUserName: userName,
@@ -56,6 +56,17 @@ class OrderListController extends _$OrderListController {
         mobilenumber: mobilenumber
     );
   }
+/*  Future <void> loadOrderForEdit(String orderId) async{
+      final repo = ref.read(orderRepositoryProvider);     //firstly build the updateorder function in controller
+      final order = await repo.updateorder(orderId);     //call the updateorder function which is in repo
+
+      if(order == null) return;
+      state = state.copyWith(
+        orderId: order.orderId,
+        isEdit: true,
+        items: order.items,
+      );
+  }*/
   void clear(){
     state = OrderEntity();
   }

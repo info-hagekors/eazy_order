@@ -7,11 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class OrderDetailsScreen extends ConsumerStatefulWidget {
-  final String orderId;
+  final String? orderId;
 
   static const String routeName = '/order-details';
 
-  const OrderDetailsScreen({super.key, this.orderId=''});
+  const OrderDetailsScreen({super.key, this.orderId});
   @override
   ConsumerState<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
 }
@@ -354,6 +354,7 @@ class _OrderDetailsScreenState extends ConsumerState<OrderDetailsScreen> {
               ),
             ),
             Divider(),
+
 
             ...List.generate(order.items.length, (index) {
               final item = order.items[index];

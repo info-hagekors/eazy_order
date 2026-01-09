@@ -1,7 +1,7 @@
 import 'package:core/config/app_colors.dart';
 import 'package:core/core.dart';
 import 'package:eazy_order_pro/feature/catalog/application/orderlist_controller.dart';
-import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
+import 'package:eazy_order_pro/feature/catalog/presentation/screen/edit_order_screen.dart';
 import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -159,7 +159,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                     onTap: (){
                       Navigator.push(
                           context, MaterialPageRoute(
-                          builder: (context)=> ProductListingScreen())
+                          builder: (context)=> EditOrderScreen(orderId: order.orderId))
                        );
                       },
                     child: Container(
@@ -172,7 +172,7 @@ class _OrderScreenState extends ConsumerState<OrderScreen> {
                         child: Text("✏️  Edit order",
                           style: GoogleFonts.poppins(
                               fontSize: 15.sp,
-                              color: AppColors.green,
+                              color: AppColors.black,
                               fontWeight: FontWeight.w500),
                         ),
                       )
