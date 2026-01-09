@@ -1,5 +1,6 @@
 
 import 'package:core/core.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 class BusinessRepository {
@@ -35,7 +36,7 @@ class BusinessRepository {
 
   Future<UserModel> getCurrentUser() async {
     final result = await _authService.getUser(_authService.currentUser?.uid ?? '');
-    print(result.toMap().toString());
+    debugPrint(result.toMap().toString());
     return result;
   }
 }

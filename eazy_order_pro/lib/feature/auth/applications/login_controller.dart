@@ -8,7 +8,6 @@ import 'package:eazy_order_pro/feature/auth/entities/login_entity.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/screens/login_screen.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/screens/register_screen.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/widgets/verify_success_dialog.dart';
-import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
 import 'package:eazy_order_pro/feature/home/presentations/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -72,12 +71,11 @@ class LoginController extends _$LoginController {
     showLoadingDialog(context);
     final result = await authService.loginWithEmail(state.email, state.password);
 
-    hideLoadingDialog(context);
+    hideLoadingDialog(navigatorKey.currentContext!);
     state = result.fold((l) {
       ToastUtils.error(l);
       return state;
     }, (r) {
-      ref.read(homeControllerProvider.notifier).setUserData(r);
       showLoginSuccessDialog(context);
       return state;
     });
@@ -105,8 +103,7 @@ class LoginController extends _$LoginController {
   }
 
   void logout() async {
-    //await ref.read(authRepositoryProvider).logout();
-    //await ref.read(secureStorageServiceProvider).deleteAll();
+    await ref.read(authServiceProvider).logout();
     ref.read(goRouterProvider).go(LoginScreen.routeName);
   }
 

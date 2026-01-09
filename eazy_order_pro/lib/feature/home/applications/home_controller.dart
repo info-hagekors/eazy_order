@@ -1,6 +1,5 @@
 
 import 'package:core/core.dart';
-import 'package:core/repositories/category_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:eazy_order_pro/feature/home/entities/home_entity.dart';
 
@@ -19,15 +18,8 @@ class HomeController extends _$HomeController {
     state = state.copyWith(selectedPage: val);
   }
 
-  void setUserData(UserModel user) {
-    state = state.copyWith(currentUser: user);
+  Future getUserData(String uid) async {
+    final result = await ref.read(authServiceProvider).getUser(uid);
+    state = state.copyWith(currentUser: result);
   }
-
-  void getdata() {
-    final categoryRepo = ref.read(categoryRepositoryProvider);
-    categoryRepo.getActiveCategories(state.currentUser.businessId);
-
-    ref.read(homeControllerProvider).currentUser.businessId;
-  }
-
 }

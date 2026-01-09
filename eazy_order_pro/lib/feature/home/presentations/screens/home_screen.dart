@@ -1,3 +1,4 @@
+import 'package:core/services/auth_service.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/Order_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ProductListingScreen(),
     OrderScreen(),
   ];
+
+  @override
+  void initState() {
+    ref.read(homeControllerProvider.notifier).getUserData(ref.read(authServiceProvider).currentUser?.uid ?? '');
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
