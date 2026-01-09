@@ -9,12 +9,22 @@ class OrderRepository {
 
   OrderRepository(this._firestoreService);
 
-  Future<List<OrderModel>> getOrders(String businessId) async {
+  Future<List<OrderModel>> getOrders(String businessId, {int limit = 10}) async {
     final result = await _firestoreService.querySnapshotListDataV2(
       FirestoreService.collectionOrder,
       { 'business_id' : businessId },
+      limit: limit
     );
     final orderData = result.map((e) => OrderModel.fromJson(e)).toList();
+    return orderData;
+  }
+
+  Future<OrderModel?> getOrderDetailsById(String orderId) async {
+    final result = await _firestoreService.getDocument(FirestoreService.collectionOrder, orderId);
+    if (result.data() == null) {
+      return null;
+    }
+    final orderData = OrderModel.fromJson(result.data() as Map<String, dynamic>);
     return orderData;
   }
 
@@ -70,6 +80,11 @@ class OrderRepository {
     );
     final invoiceId = await _firestoreService.placeOrder(FirestoreService.collectionOrder, model.orderId, model.toMap());
     return invoiceId;
+  }
+
+  Future updateOrder(OrderModel model) async {
+    final items = model.items.map((e) => e.toMap()).toList();
+    await _firestoreService.updateOrderTransaction(model.orderId, items);
   }
 }
 

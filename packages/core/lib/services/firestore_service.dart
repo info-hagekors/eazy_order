@@ -156,6 +156,22 @@ class FirestoreService {
     });
     return invoiceNo;
   }
+
+  Future updateOrderTransaction(String orderId, List<Map<String, dynamic>> items) async {
+    final orderRef = _db.collection(collectionOrder).doc(orderId);
+    await _db.runTransaction((transaction) async {
+      final snapshot = await transaction.get(orderRef);
+
+      if (!snapshot.exists) {
+        throw Exception('Order not found');
+      }
+
+      transaction.update(orderRef, {
+        'items': items,
+        'updated_at': DateTime.now().toIso8601String(),
+      });
+    });
+  }
 }
 
 // Firestore Service provider
