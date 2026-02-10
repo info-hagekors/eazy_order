@@ -47,7 +47,6 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
     final state = ref.read(productControllerProvider);
     final allProductsForCategory = state.products;
 
-    // apply search filter
     final query = searchController.text.toLowerCase();
 
     setState(() {
@@ -58,7 +57,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                 final name = p.productName.toLowerCase();
                 final category =
                     p.categoryName
-                        .toLowerCase(); // or categoryName if you have one
+                        .toLowerCase();
                 final price = p.price.toString();
 
                 return name.contains(query) ||
@@ -80,7 +79,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
     final controller = ref.read(productControllerProvider.notifier);
     final productstate = ref.watch(productControllerProvider);
     return Scaffold(
-      backgroundColor: const Color(0xfff8f8fb),
+      backgroundColor: AppColors.grey50,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -162,12 +161,11 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
               Container(
                 width: double.infinity,
                 color: AppColors.background3,
-                child: productstate.isLoading
+                child:
+                    productstate.isLoading
                         ? SizedBox(
                           height: 400,
-                          child: Center(
-                              child: CircularProgressIndicator(),
-                          ),
+                          child: Center(child: CircularProgressIndicator()),
                         )
                         : filteredProducts.isEmpty
                         ? SizedBox(
@@ -323,16 +321,8 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                                       }
                                                       return e;
                                                     }).toList();
-                                                //ToDo::: Needs to remove
-                                                setState(() {});
-                                                ref
-                                                    .read(
-                                                      productControllerProvider
-                                                          .notifier,
-                                                    )
-                                                    .onActiveInActive(
-                                                      product.productId,
-                                                      val ?? false,
+
+                                               controller.onActiveInActive(product.productId, val ?? false,
                                                     );
                                               },
                                             ),
@@ -344,14 +334,7 @@ class _ProductScreenState extends ConsumerState<ProductScreen> {
                                               onPressed: () async {
                                                 final result = await showDialog(
                                                   context: context,
-                                                  builder:
-                                                      (context) =>
-                                                          ProductAddEditDialog(
-                                                            businessId:
-                                                                widget
-                                                                    .businessId,
-                                                            product: product,
-                                                          ),
+                                                  builder: (context) => ProductAddEditDialog(businessId: widget.businessId, product: product),
                                                 );
                                                 if (result == true) {
                                                   await loadProducts();

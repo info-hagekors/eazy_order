@@ -231,7 +231,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           hintText: '...',
           suffixIcon: IconButton(
             onPressed: () => ref.read(loginControllerProvider.notifier).showPassword(),
-            icon: state.isPasswordVisible ? SvgPicture.asset(AppImages.icEyeOff) : SvgPicture.asset(AppImages.icEyeOn),
+            icon: state.isPasswordVisible ? SvgPicture.asset(AppImages.icEyeOff) : SvgPicture.asset(AppImages.icEyeOn),color: AppColors.black,
           ),
           isObscureText: !state.isPasswordVisible,
         ),

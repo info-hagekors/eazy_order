@@ -386,6 +386,7 @@ class _ProductDialogState extends ConsumerState<ProductAddEditDialog> {
   @override
   Widget build(BuildContext context) {
     final categories = ref.watch(categoryControllerProvider).categoriesList;
+    final productState = ref.watch(productControllerProvider);
 
     return AlertDialog(
       backgroundColor: AppColors.white,
@@ -487,7 +488,7 @@ class _ProductDialogState extends ConsumerState<ProductAddEditDialog> {
 
       actions: [
         TextButton(
-          onPressed: isLoading ? null : () => Navigator.pop(context),
+          onPressed: productState.isLoading ? null : () => Navigator.pop(context),
           child: Text(
             "Cancel",
             style: GoogleFonts.poppins(
@@ -497,12 +498,11 @@ class _ProductDialogState extends ConsumerState<ProductAddEditDialog> {
           ),
         ),
         ElevatedButton(
-          onPressed: isLoading ? null : submit,
+          onPressed: productState.isLoading ? null : submit,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primaryColor,
           ),
-          child:
-              isLoading
+          child: productState.isLoading
                   ? SizedBox(
                     height: 18,
                     width: 18,

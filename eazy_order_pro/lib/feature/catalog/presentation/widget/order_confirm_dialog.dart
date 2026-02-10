@@ -58,7 +58,7 @@ class _OrderConfirmDialogState extends State<OrderConfirmDialog> {
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 13.sp,
-                color: Colors.grey[600],
+                color: AppColors.grey600,
               ),
             ),
           ],

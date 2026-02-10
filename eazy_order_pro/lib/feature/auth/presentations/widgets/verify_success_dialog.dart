@@ -43,15 +43,18 @@ class _VerifySuccessDialogState extends State<VerifySuccessDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              height: 50.h,
-              width: 50.w,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: AppColors.primaryColor,
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Container(
+                height: 50.h,
+                width: 50.w,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: AppColors.primaryColor,
+                ),
+                child: SvgPicture.asset(widget.icon, height: 30.h, width: 30.w, colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),),
               ),
-              child: SvgPicture.asset(widget.icon, height: 30.h, width: 30.w, colorFilter: ColorFilter.mode(AppColors.white, BlendMode.srcIn),),
             ),
             SizedBox(height: 15.h,),
             Text(
@@ -72,7 +75,6 @@ class _VerifySuccessDialogState extends State<VerifySuccessDialog> {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 36.h,),
           ],
         ),
       ),

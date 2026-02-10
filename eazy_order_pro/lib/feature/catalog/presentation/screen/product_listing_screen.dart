@@ -1,7 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:core/config/app_colors.dart';
 import 'package:core/config/app_images.dart';
 import 'package:core/models/category_model.dart';
+import 'package:core/models/order_model.dart';
+import 'package:eazy_order_pro/core/routing/app_router.dart';
 import 'package:eazy_order_pro/feature/catalog/application/orderlist_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
@@ -14,18 +17,16 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ProductListingScreen extends ConsumerStatefulWidget {
   final String? orderId;
-  const ProductListingScreen({super.key, this.orderId});
+  final List<OrderItems> existingItems;
+  const ProductListingScreen({super.key, this.orderId, this.existingItems = const []});
 
   static const String routeName = '/product_listing';
 
   @override
-  ConsumerState<ProductListingScreen> createState() =>
-      _ProductListingScreenState();
+  ConsumerState<ProductListingScreen> createState() => _ProductListingScreenState();
 }
 
 class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
-
-  int _selectedCategoryIndex = 0;
 
   @override
   void initState() {
@@ -38,41 +39,38 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
 
       controller.reset();
       controller.getactivecategory(businessId);
-
-      /*WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (widget.orderId != null) {
-          ref
-              .read(orderListControllerProvider.notifier)
-              .loadOrderForEdit(widget.orderId!);
-        }
-      });*/
+      if (widget.orderId != null && widget.existingItems.isNotEmpty) {
+        controller.loadCartFromOrderItems(widget.existingItems);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditOrder = widget.orderId != null;
     ref.listen(productListingControllerProvider, (prev, next) {
       if (prev?.categories.isEmpty == true &&
           next.categories.isNotEmpty &&
           next.selectcategoryId == null) {
-        ref
-            .read(productListingControllerProvider.notifier)
-            .getactiveproduct(next.categories.first.categoryId!);
+
+        ref.read(productListingControllerProvider.notifier).getactiveproduct(next.categories.first.categoryId!);
       }
     });
+    ref.listen(orderListControllerProvider, (prev, next) {
+      if (next.isEdit && prev?.items != next.items) {
 
+        ref.read(productListingControllerProvider.notifier).loadCartFromOrderItems(next.items);
+      }
+    });
     final productState = ref.watch(productListingControllerProvider);
-    final orderState = ref.watch(orderListControllerProvider);
     final controller = ref.read(productListingControllerProvider.notifier);
     final categories = productState.categories;
     final products = productState.products;
-    final totalItems =
-    productState.cart.values.fold(0, (sum, qty) => sum + qty);
-    final subTotal =
-    productState.cart.entries.fold<double>(0, (sum, entry) {
+    final totalItems = productState.cart.values.fold(0, (sum, qty) => sum + qty);
+    final subTotal = productState.cart.entries.fold<double>(0, (sum, entry) {
       final product = productState.allProducts[entry.key];
       if (product == null) return sum;
-      return sum + (product.price ?? 0) * entry.value;
+      return sum + (product.price) * entry.value;
     });
 
     return Scaffold(
@@ -96,26 +94,22 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             padding: EdgeInsets.only(top: 12.h, left: 16.w, right: 16.w),
             sliver: SliverToBoxAdapter(
               child: SizedBox(
-                height: 125.h,
+                height: 100.h,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: categories.length,
                   separatorBuilder: (_, __) => SizedBox(width: 12.w),
                   itemBuilder: (context, index) {
-                    final category = categories[index];
                     return GestureDetector(
                       onTap: () {
-                        setState(() {
-                          _selectedCategoryIndex = index;
-                        });
+                        controller.selectindex(index);
 
                         final categoryId = categories[index].categoryId!;
                         controller.getactiveproduct(categoryId);
                       },
-
                       child: _categoryItem(
                         productState.categories[index].categoryName ?? "",
-                        isSelected: index == _selectedCategoryIndex,
+                        isSelected: index == productState.selectindex,
                       ),
                     );
                   },
@@ -143,32 +137,54 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             sliver: productState.isProductLoading
                 ? SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 50.h),
+                  padding: EdgeInsets.only(top: 200.h),
                   child: const Center(
                     child: CircularProgressIndicator(),
                   ),
                 )
-             )
-                : SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final product = products[index];
-                        final productId = product.productId!;
-                        final quantity = productState.cart[productId] ?? 0;
+            )
+                : products.isEmpty
+                ? SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 70.h),
+                    child: Image.asset(
+                      AppImages.noproduct,
+                      height: 200.h,
+                      width: 200,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
 
-                        return Padding(
-                      padding: EdgeInsets.only(bottom: 12.h),
-                      child: _productItem(
-                        product,
-                        quantity,
-                        controller,
-                      ),
-                    );
-                  },
-                  childCount: products.length,
-                ),
+                  Text("No Products Available !",
+                    style: GoogleFonts.poppins(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.w300),
+                  )
+                ],
+              ),
+            ):SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final product = products[index];
+                  final productId = product.productId;
+                  final quantity = productState.cart[productId] ?? 0;
+
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 12.h),
+                    child: _productItemcard(
+                      product,
+                      quantity,
+                      controller,
+                    ),
+                  );
+                },
+                childCount: products.length,
               ),
             ),
+          ),
 
           SliverToBoxAdapter(
             child: SizedBox(height: 90.h),
@@ -176,90 +192,108 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
         ],
       ),
       bottomNavigationBar: productState.cart.isNotEmpty
-          ? Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          boxShadow: [
-            BoxShadow(color: AppColors.black12, blurRadius: 8),
-          ],
-        ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '₹$subTotal',
-                        style: GoogleFonts.poppins(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.black,
-                        ),
-                      ),
-                      Text(
-                        'Total',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12.sp,
-                          color: AppColors.grey600,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(width: 12.w),
-
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>  CartScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 70.h,
-                      padding: EdgeInsets.all(16.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10,),
-                          Text(
-                            '$totalItems Items added',
-                            style: GoogleFonts.poppins(
-                              color: AppColors.white,
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(width: 30,),
-                          Container(
-                            height: 26.h,
-                            width: 26.h,
-                            decoration: const BoxDecoration(
-                              color: AppColors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                              color: AppColors.primaryColor,
-                            ),
-                          ),
-                          SizedBox(width: 10,)
-                        ],
+          ? SafeArea(
+        top: false,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            boxShadow: [
+              BoxShadow(color: AppColors.black12, blurRadius: 8),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '₹$subTotal',
+                      style: GoogleFonts.poppins(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.black,
                       ),
                     ),
+                    Text(
+                      'Total',
+                      style: GoogleFonts.poppins(
+                        fontSize: 12.sp,
+                        color: AppColors.grey600,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(width: 12.w),
+
+                GestureDetector(
+                  onTap: () {
+                    final productState = ref.read(productListingControllerProvider);
+
+                    final items = productState.cart.entries.map((entry) {
+                      final product = productState.allProducts[entry.key];
+                      if(product == null){
+                        return null;
+                      }
+                      return OrderItems(
+                        orderItemId: product.productId,
+                        productName: product.productName,
+                        price: product.price,
+                        quantity: entry.value,
+                        imageUrls: product.imageUrls,
+                        description: product.description,
+                        categoryName: product.categoryName,
+                      );
+                    }).whereType<OrderItems>().toList();
+
+                    if (isEditOrder) {
+                      Navigator.pop(context, items);
+                    } else {
+                      ref.read(goRouterProvider).push(CartScreen.routeName);
+                    }
+                  },
+                  child: Container(
+                    height: 60.h,
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(isEditOrder?'Add item':
+                        '$totalItems Items added',
+                          style: GoogleFonts.poppins(
+                            color: AppColors.white,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 30.w),
+                        Container(
+                          height: 26.h,
+                          width: 26.h,
+                          decoration: const BoxDecoration(
+                            color: AppColors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 14,
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          )
+          ),
+        ),
+      )
           : null,
     );
   }
@@ -267,7 +301,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
   Widget _categoryItem(
       String title, {
         bool isSelected = false,
-  }) {
+      }) {
     return Container(
       width: 90.w,
       height: 80.h,
@@ -286,7 +320,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
             height: 50.h,
             width: 50.w,
             child: SvgPicture.asset(
-              AppImages.restaurant
+                AppImages.restaurant
             ),
           ),
           Text(
@@ -300,14 +334,14 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
     );
   }
 
-  Widget _productItem(
+  Widget _productItemcard(
       ProductModel product,
       int quantity,
       ProductListingController controller,
       ){
     final title = product.productName ?? '';
-    final price = product.price ?? 0;
-    final productId = product.productId!;
+    final price = product.price;
+    final productId = product.productId;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -332,16 +366,16 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 15.h),
+                SizedBox(height: 7.h),
                 Text(
-                    '₹$price/-',
+                  '₹$price/-',
                   style: GoogleFonts.poppins(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryColor,
                   ),
                 ),
-                SizedBox(height: 10.h),
+                SizedBox(height: 7.h),
                 Text(
                   product.description ?? '',
                   style: GoogleFonts.poppins(fontSize: 15.sp, color: AppColors.grey600),
@@ -358,9 +392,8 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                   clipBehavior: Clip.none,
                   alignment: Alignment.center,
                   children: [
-                    /// IMAGE
                     SizedBox(
-                      height: 90.h,
+                      height: 60.h,
                       width: 110.w,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
@@ -399,19 +432,14 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
                       child: quantity == 0
                           ? GestureDetector(
                         onTap: () {
-                         controller.addItem(productId);
+                          controller.addItem(productId);
                         },
                         child: _addButton(productId, controller),
                       )
-                          : _quantitySelector(
-                        productId,
-                        quantity,
-                        controller,
-                      ),
+                          : _quantitySelector(productId, quantity, controller),
                     ),
                   ],
                 ),
-
                 SizedBox(height: 20.h),
               ],
             ),
@@ -427,8 +455,8 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       ProductListingController controller,
       ) {
     return Container(
-      height: 38.h,
-      width: 90.w,
+      height: 30.h,
+      width: 80.w,
       decoration: BoxDecoration(
         color: AppColors.white,
         border: Border.all(),
@@ -439,7 +467,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
         children: [
           GestureDetector(
             onTap: () {
-                  controller.removeItem(productId);
+              controller.removeItem(productId);
             },
             child: const Icon(Icons.remove, color: AppColors.green, size: 17),
           ),
@@ -453,7 +481,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
           ),
           GestureDetector(
             onTap: () {
-                controller.addItem(productId);
+              controller.addItem(productId);
             },
             child: const Icon(Icons.add, color: AppColors.green, size: 17),
           ),
@@ -470,7 +498,7 @@ class _ProductListingScreenState extends ConsumerState<ProductListingScreen> {
       scale: 1,
       duration: const Duration(milliseconds: 200),
       child: Container(
-        height: 32.h,
+        height: 27.h,
         width: 75.w,
         alignment: Alignment.center,
         decoration: BoxDecoration(

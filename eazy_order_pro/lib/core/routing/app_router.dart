@@ -2,6 +2,7 @@
 import 'package:eazy_order_pro/feature/auth/presentations/screens/login_screen.dart';
 import 'package:eazy_order_pro/feature/auth/presentations/screens/register_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/Order_screen.dart';
+import 'package:eazy_order_pro/feature/catalog/presentation/screen/cart_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/order_details_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
 import 'package:eazy_order_pro/feature/home/presentations/screens/home_screen.dart';
@@ -38,13 +39,17 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const ProductListingScreen(),
       ),
       GoRoute(
+        path: '/cartscreen',
+        builder: (context, state) => const CartScreen(),
+      ),
+      GoRoute(
         path: '/orderscreen',
         builder: (context, state) => const OrderScreen(),
       ),
       GoRoute(
           path: '/order-details',
           builder: (context, state) => const OrderDetailsScreen(),
-      )
+      ),
     ],
   );
 });

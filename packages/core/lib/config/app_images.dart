@@ -16,6 +16,7 @@ class AppImages {
 
   static const invalidQr = 'assets/images/invalid_qr.png';
   static const storeimage = 'assets/images/storeimage.png';
+  static const noproduct = 'assets/images/no_product.png';
 
   static const emptycart = 'assets/icons/empty-cart.svg';
   static const restaurant = 'assets/images/restaurant-plate-svgrepo-com.svg';

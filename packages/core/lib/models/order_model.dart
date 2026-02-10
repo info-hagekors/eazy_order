@@ -141,8 +141,9 @@ class OrderItems {
 
   factory OrderItems.fromJson(Map<String, dynamic> json) {
     return OrderItems(
-      orderItemId: json['orderItemId'] ?? '',
+      orderItemId: json['order_item_id'] ?? '',
       productName: json['product_name'] ?? '',
+      categoryName: json['category_name'] ?? '',
       description: json['description'] ?? '',
       price: json['price']?.toDouble() ?? 0.0,
       imageUrls: List<String>.from(json['image_urls'] ?? []),

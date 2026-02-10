@@ -26,8 +26,6 @@ class _CategoryDialogState extends ConsumerState<AddCategoryDialog> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController categoryCtrl;
 
-  bool isLoading = false;
-
   @override
   void initState() {
     super.initState();
@@ -37,6 +35,7 @@ class _CategoryDialogState extends ConsumerState<AddCategoryDialog> {
   @override
   Widget build(BuildContext context) {
     final isEdit = widget.categoryId.isNotEmpty;
+    final categoryrepo = ref.watch(categoryControllerProvider);
 
     return AlertDialog(
       backgroundColor: AppColors.white,
@@ -122,7 +121,7 @@ class _CategoryDialogState extends ConsumerState<AddCategoryDialog> {
 
       actions: [
         TextButton(
-          onPressed: isLoading ? null : () => Navigator.of(context).pop(),
+          onPressed: categoryrepo. isLoading ? null : () => Navigator.of(context).pop(),
           child: Text(
             'Cancel',
             style: GoogleFonts.poppins(
@@ -137,19 +136,17 @@ class _CategoryDialogState extends ConsumerState<AddCategoryDialog> {
           width: 110,   // adjust if needed
           height: 35,
           child: AppButton(
-            text: isLoading ? '' : (isEdit ? "Update" : "Save"),
+            text: categoryrepo.isLoading ? '' : (isEdit ? "Update" : "Save"),
             color: AppColors.primaryColor,
             borderRadius: 25,
-            isLoading: isLoading,
+            isLoading: categoryrepo.isLoading,
             textStyle: GoogleFonts.poppins(
               fontWeight: FontWeight.w400,
               color: AppColors.white,
               fontSize: 16,
             ),
-            onPressed: () async {
+            onPressed: categoryrepo.isLoading ? null : () async {
               if (!_formKey.currentState!.validate()) return;
-
-              setState(() => isLoading = true);
 
               final controller = ref.read(categoryControllerProvider.notifier);
               final text = categoryCtrl.text.trim();

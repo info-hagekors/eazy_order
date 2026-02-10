@@ -2,8 +2,10 @@ import 'package:core/config/app_colors.dart';
 import 'package:core/config/app_images.dart';
 import 'package:core/models/order_model.dart';
 import 'package:core/widgets/app_button.dart';
+import 'package:eazy_order_pro/core/routing/app_router.dart';
 import 'package:eazy_order_pro/feature/catalog/application/orderlist_controller.dart';
 import 'package:eazy_order_pro/feature/catalog/application/product_listing_controller.dart';
+import 'package:eazy_order_pro/feature/catalog/presentation/screen/product_listing_screen.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/widget/contact_dialog.dart';
 import 'package:eazy_order_pro/feature/catalog/presentation/widget/order_confirm_dialog.dart';
 import 'package:eazy_order_pro/feature/home/applications/home_controller.dart';
@@ -14,6 +16,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CartScreen extends ConsumerStatefulWidget {
+  static const String routeName = '/cartscreen';
+
   const CartScreen({super.key});
 
   @override
@@ -21,27 +25,10 @@ class CartScreen extends ConsumerStatefulWidget {
 }
 
 class _CartScreenState extends ConsumerState<CartScreen> {
-  String selectedOrderPreference = 'dine_in';
-
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(productListingControllerProvider);
-    final orderState = ref.watch(orderListControllerProvider);
-    final orderItems =
-        cartState.cart.entries.map((e) {
-          final products = cartState.allProducts[e.key]!;
-
-
-          return OrderItems(
-            orderItemId: '',
-            productName: products.productName,
-            price: products.price,
-            quantity: e.value,
-            categoryName: products.categoryName,
-            description: products.description,
-            imageUrls: products.imageUrls,
-          );
-        }).toList();
+    final productState = ref.watch(productListingControllerProvider);
     final cartController = ref.read(productListingControllerProvider.notifier);
     final totalPrice = cartState.cart.entries.fold<double>(0, (sum, e) {
       final product = cartState.allProducts[e.key];
@@ -55,13 +42,15 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-            onPressed: (){
-                Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios_new,
-              size: 22.sp,
-              color: AppColors.primaryColor,)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            size: 22.sp,
+            color: AppColors.primaryColor,
+          ),
+        ),
         backgroundColor: AppColors.white,
         elevation: 0,
         title: Text(
@@ -73,22 +62,27 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ),
       ),
 
-      body: cartState.cart.isEmpty
+      body: cartState.cart.isEmpty &&
+          !cartState.isLoading &&
+          ModalRoute.of(context)?.isCurrent == true
               ? _emptyCartView(context)
               : ListView(
                 padding: EdgeInsets.all(16.w),
-        children: [
+                children: [
                   _cartItemsCard(cartState, cartController),
 
                   SizedBox(height: 16.h),
 
-                  _contactCard(orderState),
+                  _contactCard(productState),
 
                   SizedBox(height: 10.h),
 
                   Text(
                     'Please enter your WhatsApp number to receive order updates.',
-                    style: GoogleFonts.poppins(fontSize: 12.sp, color: AppColors.grey600),
+                    style: GoogleFonts.poppins(
+                      fontSize: 12.sp,
+                      color: AppColors.grey600,
+                    ),
                   ),
                   SizedBox(height: 16.h),
 
@@ -114,26 +108,29 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 20.h),
+                        SizedBox(height: 12.h),
 
                         Row(
                           children: [
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  ref.read(orderListControllerProvider.notifier).orderpreference('dine_in');
+                                  ref.read(productListingControllerProvider.notifier,).orderpreference('dine_in');
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                                  padding: EdgeInsets.symmetric(vertical: 10.h),
                                   decoration: BoxDecoration(
-                                    color: orderState.orderpreference == 'dine_in'
-                                        ? AppColors.green.withAlpha(38)
-                                        : AppColors.white,
+                                    color:
+                                        productState.orderpreference == 'dine_in'
+                                            ? AppColors.green.withAlpha(38)
+                                            : AppColors.white,
                                     borderRadius: BorderRadius.circular(10.r),
                                     border: Border.all(
-                                      color: orderState.orderpreference == 'dine_in'
-                                          ? AppColors.green
-                                          : AppColors.grey400,
+                                      color:
+                                          productState.orderpreference ==
+                                                  'dine_in'
+                                              ? AppColors.green
+                                              : AppColors.grey400,
                                       width: 1.5,
                                     ),
                                   ),
@@ -143,9 +140,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       Icon(
                                         Icons.dining_outlined,
                                         size: 18,
-                                        color: orderState.orderpreference == 'dine_in'
-                                            ? AppColors.green
-                                            : AppColors.black,
+                                        color: productState.orderpreference ==
+                                                    'dine_in'
+                                                ? AppColors.green
+                                                : AppColors.black,
                                       ),
                                       SizedBox(width: 8.w),
                                       Text(
@@ -153,9 +151,10 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                         style: GoogleFonts.poppins(
                                           fontSize: 15.sp,
                                           fontWeight: FontWeight.w600,
-                                          color: orderState.orderpreference == 'dine_in'
-                                              ? AppColors.green
-                                              : AppColors.black,
+                                          color: productState.orderpreference ==
+                                                      'dine_in'
+                                                  ? AppColors.green
+                                                  : AppColors.black,
                                         ),
                                       ),
                                     ],
@@ -168,19 +167,23 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  ref.read(orderListControllerProvider.notifier).orderpreference('take_away');
+                                  ref.read(productListingControllerProvider.notifier).orderpreference('take_away');
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                                  padding: EdgeInsets.symmetric(vertical: 10.h),
                                   decoration: BoxDecoration(
-                                    color: orderState.orderpreference == 'take_away'
-                                        ? AppColors.green.withAlpha(38)
-                                        : AppColors.white,
+                                    color:
+                                        productState.orderpreference ==
+                                                'take_away'
+                                            ? AppColors.green.withAlpha(38)
+                                            : AppColors.white,
                                     borderRadius: BorderRadius.circular(10.r),
                                     border: Border.all(
-                                      color: orderState.orderpreference == 'take_away'
-                                          ? AppColors.green
-                                          : AppColors.grey400,
+                                      color:
+                                          productState.orderpreference ==
+                                                  'take_away'
+                                              ? AppColors.green
+                                              : AppColors.grey400,
                                       width: 1.5,
                                     ),
                                   ),
@@ -190,9 +193,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                       Icon(
                                         Icons.restaurant_menu_rounded,
                                         size: 18,
-                                        color: orderState.orderpreference == 'take_away'
-                                            ? AppColors.green
-                                            : AppColors.black,
+                                        color:
+                                            productState.orderpreference ==
+                                                    'take_away'
+                                                ? AppColors.green
+                                                : AppColors.black,
                                       ),
                                       SizedBox(width: 8.w),
                                       Text(
@@ -200,9 +205,11 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                         style: GoogleFonts.poppins(
                                           fontSize: 15.sp,
                                           fontWeight: FontWeight.w600,
-                                          color: orderState.orderpreference == 'take_away'
-                                              ? AppColors.green
-                                              : AppColors.black,
+                                          color:
+                                              productState.orderpreference ==
+                                                      'take_away'
+                                                  ? AppColors.green
+                                                  : AppColors.black,
                                         ),
                                       ),
                                     ],
@@ -227,92 +234,96 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 ],
               ),
 
-      bottomNavigationBar: cartState.cart.isEmpty
+      bottomNavigationBar:
+          cartState.cart.isEmpty
               ? null
-              : Container(
-                padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 16.h),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  boxShadow: [BoxShadow(color: AppColors.black12, blurRadius: 8)],
+              : Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).padding.bottom,
                 ),
-                child: Row(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '₹$totalPrice',
-                          style: GoogleFonts.poppins(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 10.h),
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    boxShadow: [
+                      BoxShadow(color: AppColors.black12, blurRadius: 8),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '₹$totalPrice',
+                            style: GoogleFonts.poppins(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Grand Total',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12.sp,
-                            color: AppColors.grey600,
+                          Text(
+                            'Grand Total',
+                            style: GoogleFonts.poppins(
+                              fontSize: 12.sp,
+                              color: AppColors.grey600,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 16.w),
+                        ],
+                      ),
+                      SizedBox(width: 16.w),
 
-                    Expanded(
-                      child: AppButton(
-                        color: AppColors.primaryColor,
-                        onPressed: () async {
-                          final result = await showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (_) => const OrderConfirmDialog(),
-                          );
+                      Expanded(
+                        child: AppButton(
+                          height: 50.h,
+                          color: AppColors.primaryColor,
+                          isLoading: cartState.isLoading,
+                          onPressed: () async {
+                            final result = await showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const OrderConfirmDialog(),
+                            );
 
-                          if (result == true && context.mounted) {
-                            final homeState = ref.read(homeControllerProvider);
-                            final productState = ref.read(productListingControllerProvider);
+                            if (result == true && context.mounted) {
+                              final homeState = ref.read(homeControllerProvider);
+                              final productState = ref.read(productListingControllerProvider);
+                              final controller = ref.read(productListingControllerProvider.notifier);
+                              final selectedCategoryName = productState.categories.firstWhere((c) =>
+                              c.categoryId == productState.selectcategoryId).categoryName;
 
-                            final orderItems =
-                                productState.cart.entries.map((entry) {
-                                  final product =
-                                      productState.allProducts[entry.key]!;
+                            final orderItems = productState.cart.entries.map((entry) {
+                            final product = productState.allProducts[entry.key]!;
                                   return OrderItems(
                                     orderItemId: product.productId,
                                     productName: product.productName,
                                     price: product.price,
                                     quantity: entry.value,
-                                    categoryName: product.categoryName ?? '',
+                                    categoryName: selectedCategoryName,
                                     description: product.description,
                                     imageUrls: product.imageUrls,
                                   );
                                 }).toList();
 
-                            await ref.read(orderListControllerProvider.notifier).orderPlace(
-                                  homeState.currentUser.businessId,
-                                  orderState.username,
-                                  orderState.mobilenumber,
-                                  orderItems,
-                                  totalPrice,
-                                  orderState.orderpreference
-                                );
-
-                            ref.read(productListingControllerProvider.notifier).clearCart();
-                            ref.read(orderListControllerProvider.notifier).clear();
-
-                            Navigator.of(context).popUntil((route) => route.isFirst);
-                          }
-                        },
-
-                        text: 'Place order',
-                        textStyle: GoogleFonts.poppins(
-                          fontSize: 17.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.white,
+                              await controller.orderPlace(
+                                    homeState.currentUser.businessId,
+                                    orderItems,
+                                    totalPrice,
+                                  );
+                              ref.read(goRouterProvider).pop(ProductListingScreen.routeName);
+                                controller.clearCart();
+                            }
+                          },
+                          text: 'Place order',
+                          textStyle: GoogleFonts.poppins(
+                            fontSize: 17.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
     );
@@ -339,7 +350,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8.r),
                     child: SizedBox(
-                      height: 50.h,
+                      height: 40.h,
                       width: 70.h,
                       child: Image.asset(AppImages.dish, fit: BoxFit.cover),
                     ),
@@ -383,8 +394,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 onTap: () => Navigator.pop(context),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 13,
-                    vertical: 4,
+                    horizontal: 8,
+                    vertical: 2,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.white,
@@ -429,14 +440,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           SizedBox(height: 8.h),
           Text(
             'Add items from the menu to start ordering',
-            style: GoogleFonts.poppins(fontSize: 13.sp, color: AppColors.grey600),
+            style: GoogleFonts.poppins(
+              fontSize: 13.sp,
+              color: AppColors.grey600,
+            ),
           ),
           SizedBox(height: 20.h),
           AppButton(
             color: AppColors.blue,
             height: 45.h,
             width: 150.w,
-            onPressed: () => Navigator.pop(context),
+            onPressed: ref.read(goRouterProvider).pop,
             text: 'Browse Menu',
             textStyle: GoogleFonts.poppins(
               fontSize: 14.sp,
@@ -480,23 +494,24 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
 
-  Widget _contactCard(dynamic orderState) {
-    return GestureDetector(
+  Widget _contactCard(dynamic productState) {
+    final controller = ref.read(productListingControllerProvider.notifier);
+    return GestureDetector(                                    //open dialog.......
       onTap: () async {
-        final result = await showDialog<Map<String, String>>(
+        final result = await showDialog<Map<String, String>>(    //firstly wait and than check value is return completely like here 'name' : namecontroller.text.trim()...<String, String>....
           context: context,
           builder: (context) => const ContactDialog(),
         );
 
-        if (result != null) {
-          ref.read(orderListControllerProvider.notifier).updateContact(
-              username: result['name'] ?? '',
-              mobilenumber: result['mobile'] ?? ''
-          );
+        if (result != null) {            // this is read the return Map value, after result does not equal to null than save it in controller function.......
+          controller.updateContact(
+                name: result['name'] ?? '',        //name: is store the value in variable which is in result['name']......
+                number: result['mobile'] ?? '',
+              );
         }
       },
       child: Container(
-        padding: EdgeInsets.all(13.w),
+        padding: EdgeInsets.all(10.w),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12.r),
@@ -512,15 +527,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                     orderState.username.isEmpty
-                         ? 'username': orderState.username,
-                    style: GoogleFonts.poppins(color: AppColors.black),
+                    productState.username.isEmpty
+                        ? 'username'
+                        : productState.username,
+                    style: GoogleFonts.poppins(color: AppColors.black,fontSize: 16.sp),
                   ),
                   SizedBox(height: 2.h),
                   Text(
-                    orderState.mobilenumber.isEmpty
-                        ? '+91 XXXXXXXX': orderState.mobilenumber,
-                    style: GoogleFonts.poppins(color: AppColors.black),
+                    productState.mobilenumber.isEmpty
+                        ? '+91 XXXXXXXX'
+                        : productState.mobilenumber,
+                    style: GoogleFonts.poppins(color: AppColors.black,fontSize: 16.sp),
                   ),
                 ],
               ),
@@ -557,6 +574,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
 
   Widget _grandTotalCard(double totalPrice) {
     return Container(
+      height: 55.h,
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -568,11 +586,17 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         children: [
           Text(
             'Grand Total',
-            style: GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w600),
+            style: GoogleFonts.poppins(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           Text(
             '₹${totalPrice.toStringAsFixed(0)}',
-            style: GoogleFonts.poppins(fontSize: 15.sp, fontWeight: FontWeight.w600),
+            style: GoogleFonts.poppins(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),

@@ -47,7 +47,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                 .toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xfff8f8fb),
+      backgroundColor: AppColors.grey50,
 
       body: SingleChildScrollView(
         child: Padding(
@@ -99,7 +99,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                               width: double.infinity,
                               child: TextField(
                                 controller: searchCtrl,
-                                onChanged: (_) => setState(() {}),
+                                onChanged: controller.updateSearchText,
                                 decoration: InputDecoration(
                                   hintText: "Search...",
                                   border: OutlineInputBorder(
@@ -160,7 +160,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                               width: 220,
                               child: TextField(
                                 controller: searchCtrl,
-                                onChanged: (_) => setState(() {}),
+                                onChanged: controller.updateSearchText,
                                 decoration: InputDecoration(
                                   hintText: "    Search...",
                                   contentPadding: EdgeInsets.zero,
@@ -287,8 +287,6 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                                       }
                                                       return e;
                                                     }).toList();
-                                                //ToDo::: Needs to remove
-                                                setState(() {});
                                                 ref
                                                     .read(
                                                       categoryControllerProvider
@@ -333,20 +331,11 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                               onPressed: () async {
                                                 final result = await showDialog(
                                                   context: context,
-                                                  builder:
-                                                      (
-                                                        _,
-                                                      ) => CategoryDeleteDialog(
-                                                        categoryName:
-                                                            cat.categoryName,
-                                                      ),
+                                                  builder: (_) =>
+                                                      CategoryDeleteDialog(categoryName: cat.categoryName),
                                                 );
                                                 if (result == true) {
-                                                  await ref
-                                                      .read(
-                                                        categoryControllerProvider
-                                                            .notifier,
-                                                      )
+                                                  await controller
                                                       .deleteCategory(
                                                         cat.categoryId,
                                                       );

@@ -48,12 +48,15 @@ class CategoryController extends _$CategoryController {
   }
 
   Future updateCategory(String name, String categoryId) async {
+    state = state.copyWith(isLoading: true);
     if(name.isEmpty) {
       ToastUtils.error('Please enter category name...');
       return;
     }
     final categoryRepo = ref.read(categoryRepositoryProvider);
     await categoryRepo.updateCategoryName(categoryId, name);
+
+    state = state.copyWith(isLoading: false);
   }
 
   Future deleteCategory(String categoryId) async {
@@ -76,6 +79,30 @@ class CategoryController extends _$CategoryController {
     }).toList();
     state = state.copyWith(categoriesList: list);
     await ref.read(categoryRepositoryProvider).setActiveInActive(categoryId, val);
+  }
+
+  List<CategoryModel> applySearch(
+      List<CategoryModel> list,
+      String query,
+      ) {
+    if (query.isEmpty) return list;
+
+    return list
+        .where(
+          (c) => c.categoryName
+          .toLowerCase()
+          .contains(query.toLowerCase()),
+    )
+        .toList();
+  }
+  void updateSearchText(String value) {
+    state = state.copyWith(
+      searchtext: value,
+      filteredCategories: applySearch(
+        state.categoriesList,
+        value,
+      ),
+    );
   }
 }
 
